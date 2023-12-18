@@ -1,0 +1,46 @@
+[sqlfluff]
+dialect = postgres
+templater = jinja
+exclude_rules = L050,L016,L001,L031,L034,L045,L044
+# we ignore parsing errors since some postgres functions are not taken into account by sqlfluff
+ignore = parsing
+
+[sqlfluff:templater:jinja:context]
+params={"filepath":"/home", "filetype":"type", "foldername":"folder", "filename":"file", "filedate":"date"}
+
+[sqlfluff:indentation]
+# See https://docs.sqlfluff.com/en/stable/layout.html#configuring-indent-locations
+indented_on_contents = False
+
+[sqlfluff:rules:L063]
+# Data Types
+extended_capitalisation_policy = upper
+
+[sqlfluff:rules:L064]
+# Consistent usage of preferred quotes for quoted literals
+preferred_quoted_literal_style = single_quotes
+
+
+[sqlfluff:rules:L067]
+# SQL type casting
+preferred_type_casting_style = consistent
+
+[sqlfluff:rules]
+single_table_references = unqualified
+
+[sqlfluff:rules:L010]
+# Keywords
+capitalisation_policy = upper
+
+[sqlfluff:rules:L014]
+# Unquoted identifiers
+extended_capitalisation_policy = lower
+
+[sqlfluff:rules:L030]
+# Function names
+extended_capitalisation_policy = upper
+
+
+[sqlfluff:rules:L040]
+# Null & Boolean Literals
+capitalisation_policy = upper

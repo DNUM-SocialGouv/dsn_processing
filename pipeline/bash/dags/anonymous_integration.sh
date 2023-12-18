@@ -1,0 +1,1 @@
+python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s update_database/create_anonymous_schema.sql -csf anonymous_database_selection

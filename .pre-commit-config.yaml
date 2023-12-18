@@ -1,0 +1,34 @@
+# doc : https://pre-commit.com/#new-hooks
+repos:
+  - repo: local # run local commands (no need of proxy), where `entry` is the command to execute
+    hooks:
+      - id: isort
+        name: run isort on all
+        entry: isort .
+        language: system
+        types: [python]
+      - id: black
+        name: run black on all
+        entry: black .
+        language: system
+        types: [python]
+      - id: gen-sql
+        name: regenerate sql files
+        entry: python ./core/sql/generate_sql.py
+        language: system
+        always_run: true
+        pass_filenames: false
+        files: ./core/sql/generate_sql.py
+      - id: sqlfluff
+        name: run sqlfluff linter on all .sql files (non-blocking)
+        entry: sqlfluff lint .
+        language: system
+        types: [sql]
+        verbose: true
+      - id: data-tests
+        name: run data unit tests (non-blocking, it lasts few minutes)
+        entry: bash ./pipeline/bash/dags/test_integration.sh
+        language: system
+        verbose: true
+        files: '^(core|pipeline|tests)/'
+        pass_filenames: false
