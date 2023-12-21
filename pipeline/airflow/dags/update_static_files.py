@@ -4,15 +4,15 @@ from airflow import DAG  # type: ignore
 from airflow.models.param import Param  # type: ignore
 from airflow.operators.python import PythonOperator  # type: ignore
 
+from dsn_processing.core.python.raw_files_management.generate_holiday_calendar import (
+    generate_holidays_calendar,
+)
 from dsn_processing.core.python.raw_files_management.generate_static_table_files import (
     generate_categories_juridiques_insee_file,
     generate_conventions_collectives_file,
     generate_motifs_recours_file,
     generate_naf_file,
     generate_natures_contrats_file,
-)
-from dsn_processing.core.python.raw_files_management.generate_holiday_calendar import (
-    generate_holidays_calendar,
 )
 from dsn_processing.pipeline.airflow.dags.utils import (
     START_DATE,

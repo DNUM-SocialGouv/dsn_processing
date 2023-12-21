@@ -49,7 +49,7 @@ fi
 
 # build and push
 if [[ -z $ignore_common ]]; then
-    docker build --rm --file ${HOME}/${AIRFLOW_COMMON_BUILD_CONTEXT}/workflow/pipeline/airflow/common/Dockerfile \
+    docker build --rm --file ${HOME}/${AIRFLOW_COMMON_BUILD_CONTEXT}/pipeline/airflow/common/Dockerfile \
     --build-arg AIRFLOW_UID=${AIRFLOW_UID} \
     --build-arg CHAMPOLLION_GID=${CHAMPOLLION_GID} \
     --build-arg HTTP_PROXY=${HTTP_PROXY} \

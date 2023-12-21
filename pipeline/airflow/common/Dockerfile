@@ -8,7 +8,7 @@ WORKDIR /home/airflow
 ADD --chmod=0777 . code/dsn_processing
 ADD --chmod=0777 ./pipeline/airflow/dags /opt/airflow/dags
 
-RUN apt update && apt install -y p7zip* && apt-get clean
+RUN apt update && apt install -y p7zip* && apt-get -y install libpq-dev gcc && apt-get clean
 RUN groupadd -g $CHAMPOLLION_GID CHAMPOLLION
 RUN usermod -aG CHAMPOLLION airflow
 
