@@ -1,4 +1,4 @@
-# Bases de données 
+# Guide technique des bases de données
 
 Qu'il s'agisse de serveurs de base conteneurisés pour les besoins du développement ou de serveur de base de production, on instancie trois bases de données pour les usages suivants :
 
@@ -286,4 +286,3 @@ La table `expected_contrats_comparisons` sert à connaître le type de comparais
 Une base de fausses données remplie à la main a été mise en place. Le fichier permettant la construction de cette dernière est `source_file_mock_data.xlsx` (TO DO : mettre lien). Il comporte un onglet par table. Les colonnes `Id` doivent être cohérentes entre les tables afin d'assurer la construction d'une base pertinente. Cet fichier de référence peut être enrichi par n'importe quel membre de l'équipe projet. A date, aucune fausse donnée n'a été générée pour la table `activites`.
 
 Pour plus d'informations sur la création de cette base `mock`, voir TO DO mettre lien pipeline.
-

@@ -114,7 +114,7 @@ Les scripts `extract_and_load_metadata` et `update_zonage`, quant à eux, écras
 
 ## Scripts *extract*
 
-Les scripts *extract* permettent l'extraction des données brutes dans les tables *raw* (se référer au fichier [1_integration_scripts_structure.md](./1_integration_scripts_structure.md)). Ils sont tous construits grâce à la fonction `get_copy_query` de `core/sql/utils.py`. La plupart des scripts *extract* ont donc la forme suivante :
+Les scripts *extract* permettent l'extraction des données brutes dans les [tables *raw*](integration_structure_scripts.md#natures-des-tables-dintégration). Ils sont tous construits grâce à la fonction `get_copy_query` de `core/sql/utils.py`. La plupart des scripts *extract* ont donc la forme suivante :
 
 ```sql
 TRUNCATE TABLE table_name CASCADE;
@@ -132,11 +132,11 @@ WITH (
 
 On utilise la fonction Postgres `COPY`, cela implique que les données ne transitent pas par un outil tierce (par exemple un orchestrateur python), le fichier csv est directement lu et *ingéré* par la base de données. En particulier, cela nécessite que l'utilisateur base de données, autrement dit l'*user* (`postgres` par exemple), ait les droits en lecture sur les fichiers csv concernés. La bonne pratique consiste à ajouter l'*user* dans le groupe UNIX detenant les fichiers csv. Pour plus d'informations sur la fonction `COPY` de Postgres se référer à la [documentation Postgres](https://docs.postgresql.fr/16/sql-copy.html).
 
-Pour avoir plus d'informations sur les fichiers bruts de la DSN, voir [0_raw_DSN.md](./0_raw_DSN.md).
+Pour avoir plus d'informations sur les fichiers bruts en entrée, voir [Import et accès aux données source](../pipeline/import_et_acces_donnees_source.md#format-des-fichiers-de-données).
 
 ## Scripts *transform*
 
-Les scripts *transform* permettent de sélectionner les colonnes nécessaires, de croiser les données des différentes tables *raw*, de convertir et de transformer certaines colonnes. Ils permettent le peuplement des tables *source* (se référer au fichier [1_integration_scripts_structure.md](./1_integration_scripts_structure.md)). Au-delà de la sélection de colonnes, nous listons ci-dessous les spécificités de chaque script :
+Les scripts *transform* permettent de sélectionner les colonnes nécessaires, de croiser les données des différentes tables *raw*, de convertir et de transformer certaines colonnes. Ils permettent le peuplement des [tables *source*](integration_structure_scripts.md#natures-des-tables-dintégration). Au-delà de la sélection de colonnes, nous listons ci-dessous les spécificités de chaque script :
 
 | Script 	| Traitement spécifique 	|
 |---	|---	|
@@ -303,7 +303,7 @@ On remarquera qu'on effectue deux fois l'étape de link car cette dernière est 
 
 Le script `load_postes` implémente une information de `transform` (libellés passés en majuscules sans *trailing whitespace*) mais ne fait rien d'autre que du chargement de données sans logique d'appariement.
 
-Le script `load_activites`, quant à lui, est plus complexe que les autres scripts puisqu'il permet de recouvrer les informations sur les volumes d'activités en effectuant des découpages ou des regroupements temporels. Pour en savoir plus sur les déclarations de volumes horaires, se référer au fichier [0_raw_DSN.md](./0_raw_DSN.md).
+Le script `load_activites`, quant à lui, est plus complexe que les autres scripts puisqu'il permet de recouvrer les informations sur les volumes d'activités en effectuant des découpages ou des regroupements temporels. Pour en savoir plus sur les déclarations de volumes horaires, se référer au fichier [Les données source : les déclarations sociales nominatives](nature_donnees_source.md#déclaration-des-heures-travaillées).
 
 On cherche à *redistribuer* les volumes d'activité déclarés sur des périodes quelconques vers chaque mois calendaire. Pour ce faire, on *découpe* chaque ligne d'activité en autant de lignes que de mois calendaires concernés. Par exemple, l'activité suivante : 
 
@@ -328,7 +328,7 @@ Les scripts *modify* permettent de modifier les données une fois qu'elles ont �
 
 ### Prise en compte des changements de données identifiantes
 
-Lorsque les données identifiantes (voir section [Tuples identifiants](#tuples-identifiants)) d'une entité changent d'une déclaration à l'autre, ce changement doit faire l'objet d'un bloc changement (voir [0_raw_DSN.md](0_raw_DSN.md)). Dans les scripts `transform_changements_salaries.sql` et `transform_changements_contrats.sql` documentés plus haut, les changements déclarés par les établissements sont chargés et consolidés dans les tables `source.source_changements_salaries` et `source.source_changements_contrats`. Dans les scripts `modify_changements_salaries` et `modify_changements_contrats`, on exploite ces deux tables afin de *fusionner* les entités (salarié ou contrat) doublonnées. On donne l'exemple théorique ci-dessous :
+Lorsque les données identifiantes (voir section [Tuples identifiants](#tuples-identifiants)) d'une entité changent d'une déclaration à l'autre, ce changement doit faire l'objet d'un [bloc changement](nature_donnees_source.md#déclaration-des-changements-dinformations). Dans les scripts `transform_changements_salaries.sql` et `transform_changements_contrats.sql` documentés plus haut, les changements déclarés par les établissements sont chargés et consolidés dans les tables `source.source_changements_salaries` et `source.source_changements_contrats`. Dans les scripts `modify_changements_salaries` et `modify_changements_contrats`, on exploite ces deux tables afin de *fusionner* les entités (salarié ou contrat) doublonnées. On donne l'exemple théorique ci-dessous :
 
 1. Un objet $O$ est déclaré au mois $1$ avec la clef identifiante $ci(O) = A$. Il est donc enregistré dans la table $T$ tel que :
 
@@ -605,25 +605,17 @@ Lors de la fin d'un contrat de travail une déclaration spécifique doit être �
 
 En statut 1 ou 2, on dira que le contrat est fermé alors qu'en statut 0, il est dit ouvert. Les dates de fin effectives de statut 2 ont une valeur supérieure puisqu'elles sont celles déclarées directement par l'établissement. Par défaut, un contrat n'a pas de date de fin effective et est donc en statut 0. Il peut changer de statut de la manière suivante : 
 
-```mermaid
-graph LR;
-   0(statut 0)-->|3| 1(statut 1);
-   0-->|4| 1;
-   0-->|1| 2(statut 2);
-   1-->|1| 2;
-   2-->|2| 0;
-   1-->|2| 0;
-   0-->|6| 2;
-   1-->|5| 0;
-```
+![graphe_des_statuts_dates_fin_effective](../../images/statuts_date_fin_effective.png)
+
+[Lien éditable](https://excalidraw.com/#json=R5RKpaQ2vhFSjcS6wv4k7,sNAk0R_S1_vH1fFSC63WGw)
 
 1. L'établissement déclare une date de fin effective via un *bloc fin*.
 
 2. L'établissement déclare l'annulation d'une date de fin effective via un *bloc fin* avec motif `099`.
 
 3. Si la dernière déclaration d'un contrat a trois mois ou plus de retard par rapport à la dernière déclaration de son établissement, on lui assigne comme date de fin effective en statut 1 :
-- sa date de fin prévisionnelle si cette dernière appartient au mois de la dernière déclaration du contrat ;
-- le dernier jour du mois de sa dernière déclaration sinon.
+  * sa date de fin prévisionnelle si cette dernière appartient au mois de la dernière déclaration du contrat ;
+  * le dernier jour du mois de sa dernière déclaration sinon.
 
 4. Idem que 3 si l'établissement a fermé.
 
@@ -635,7 +627,7 @@ Le script `modify_fins_contrats` encode ce graphe.
 
 ### Allocation des intérimaires et des contrats d'intérim
 
-Les salariés intérimaires (stt) et les contrats d'intérim (ctt) sont déclarés dans les ETT (établissements de travail temporaire) et non dans les ETU (établissements utilisateurs). Pour plus de détails, voir la documentation [sur la DSN](0_raw_DSN.md). L'objectif des scripts `allocate_stt` et `allocate_ctt` est donc de réallouer les salariés et contrats d'intérim dans les ETU à la fin de chaque intégration mensuelle. Au début de l'intégration suivante, il faut désallouer ces salariés et contrats temporaires afin de pouvoir intégrer les nouvelles données, cela est l'objet des scripts `remove_stt` et `remove_ctt`. On a choisi une gestion sous la forme allocation - désallocation par souci de simplicité.
+Les salariés intérimaires (stt) et les contrats d'intérim (ctt) sont déclarés dans les ETT (établissements de travail temporaire) et non dans les ETU (établissements utilisateurs). Pour plus de détails, voir la documentation [sur la DSN](nature_donnees_source.md#cas-particulier--salariés-intérimaires-et-contrats-dintérim). L'objectif des scripts `allocate_stt` et `allocate_ctt` est donc de réallouer les salariés et contrats d'intérim dans les ETU à la fin de chaque intégration mensuelle. Au début de l'intégration suivante, il faut désallouer ces salariés et contrats temporaires afin de pouvoir intégrer les nouvelles données, cela est l'objet des scripts `remove_stt` et `remove_ctt`. On a choisi une gestion sous la forme allocation - désallocation par souci de simplicité.
 
 Remarque : Cette opération n'est pas bijective. Un STT dans une ETU peut être la *copie* d'un salarié ayant travaillé pour plusieurs ETT. De plus, un salarié dans une ETT peut donner lieu à plusieurs *copies* dans différentes ETU. 
 

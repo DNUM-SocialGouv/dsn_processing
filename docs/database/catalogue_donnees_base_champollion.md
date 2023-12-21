@@ -156,9 +156,6 @@ Ce catalogue comporte de nombreuses références au [cahier technique de la norm
 | weekday_number | INT | Non | Jour de la semaine de 0 à 6 (0 pour dimanche et 6 pour samedi) |  |  |
 | public_holiday | BOOLEAN | Oui | Si égal 1, ce jour appartient au calendrier des jours fériés |  |  |
 
-## Schéma de la base
+## Schéma de la base de données
 
-TO DO : à mettre à jour
-!["Schéma de la base Champollion"](/source/images/champollion_database_schema.png)
-
-*Pour générer le fichier suivant à l'aide de PGAdmin, cliquer sur la base puis cliquer sur `ERD for database`*.
+![Schéma de la base de données](../images/diagramme_schema_public.png)
