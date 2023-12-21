@@ -95,7 +95,7 @@ Trois images sont nécessaires pour la mise en route de ce service :
 3. Compilez et poussez les images (avec `ENV_FILE_PATH`, le chemin vers votre fichier de variables d'environnement)
 
     ```bash
-    bash workflow/pipeline/airflow/build.sh -e ENV_FILE_PATH -p
+    bash pipeline/airflow/build.sh -e ENV_FILE_PATH -p
     ```
 
 4. Connectez-vous au Hub pour vérifier que les images ont bien été poussées.

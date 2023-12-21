@@ -3,6 +3,7 @@ set -e
 initial_postgres_db="$POSTGRES_DB"
 export POSTGRES_DB="test"
 export BASH_ORCHESTRATOR_VERBOSE=False
+[ -z "$DSN_PROCESSING_REPOSITORY_PATH" ] && echo "Environment variable DSN_PROCESSING_REPOSITORY_PATH is not defined." && exit 0
 
 echo "Info: generate test data files."
 python ${DSN_PROCESSING_REPOSITORY_PATH}/core/python/raw_files_management/generate_test_data_files.py # add -i to re-generate input files as well

@@ -20,7 +20,7 @@ repos:
         pass_filenames: false
         files: ./core/sql/generate_sql.py
       - id: sqlfluff
-        name: run sqlfluff linter on all .sql files (non-blocking)
+        name: run sqlfluff linter on all .sql files (non-blocking, it lasts few minutes)
         entry: sqlfluff lint .
         language: system
         types: [sql]

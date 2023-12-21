@@ -10,6 +10,13 @@ from dsn_processing._base import Base
 
 
 def generate_expected_data_files() -> None:
+    assert (
+        "DSN_PROCESSING_REPOSITORY_PATH" in os.environ
+    ), "Missing environment variable DSN_PROCESSING_REPOSITORY_PATH"
+    assert (
+        "WORKFLOW_SOURCES_DATA_PATH" in os.environ
+    ), "Missing environment variable WORKFLOW_SOURCES_DATA_PATH"
+
     # read expected data excel
     file_name = Base.EXPECTED_DATA_FILE + ".xlsx"
     file_path = os.path.join(
@@ -48,10 +55,18 @@ def generate_expected_data_files() -> None:
             encoding="cp1252",
         )
 
-        # os.chmod(file_path, 0o777)
-
 
 def generate_input_data_files() -> None:
+    assert (
+        "DSN_PROCESSING_REPOSITORY_PATH" in os.environ
+    ), "Missing environment variable DSN_PROCESSING_REPOSITORY_PATH"
+    assert (
+        "WORKFLOW_RAW_DATA_PATH" in os.environ
+    ), "Missing environment variable WORKFLOW_RAW_DATA_PATH"
+    assert (
+        "WORKFLOW_TEST_DATA_PATH" in os.environ
+    ), "Missing environment variable WORKFLOW_TEST_DATA_PATH"
+
     file_name = Base.EXPECTED_DATA_FILE + ".xlsx"
     file_path = os.path.join(
         os.environ["DSN_PROCESSING_REPOSITORY_PATH"], "resources", file_name
