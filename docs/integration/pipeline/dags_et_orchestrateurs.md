@@ -1,4 +1,4 @@
-# Dags et orchestrateurs
+# Exécution des scripts d'intégration : dags et orchestrateurs
 
 Un DAG (directed acyclic graph) est une liste ordonnée de tâches matérialisées par des scripts Python ou SQL. En d'autres termes, il s'agit d'une liste de scripts qui sont exécutés successivement selon l'ordre de la liste.
 
@@ -69,11 +69,11 @@ Chaque Airflow est déployé pour un serveur de base donné, spécifié à l'aid
 
 Pour que les étapes suivantes fonctionnent, il faut qu'une connexion au Hub de stockage des images ait été activée (TO DO : mettre lien).
 
-##### En dynamique ou en statique ?
+##### En dynamique ou en statique
 
 Si Airflow est déployé sur une machine qui héberge le code, on peut *déployer* l'ochestrateur de manière dynamique. Les dags sont alors définis directement par le dossier contenant le code. Pour ce faire, on décommentera dans le fichier [docker-compose](./../../../pipeline/airflow/docker-compose.yaml) les deux lignes suivantes : 
 
-```yml
+```yaml
     - ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/airflow/dags:/opt/airflow/dags                  # only for development
     - ${DSN_PROCESSING_REPOSITORY_PATH}:/home/airflow/code/dsn_processing                        # only for development
 ```
@@ -129,7 +129,7 @@ Le login et le mot de passe sont définis par les valeurs des variables d'enviro
 
 #### Les dags Airflow
 
-Les dags Airflow sont définis par les fichiers python du dossier [dags](../../../pipeline/airflow/dags/). La plupart des ces fichiers font appel à la fonction `register_tasks` du fichier [utils.py](../../../pipeline/airflow/dags/utils.py) qui écrit les dags automatiquement à partir des scripts listés dans les [dags Bash](#les-dags-bash).
+Les dags Airflow sont définis par les fichiers python du dossier [dags](TO DO : mettre lien). La plupart des ces fichiers font appel à la fonction `register_tasks` du fichier [utils.py](TO DO : mettre lien) qui écrit les dags automatiquement à partir des scripts listés dans les [dags Bash](#les-dags-bash).
 
 Pour en savoir plus sur l'utilisation d'Airflow, se rendre sur la [documentation](https://airflow.apache.org/docs/) de l'outil. En substance : 
 
@@ -158,7 +158,7 @@ La liste des DAGs disponibles est la suivante :
 |---|---|---|---|---|
 | check_database_connection | Test de la connexion à la base de données. | NA |  | x |
 | init_database | Initialisation de la base de données. | NA | x | x |
-| monthly_integration | Intégration mensuelle de données. | Le 10 de chaque mois après réception des données source (voir la documentation sur l'[import des données source](./import_donnees_source.md)). | x | x |
+| monthly_integration | Intégration mensuelle de données. | Le 10 de chaque mois après [réception des données source](import_et_acces_donnees_source.md#planning-des-imports). | x | x |
 | update_static_files | Mise à jour des fichiers de contexte, dits fichiers statiques. | Une fois par an. | x | x |
 | update_database | Mise à jour des tables contextuelles, dites statiques. | Une fois par an. | x | x |
 | historical_integration | Intégration successive de plusieurs mois de données. | NA | x | x (via un fichier bash) |

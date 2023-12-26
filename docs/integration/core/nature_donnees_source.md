@@ -1,4 +1,4 @@
-# Déclarations sociales nominatives
+# Les données source : les déclarations sociales nominatives
 
 La DSN, Déclaration Sociale Nominative, est une déclaration envoyée tous les mois par tous les employeurs (c.a.d toutes les entités ayant des salariés, les indépendants et auto-entrepreneurs ne la remplissent donc pas). Elle contient toutes les informations relatives à la vie professionnelle des salariés : modalités du contrat de travail, heures travaillées, rémunérations, absences, etc. La DSN répond à la [norme Neodes](https://www.net-entreprises.fr/media/documentation/dsn-cahier-technique-2023.1.pdf) qui est mise à jour chaque année. Elle se structure en bloc puis en champ. La lecture du cahier technique de la norme Neodes est un pré-requis pour la pleine compréhension de la suite de la documentation.
 
@@ -111,13 +111,9 @@ Le champ Lieu de Travail (S21.G00.40.019) du bloc Contrat renseigne le lieu de t
 
 Ce champ est particulièrement important dans le cas de l'intérim. En effet, les contrats d'intérim ne sont déclarés que par les établissements de travail temporaire (ETT) et non par les établissements utilisateurs (ETU).
 
+![ett_etu_stt](../../images/ett_etu_stt.png)
 
-```mermaid
-graph LR;
-   ETT-->|mise à disposition| ETU;
-   ETT-->|contrat de travail| intérimaire;
-   ETU-->|contrat de mission| intérimaire;
-```
+[Lien éditable](https://excalidraw.com/#json=9xP2oPd_CmAjDuXWVx4Gu,PqeL4-yQsmK0BdNu23YpCQ)
 
 Sur le diagramme précédent, seuls les contrats de travail (côté ETT) sont déclarés. Ainsi, le champ Lieu de Travail permet de *reconstruire* les contrats de missions en identifiant les ETU.
 

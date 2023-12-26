@@ -15,13 +15,9 @@ Dans la base de données, les tables *raw* font l'objet d'un schéma **raw** et 
 
 Ainsi, l'import de données suit le schéma suivant : 
 
-```mermaid
-graph LR;
-    A(csv)-->|extract| B(raw);
-    B(raw)-->|transform| C(source);
-    C(source)-->|load| D(permanent);
-    D(permanent) -->|modify| D(permanent);
-```
+![etlm](../../images/etlm.png)
+
+[Lien éditable](https://excalidraw.com/#json=6bUVDQbLfSIEkWDwk3_5p,bwHisIrHAzz_nVuuUvKS9Q)
 
 ### Tables de log
 
