@@ -54,7 +54,7 @@ pre-commit install
 
 ### Exporter les variables d'environnement
 
-Les variables d'environnement à définir sont répertoriées dans le fichier [.env.example](TO DO : mettre lien). Il faut donc créer un fichier `.env.dsn_processing` stocké à la racine de la session par exemple.
+Les variables d'environnement à définir sont répertoriées dans le fichier [.env.example](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/.env.example). Il faut donc créer un fichier `.env.dsn_processing` stocké à la racine de la session par exemple. Un fichier pré-rempli est disponible [ici](https://msociauxfr.sharepoint.com/:t:/r/teams/EIG71/Documents%20partages/General/Commun/D%C3%A9veloppement/.env.prefilled/.env.dsn_processing.prefilled.txt?csf=1&web=1&e=E74wja).
 
 Pour exporter les variables de ce fichier, on pourra utiliser la fonction `bash` suivante.
 
@@ -64,20 +64,22 @@ export $(grep -v '^#' ~/.env.dsn_processing | xargs)
 
 On peut ajouter cette ligne à son fichier `~/.bashrc` si l'on souhaite que l'export de ces variables d'environnement soit automatique à l'ouverture d'un terminal.
 
+A noter que des variables d'environnement complémentaires sont nécessaires pour déployer la brique [Airflow](docs/integration/pipeline/dags_et_orchestrateurs.md#déploiement).
+
 ## Contributions
 
 ### Auteurs (décembre 2023)
 
 - Auteur principal : [Margot COSSON](https://github.com/margotcosson)
-- Co-auteurs : [Léo GUILLAUME](https://github.com/leoguillaumegouv); [Yan ZHI](TO DO : add lien)
+- Co-auteurs : [Léo GUILLAUME](mailto:leoguillaume1@gmail.com); [Yan ZHI](mailto:yan.zhi@sg.social.gouv.fr)
 
 ### Contribuer au projet
 
-Ce code est principalement hébergé sur un gitlab interne. Sa version publique sur Github (TO DO : mettre lien) est un mirroir du repository gitlab.
+Ce code est principalement hébergé sur un gitlab interne. Sa [version publique sur Github](https://github.com/DNUM-SocialGouv/dsn_processing) est un mirroir du repository gitlab.
 
 #### Tests unitaires
 
-Le fichier `.pre-commit-config.yaml` assure l'exécution de tests unitaires au moment d'un commit. Les tests dont le résultat n'empêche pas le commit sont étiquettés avec la balise `non-blocking`. Pour s'exécuter, les tests ont besoin que les variables d'environnement listées dans le fichier `.env.example`(TO DO : mettre lien) soient [définies](#exporter-les-variables-denvironnement).
+Le fichier `.pre-commit-config.yaml` assure l'exécution de tests unitaires au moment d'un commit. Les tests dont le résultat n'empêche pas le commit sont étiquettés avec la balise `non-blocking`. Pour s'exécuter, les tests ont besoin que les variables d'environnement listées dans le fichier [`dsn_processing/.env.example`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/.env.example) soient [définies](#exporter-les-variables-denvironnement).
 
 #### Nomenclature des commits
 

@@ -22,9 +22,9 @@ python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s monthl
 python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s monthly_integration/remove_ctt.sql
 python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s monthly_integration/remove_stt.sql
 python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s monthly_integration/reindex_tables.sql
+python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s monthly_integration/set_dernier_mois_de_declaration_integre.sql -d $year-$month-01
 
 python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s monthly_integration/extract_etablissements.sql -cmf champollion_etablissement -d $year-$month-01 -f $folder_type
-python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s monthly_integration/set_dernier_mois_de_declaration_integre.sql -d $year-$month-01
 python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s monthly_integration/transform_entreprises.sql
 python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s monthly_integration/load_entreprises.sql
 python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s monthly_integration/transform_etablissements.sql
@@ -65,4 +65,5 @@ python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s monthl
 python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s monthly_integration/allocate_ctt.sql
 
 python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s monthly_integration/monthly_sanity_checks.sql
+python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s monthly_integration/clean_database.sql
 python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s monthly_integration/integration_log_end.sql -d $year-$month-01

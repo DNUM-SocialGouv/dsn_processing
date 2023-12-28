@@ -18,7 +18,7 @@ Ce catalogue comporte de nombreuses références au [cahier technique de la norm
 |---|---|---|---|---|---|
 | entreprise_id | BIGSERIAL | Non | Id de l'entreprise dans la base |  |  |
 | entreprise_key | BIGINT | Non | SIREN de l'entreprise | Attention, le SIREN étant stocké avec un type numéraire, s'il contient des 0 au début, ils seront supprimés. Ainsi, pour reconstituer un siren exact il faut ajouter autant de 0 que nécessaires au début pour obtenir un numéro à 9 chiffres. | S21.G00.06.001 |
-| raison_sociale | VARCHAR(80) | Oui | Raison sociale de l'entreprise | On ne peut pas spécifier la longueur de la chaîne de caractère car le champ n'est pas référencé dans le cahier technique de la DSN. | |
+| raison_sociale | VARCHAR(80) | Oui | Raison sociale de l'entreprise |  |  |
 | date_premiere_declaration | DATE | Non | Date de la première déclaration pour cette entreprise |  |  |
 | date_derniere_declaration | DATE | Non | Date de la dernière déclaration pour cette entreprise |  |  |
 
@@ -28,7 +28,7 @@ Ce catalogue comporte de nombreuses références au [cahier technique de la norm
 |---|---|---|---|---|---|
 | etablissement_id | BIGSERIAL | Non | Id de l'établissement dans la base Champollion |  |  |
 | entreprise_id | BIGINT | Non | Id de l'entreprise à laquelle appartient l'établissement |  |  |
-| etablissement_key | BIGINT | Non | SIRET de l'établissement | Attention, le siret étant stocké avec un type numéraire, s'il contient des 0 au début, ils seront supprimés. Ainsi, pour reconstituer un siret exact il faut ajouter autant de 0 que nécessaires au début pour obtenir un numéro à 14 chiffres. | S21.G00.06.001 + S21.G00.11.001 |
+| etablissement_key | BIGINT | Non | SIRET de l'établissement | Attention, le SIRET étant stocké avec un type numéraire, s'il contient des 0 au début, ils seront supprimés. Ainsi, pour reconstituer un SIRET exact il faut ajouter autant de 0 que nécessaires au début pour obtenir un numéro à 14 chiffres. | S21.G00.06.001 + S21.G00.11.001 |
 | siege_social | BOOLEAN | Non | 0 si l'établissement n'est pas le siège social de l'entreprise, 1 sinon |  |  |
 | enseigne | VARCHAR(80) | Oui | Enseigne de l'établissement |  |  |
 | adresse | VARCHAR(50) | Oui | Adresse de l'établissement |  | S21.G00.11.003 |
@@ -48,7 +48,7 @@ Ce catalogue comporte de nombreuses références au [cahier technique de la norm
 | salarie_id | BIGSERIAL | Non | Id du salarié dans la base Champollion |  |  |
 | etablissement_id | BIGINT | Non | Id de l'établissement employant le salarié |  |  |
 | salarie_key | VARCHAR(170) | Non | NIR du salarié si renseigné, concaténation du nom de famille, prénoms et date de naissance sinon |  |  |
-| nir | BIGINT | Oui | NIR du salarié | Il s'agit en réalité d'un NIR randomisé en base, seul le premier chiffre indiquant le sexe est celui du NIR d'origine. Si la valeur du NIR est nulle, les champs nom_famille, prenoms, date_naissance ne peuvent être nuls. | S21.G00.30.001 |
+| nir | BIGINT | Oui | NIR du salarié | Il s'agit en réalité d'un NIR randomisé en base, seul le premier chiffre indiquant le sexe est celui du NIR d'origine. Si la valeur du NIR est nulle, les champs nom_famille, prenoms, date_naissance ne peuvent pas être nuls. | S21.G00.30.001 |
 | nom_famille | VARCHAR(80) | Oui | Nom de famille du salarié |  | S21.G00.30.002 |
 | nom_usage | VARCHAR(80) | Oui | Nom d'usage du salarié |  | S21.G00.30.003 |
 | prenoms | VARCHAR(80) | Oui | Prénoms du salarié |  | S21.G00.30.004 |
@@ -66,8 +66,8 @@ Ce catalogue comporte de nombreuses références au [cahier technique de la norm
 | salarie_id | BIGINT | Non | Id du salarié qui est employé par ce contrat |  |  |
 | contrat_key | VARCHAR(46) | Non | Concaténation du numéro du contrat, d'un symbole '_' et de la date de début du contrat |  |  |
 | numero | VARCHAR(35) | Non | Numéro du contrat de travail |  | S21.G00.40.009 |
-| date_debut | DATE | Non | Date de début du contrat de travail | Si une date de début effective, différente de la date de début, est renseignée alors la date de début à considérer est la date de début effective. | S21.G00.40.001 |
-| date_debut_effective | DATE | Oui | Date de début effective du contrat | La valeur de la date de début effective est nulle pour la plupart des cas, elle peut être renseignée avec une date différente de la date de début en cas de transfert d'employeur. |  |
+| date_debut | DATE | Non | Date de début du contrat de travail | Si une date de début effective, différente de la date de début, est renseignée, alors la date de début à considérer est la date de début effective. | S21.G00.40.001 |
+| date_debut_effective | DATE | Oui | Date de début effective du contrat | La valeur de la date de début effective est nulle pour la plupart des cas, elle peut être renseignée avec une date différente de la date de début en cas de transfert d'employeur, elle est alors égale à la date du transfert. |  |
 | poste_id | BIGINT | Oui | Id du libellé de poste |  | sur la base de S21.G00.40.006 |
 | code_nature_contrat | CHAR(2) | Oui | Code de la nature du contrat de travail |  | S21.G00.40.007 |
 | code_convention_collective | CHAR(4) | Oui | Code de la convention collective du contrat de travail |  | S21.G00.40.017 |
@@ -75,10 +75,10 @@ Ce catalogue comporte de nombreuses références au [cahier technique de la norm
 | code_dispositif_public | CHAR(2) | Oui | Code du dispositif de politique publique d'emploi ou de formation professionnelle |  | S21.G00.40.008 |
 | code_complement_dispositif_public | CHAR(2) | Oui | Code du complément de dispositif public pour les salariés concernés par une aide au poste en entreprise adaptée ou structure d'insertion par l'activité économique |  | S21.G00.40.073 |
 | lieu_travail | VARCHAR(14) | Oui | Identifiant du lieu de travail effectif du salarié (SIRET si applicable, sinon codification libre) |  | S21.G00.40.019 |
-| code_mise_disposition_externe | CHAR(2) | Oui | Nature de la mise à disposition externe du salarié. |  | S21.G00.40.074 |
+| code_mise_disposition_externe | CHAR(2) | Oui | Nature de la mise à disposition externe du salarié |  | S21.G00.40.074 |
 | date_fin_previsionnelle | DATE | Oui | Date de fin prévisionnelle du contrat de travail déclarée par l'établissement | La date de fin prévisionnelle ne fait l'objet d'aucune vérification et doit être manipulée avec prudence. La date de fin effective est dans tous les cas à privilégier. | S21.G00.40.010 |
-| date_fin_effective | DATE | Oui | Date de fin effective du contrat déclarée ou déduite. | Si la date de fin effective est strictement antérieure à la date de début du contrat, cela signifie que le contrat a été annulé. La norme DSN interdit ce cas de figure mais cela est possible en base Champollion dans deux cas précis : un changement d'employeur antérieur à la date de début du contrat (le contrat chez l'ancien employeur est donc "annulé") ou une absence de déclaration (fin de contrat en statut 1) de ce contrat antérieure au premier mois de validité du contrat. | sur la base de S21.G00.62.001 |
-| statut_fin | SMALLINT | Oui | 2 si la date de fin effective a été ajoutée suite à une déclaration spécifique de la part des établissements ou un changement d'employeur, 1 si la date de fin effective a été déduite en base, 0 ou NULL si la valeur de la date de fin effective est nulle |  |  |
+| date_fin_effective | DATE | Oui | Date de fin effective du contrat déclarée ou déduite | Si la date de fin effective est strictement antérieure à la date de début du contrat, cela signifie que le contrat a été annulé. La norme DSN interdit ce cas de figure mais cela est possible en base Champollion dans deux cas précis : un changement d'employeur antérieur à la date de début du contrat (le contrat chez l'ancien employeur est donc "annulé") ou une absence de déclaration (fin de contrat en statut 1) de ce contrat antérieure au premier mois de validité du contrat. | sur la base de S21.G00.62.001 |
+| statut_fin | SMALLINT | Oui | 2 si la date de fin effective a été ajoutée suite à la déclaration spécifique de l'établissement ou à un changement d'employeur, 1 si la date de fin effective a été déduite en base, 0 ou NULL si la valeur de la date de fin effective est nulle. |  |  |
 | etu_id | BIGINT | Oui | Id de l'établissement utilisateur pour les contrats d'intérim des établissements de travail temporaires |  | sur la base de S21.G00.40.046 |
 | ett_contrat_id | BIGINT | Oui | Dans le cas d'un contrat re-distribué depuis un établissement de travail temporaire (ETT) vers un établissement utilisateur (ETU), id du contrat d'intérim dans l'ETT |  |  |
 | date_derniere_declaration | DATE | Non | Date de la dernière déclaration pour ce contrat |  |  |
@@ -96,7 +96,7 @@ Ce catalogue comporte de nombreuses références au [cahier technique de la norm
 | Colonne | Type | NULL possible | Explication | Remarque | Rubrique DSN |
 |---|---|---|---|---|---|
 | activite_id | BIGSERIAL | Non | Id de l'activité (volume horaire mensuel) |  |  |
-| contrat_id | BIGINT | Non | Id du contrat concerné par l'activité renseignée |  |  |
+| contrat_id | BIGINT | Non | Id du contrat concerné par l'activité renseignée | Pour les contrats d'intérim redistribués depuis les entreprises d'intérim vers les entreprises utilisatrices, ce champ correspond à `contrats.ett_contrat_id` et non pas `contrats.contrat_id`. |  |
 | mois | DATE | Non | Mois considéré |  | sur la base de S21.G00.51.001 et S21.G00.51.002  |
 | heures_standards_remunerees | REAL | Non | Somme des heures standards rémunérées | Montant pouvant être négatif dans de très rares cas. | sur la base de S21.G00.53.002 |
 | heures_non_remunerees | REAL | Non | Somme des heures non rémunérées | Montant pouvant être négatif dans de très rares cas. | sur la base de S21.G00.53.002 |
@@ -154,7 +154,7 @@ Ce catalogue comporte de nombreuses références au [cahier technique de la norm
 | month_number | INT | Non | Mois au format MM |  |  |
 | year_number | INT | Non | Année au format AAAA |  |  |
 | weekday_number | INT | Non | Jour de la semaine de 0 à 6 (0 pour dimanche et 6 pour samedi) |  |  |
-| public_holiday | BOOLEAN | Oui | Si égal 1, ce jour appartient au calendrier des jours fériés |  |  |
+| public_holiday | BOOLEAN | Oui | Si égal 1, cette date est un jour férié |  |  |
 
 ## Schéma de la base de données
 

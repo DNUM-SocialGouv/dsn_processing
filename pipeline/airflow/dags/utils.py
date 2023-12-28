@@ -28,7 +28,7 @@ BASH_TEMPLATE_SEARCHPATH = os.path.join(
 )
 INTEGRATION_DATE_REGEX = r"^\d{4}-(0[1-9]|1[0-2])-01$"
 AUTHORIZED_DAGS = ["init_database.sh", "monthly_integration.sh", "update_database.sh"]
-INTEGRATION_DAY = "10"
+INTEGRATION_DAY = "10"  # on intègre le 10 de chaque mois
 START_DATE = dt.datetime(2000, 1, 1)
 
 

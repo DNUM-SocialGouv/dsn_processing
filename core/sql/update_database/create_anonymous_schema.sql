@@ -1,9 +1,11 @@
 
 
+        CALL log.log_script('update_database', 'create_anonymous_schema', 'BEGIN');
+            
+
 
         DROP SCHEMA IF EXISTS anonymous CASCADE;
         CREATE SCHEMA anonymous;
-        -- grant privilege to do
 
         CREATE TABLE anonymous.selection_etablissements (
             etablissement_key BIGINT NOT NULL,
@@ -187,3 +189,6 @@
         INNER JOIN anonymous.contrats
             ON COALESCE(contrats.ett_contrat_id, contrats.contrat_id) = activites.contrat_id;
         
+
+        CALL log.log_script('update_database', 'create_anonymous_schema', 'END');
+            

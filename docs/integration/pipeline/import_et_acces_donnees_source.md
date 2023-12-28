@@ -16,7 +16,7 @@ Le compte utilisé pour transférer les fichiers sur la VM de stockage de Champo
 
 ### Scripts de sélection des données
 
-Pour chaque table souhaitée de la DSNP3, un script SQL permet la récupération des données chargées en base sur la période qui nous intéresse (voir section *Chronologie* ci-dessous). Chaque script est formatté de la sorte : 
+Pour chaque table souhaitée de la DSNP3, un script SQL permet la récupération des données chargées en base sur la [période qui nous intéresse](#planning-des-imports). Chaque script est formatté de la sorte : 
 
 ```SQL
 USE [DSNP3]
@@ -46,7 +46,7 @@ GO
 
 Pour la clause de sélection temporelle, on utilise la date de chargement (sous format id) de la table la plus *haute*, c'est-à-dire la table `Declaration`, afin de minimiser le risque de dates de chargement erronées (faille issue de la procédure d'intégration des données en DSNP3).
 
-Les scripts sont stockés dans `core/python/raw_files_management/raw_DSN_selection_scripts/`.
+Les scripts sont stockés dans `dsn_processing/core/python/raw_files_management/raw_DSN_selection_scripts/`.
 
 ### Format des fichiers de données
 
@@ -494,6 +494,8 @@ champollion_YYYYMM01.7z
 
 </details>
 
+
+
 ### Planning des imports
 
 <pre>
@@ -526,13 +528,13 @@ Ainsi, dans la requête SQL ci-dessus, pour récupérer les données du mois MM 
   AND [dbo].[NomTable].[IdDateChargement] < AAAA(MM+2)09
 ```
 
-Si besoin, les clauses temporelles peuvent être récupérées dans le tableur `core/python/raw_files_management/raw_DSN_selection_scripts/WHERE_time_clauses.xlsx`.
+Si besoin, les clauses temporelles peuvent être récupérées dans le tableur [`dsn_processing/core/python/raw_files_management/raw_DSN_selection_scripts/WHERE_time_clauses.xlsx`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/core/python/raw_files_management/raw_DSN_selection_scripts/WHERE_time_clauses.xlsx).
 
-L'import n'étant pas automatique, **le 9 de chaque mois, il faut envoyer un message à VDDAL pour qu'il lance l'import de données**. Une fois cela réalisé, il faut lancer l'intégration mensuelle.
+L'import n'étant pas automatique, **le 9 de chaque mois, il faut envoyer un message à VDDAL pour qu'il lance l'import de données**. Une fois cela réalisé, il faut lancer l'intégration mensuelle. L'automatisation est un enjeu majeur des futurs travaux à mener.
 
 ## Accès aux données source
 
-Pour plus d'informations sur l'hébergement des données dans l'infrastructure Champollion, se référer TO DO : mettre lien.
+Pour plus d'informations sur l'hébergement des données dans l'infrastructure Champollion, se référer à la [documentation dédiée](https://gitlab.intranet.social.gouv.fr/champollion/champolib/blob/dev/documentation/data/1_infrastructure_data.md#h%C3%A9bergement-des-donn%C3%A9es-source).
 
 Les chemins d'accès aux données sont déterminés :
 
@@ -541,9 +543,9 @@ Les chemins d'accès aux données sont déterminés :
     - `WORKFLOW_ARCHIVES_DATA_PATH` : dossier hébergeant les archives compressées de fichiers DSN ;
     - `WORKFLOW_RAW_DATA_PATH` : dossier hébergeant les fichiers DSN après décompression ;
     - `WORKFLOW_TEST_DATA_PATH` : dossier hébergeant les fichiers DSN de test ;
-    - `WORKFLOW_SOURCES_DATA_PATH` : dossier hébergeant les auter fichiers de données non DSN.
+    - `WORKFLOW_SOURCES_DATA_PATH` : dossier hébergeant les autres fichiers de données non DSN.
 
-2. d'autre part via les paramètres passés aux [orchestrateurs] (TO DO : mettre lien) sous [format jinja](https://airflow.apache.org/docs/apache-airflow/stable/templates-ref.html):
+2. d'autre part via les paramètres passés aux [orchestrateurs](./dags_et_orchestrateurs.md#orchestrateurs-de-scripts) sous [format jinja](https://airflow.apache.org/docs/apache-airflow/stable/templates-ref.html):
 
     - `{{ params.filepath }}`
     - `{{ params.filetype }}`

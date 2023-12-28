@@ -32,7 +32,7 @@ with DAG(
     dag_id=DAG_ID,
     default_args=default_args,
     description="Update the static files",
-    schedule_interval="0 8 1 2 *",  # each february 1st of the year at 8:00
+    schedule_interval=None,
     max_active_runs=1,
     start_date=START_DATE,
     catchup=False,

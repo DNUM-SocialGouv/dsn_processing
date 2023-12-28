@@ -95,6 +95,8 @@ x-airflow-common:
       condition: service_healthy
     postgres:
       condition: service_healthy
+  extra_hosts:
+    - "${POSTGRES_HOST}:${POSTGRES_HOST_IP}"
 
 services:
   postgres:

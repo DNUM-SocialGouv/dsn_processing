@@ -1,18 +1,18 @@
 # Guide technique des bases de données
 
-Qu'il s'agisse de serveurs de base conteneurisés pour les besoins du développement ou de serveur de base de production, on instancie trois bases de données pour les usages suivants :
+Qu'il s'agisse de serveurs de base conteneurisés pour les besoins du développement ou de serveurs de base de production, on instancie trois bases de données pour les usages suivants :
 
 - `champollion` : la base principale, qui contient les données réelles et complètes ;
 - `mock` : une base de fausses données ;
 - `test` : une base de test qui contient des données réelles de test.
 
-Pour plus d'informations sur l'infrastructure retenue pour les bases, se référer à TO DO : mettre lien.
+Pour plus d'informations sur l'infrastructure retenue pour les bases, se référer à la [documentation](https://gitlab.intranet.social.gouv.fr/champollion/champolib/blob/dev/documentation/data/1_infrastructure_data.md) sur l'infrastructure data du projet.
 
 ## Initialisation
 
 ### Création des bases 
 
-*A noter que pour les serveurs de base conteneurisés, la création de ces bases est automatique lors du déploiment du serveur.*
+*A noter que, pour les serveurs de base conteneurisés, la création de ces bases est automatique lors du déploiment du serveur.*
 
 Pour créer ces trois bases, on se connecte à la base `postgres` (il est nécessaire de ne pas être connecté via une version pré-existante de l'une des trois bases) et on exécute la commande suivante : 
 
@@ -54,7 +54,7 @@ CREATE DATABASE test
 
 ### Définition des schémas
 
-Les schémas au sein de chaque base sont gérés par la pipeline de traitement de données (TO DO : mettre lien). Dans la base `champollion`, on retrouve notamment un schéma `public` contenant les données réelles et un schéma `anonymous` contenant des données anonymisées. TO DO : mettre lien vers plus d'explication avec lien vers excel.
+Les schémas au sein de chaque base sont gérés par la [pipeline de traitement de données](../integration/core/integration_contenu_scripts.md#create_permanent_tables). Dans la base `champollion`, on retrouve notamment un schéma `public` contenant les données réelles et un schéma `anonymous` contenant des données anonymisées.
 
 ## Structure commune
 
@@ -68,7 +68,7 @@ Les conventions suivantes sont respectées :
 ### Types des tables : dynamiques et statiques
 
 La base de données comporte deux types de tables permanentes :
-- les **tables dynamiques** qui sont enrichie et mises à jour mensuellement par le flux DSN ;
+- les **tables dynamiques** qui sont enrichies et mises à jour mensuellement par le flux DSN ;
 - les **tables statiques** qui comportent des informations contextuelles.
 
 #### Tables dynamiques
@@ -91,7 +91,7 @@ De plus, elles font état des contraintes suivantes :
 - une contrainte d'unicité (`UNIQUE`) sur le tuple composé de la donnée identifiante `<nom>_key` et du ou des id  `<nom_parent>_id` de son ou ses parent(s) ;
 - et une potentielle contrainte de validité (`CHECK`) sur la donnée identiante `<nom>_key` par rapport aux autres informations contenues dans la table (en effet, le champ `<nom>_key` est souvent constitué de la concaténation conditionnelle de plusieurs autres colonnes de la table).
 
-Pour plus d'informations sur les clefs identifiantes, consulter la documentation sur l'intégration des données (TO DO : mettre lien).
+Pour plus d'informations sur les clefs identifiantes, consulter la [documentation](../integration/core/integration_contenu_scripts.md#tuples-identifiants) sur l'intégration des données.
 
 #### Tables statiques
 
@@ -187,7 +187,7 @@ Liste des index en base Champollion :
 
 ## Nature des données
 
-Les informations relatives à la nature des données sont répertoriées dans le catalogue de la base Champollion (TO DO : mettre lien). 
+Les informations relatives à la nature des données sont répertoriées dans le [catalogue de la base Champollion](./catalogue_donnees_base_champollion.md). 
 
 ## Trois bases pour quatre cas d'usage
 
@@ -220,9 +220,9 @@ Autrement dit, les données identifiantes d'une ligne sont remplacées par les d
 
 A noter que :
 
-- cette transformation est un automorphisme de $[\![1;I]\!]$ dans $[\![1;I]\!]$ mais pas forcément de $\{c_{id}(r)\}_{r \in R}$ dans $\{c_{id}(r)\}_{r \in R}$. Dès lors, si la ligne d'id $I-r+1$ n'existe pas (en base, les id ne sont pas forcément continus), on l'élimine.
-- cette méthode de semi-anonymisation n'est pertinente que si l'on ne sélectionne qu'une partie des lignes de la table originelle. Dans le cas contraire, il serait très facile de dé-anonymiser la base.
-- si la table $T$ contient plusieurs colonnes identifiantes, le tuple de remplacement correspondra au tuple identifiant d'une seule et même ligne.
+- Cette transformation est un automorphisme de $[\![1;I]\!]$ dans $[\![1;I]\!]$ mais pas forcément de $\{c_{id}(r)\}_{r \in R}$ dans $\{c_{id}(r)\}_{r \in R}$. Dès lors, si la ligne d'id $I-r+1$ n'existe pas (en base, les id ne sont pas forcément continus), on l'élimine.
+- Cette méthode de semi-anonymisation n'est pertinente que si l'on ne sélectionne qu'une partie des lignes de la table originelle. Dans le cas contraire, il serait très facile de dé-anonymiser la base.
+- Si la table $T$ contient plusieurs colonnes identifiantes, le tuple de remplacement correspondra au tuple identifiant d'une seule et même ligne.
 
 #### Schéma `anonymous`
 
@@ -231,20 +231,20 @@ Par souci de simplicité, on ne créé pas une base de données anonymisée mais
 - sélectionnant les lignes correspondant à une liste établie de SIRET ;
 - semi-anonymisant les champs identifiants précédemment cités table par table.
 
-La liste de SIRET sélectionnés est déclarée dans le fichier `champolib/source/data/anonymous_database_selection.csv` (TO DO : mettre lien). A noter que toute entreprise de travail temporaire (ETT) ayant au moins un contrat de travail temporaire avec l'un des établissements listés est ajoutée par défaut.
+La liste de SIRET sélectionnés est déclarée dans le fichier [`dsn_processing/resources/anonymous_database_selection.csv`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/resources/anonymous_database_selection.csv). A noter que toute entreprise de travail temporaire (ETT) ayant au moins un contrat de travail temporaire avec l'un des établissements listés est ajoutée par défaut.
 
-A noter que la méthode d'anonymisation utilisée ne permet pas de garantir la cohérence des champs anonymisés avec ceux non anonymisés de la même table ainsi que ceux anonymisés d'une table parente. En particulier, on peut avoir :
+La méthode d'anonymisation utilisée ne permet pas de garantir la cohérence des champs anonymisés avec ceux non anonymisés de la même table ainsi que ceux anonymisés d'une table parente. En particulier, on peut avoir :
 
 - une date de naissance dans la table `salaries` postérieure à la date de début d'un contrat dans la table `contrats` ;
 - le genre du NIR contradictoire avec le genre présumé à l'aide du prénom ;
 - un même individu avec deux noms, prénoms, dates et lieux de naissances différents entre ETT et ETU ;
-- un établissement dont l'entreprise parente a un SIREN différent des 9 premiers chiffres de sont SIRET.
+- un établissement dont l'entreprise parente a un SIREN différent des 9 premiers chiffres de son SIRET.
 
 Le dernier point ne pose pas de problème à date car le SIREN n'est pas exploité par les *clients* de la base.
 
 #### Comment étendre le périmètre de données ?
 
-TO DO : mettre lien vers pipeline
+La documentation se trouve [ici](../integration/pipeline/dags_et_orchestrateurs.md#anonymous_integration).
 
 ### Une base de `test` avec des données réelles
 
@@ -252,7 +252,7 @@ La base de test a un objectif double :
 * pouvoir tester ses développements sur une faible volumétrie de données ;
 * vérifier le comportement des fonctions d'intégration (tests unitaires des fonctions d'intégration).
 
-Pour ce faire, elle suit la structure commune des bases Champollion mais possède un schéma `test` supplémentaire. Il répertorie les tables contenant les données *attendues*, c'est-à-dire les tables telles qu'elles devraient être si l'intégration des données a un comportement normal. Ces tables sont nomenclaturées avec le préfixe `expected` :
+Pour ce faire, elle suit la structure commune des bases Champollion mais possède un schéma `test` supplémentaire. Il répertorie les tables contenant les données *attendues*, c'est-à-dire les tables telles qu'elles doivent être si l'intégration des données a un comportement normal. Ces tables sont nomenclaturées avec le préfixe `expected` :
 
 ```
 .
@@ -274,15 +274,15 @@ Pour ce faire, elle suit la structure commune des bases Champollion mais possèd
     └── expected_salaries
 ```
 
-Les données intégrées dans cette base sont des données réelles qui ont été sélectionnées afin de tester les scripts d'intégration sur des cas particuliers. Le fichier rassemblant toutes les informations nécessaires à la construction de cette base de test est `source_file_test_data.xlsx` (TO DO : mettre lien). Pour plus d'informations sur la création de cette base `test`, voir TO DO mettre lien pipeline.
+Les données intégrées dans cette base sont des données réelles qui ont été sélectionnées afin de tester les scripts d'intégration sur des cas particuliers. Le fichier rassemblant toutes les informations nécessaires à la construction de cette base de test est [`dsn_processing/resources/source_file_test_data.xlsx`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/resources/source_file_test_data.xlsx). Pour plus d'informations sur la création de cette base `test`, voir la [documentation](../integration/pipeline/dags_et_orchestrateurs.md#test_integration) à ce sujet.
 
-La table `expected_contrats_comparisons` sert à connaître le type de comparaison à effectuer en ce qui concerne les champs `contrats.date_fin_effective` et `contrats.statut_fin`. Si `expected_contrats_comparison.date_fin_effective_comparison` est égal à:
-* 1 alors la date de fin effective *obtenue* doit être strictement égale à celle *attendue* (idem pour le statut);
-* 2, elle doit être supérieure ou égal à celle *attendue* (idem pour le statut);
+La table `expected_contrats_comparisons` sert à connaître le type de comparaison à effectuer en ce qui concerne les champs `contrats.date_fin_effective` et `contrats.statut_fin`. Si `expected_contrats_comparison.date_fin_effective_comparison` est égal à :
+* 1, la date de fin effective *obtenue* doit être strictement égale à celle *attendue* (idem pour le statut) ;
+* 2, elle doit être supérieure ou égal à celle *attendue* (idem pour le statut) ;
 * ni 1 ni 2, on ne peut pas faire de comparaison (idem pour le statut).
 
 ### Une base de fausses données pour le site vitrine
 
-Une base de fausses données remplie à la main a été mise en place. Le fichier permettant la construction de cette dernière est `source_file_mock_data.xlsx` (TO DO : mettre lien). Il comporte un onglet par table. Les colonnes `Id` doivent être cohérentes entre les tables afin d'assurer la construction d'une base pertinente. Cet fichier de référence peut être enrichi par n'importe quel membre de l'équipe projet. A date, aucune fausse donnée n'a été générée pour la table `activites`.
+Une base de fausses données remplie à la main a été mise en place. Le fichier permettant la construction de cette dernière est [`dsn_processing/resources/source_file_mock_data.xlsx`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/resources/source_file_mock_data.xlsx). Il comporte un onglet par table. Les colonnes `Id` doivent être cohérentes entre les tables afin d'assurer la construction d'une base pertinente. Ce fichier de référence peut être enrichi par n'importe quel membre de l'équipe projet. A date, aucune fausse donnée n'a été générée pour la table `activites`.
 
-Pour plus d'informations sur la création de cette base `mock`, voir TO DO mettre lien pipeline.
+Pour plus d'informations sur la création de cette base `mock`, voir la [documentation](../integration/pipeline/dags_et_orchestrateurs.md#mock_integration) à ce sujet.
