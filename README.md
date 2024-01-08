@@ -41,11 +41,15 @@ Le `PYTHON_LIB_PATH` est le chemin qui pointe sur votre dossier `lib` Python. Si
 
 ### Installer les `requirements.txt`
 
+Pensez à [exporter](#exporter-les-variables-denvironnement) les variables `HTTP_PROXY` et `HTTPS_PROXY` avant de réaliser cette étape. Les valeurs de ces variables sont disponibles [ici](https://msociauxfr.sharepoint.com/:t:/r/teams/EIG71/Documents%20partages/General/Commun/D%C3%A9veloppement/.env.prefilled/.env.dsn_processing.prefilled.txt?csf=1&web=1&e=GchPW6).
+
 ```bash
 pip install -r ${DSN_PROCESSING_REPOSITORY_PATH}/dsn_processing/requirements.txt
 ```
 
 ### Installer `pre-commit`
+
+Pensez à [exporter](#exporter-les-variables-denvironnement) les variables `HTTP_PROXY` et `HTTPS_PROXY` avant de réaliser cette étape. Les valeurs de ces variables sont disponibles [ici](https://msociauxfr.sharepoint.com/:t:/r/teams/EIG71/Documents%20partages/General/Commun/D%C3%A9veloppement/.env.prefilled/.env.dsn_processing.prefilled.txt?csf=1&web=1&e=GchPW6).
 
 ```bash
 cd ${DSN_PROCESSING_REPOSITORY_PATH}/dsn_processing
@@ -54,7 +58,7 @@ pre-commit install
 
 ### Exporter les variables d'environnement
 
-Les variables d'environnement à définir sont répertoriées dans le fichier [.env.example](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/.env.example). Il faut donc créer un fichier `.env.dsn_processing` stocké à la racine de la session par exemple. Un fichier pré-rempli est disponible [ici](https://msociauxfr.sharepoint.com/:t:/r/teams/EIG71/Documents%20partages/General/Commun/D%C3%A9veloppement/.env.prefilled/.env.dsn_processing.prefilled.txt?csf=1&web=1&e=E74wja).
+Les variables d'environnement à définir sont répertoriées dans le fichier [dsn_processing/.env.example](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/.env.example). Il faut donc créer un fichier `.env.dsn_processing` stocké à la racine de la session par exemple. Un fichier pré-rempli est disponible [ici](https://msociauxfr.sharepoint.com/:t:/r/teams/EIG71/Documents%20partages/General/Commun/D%C3%A9veloppement/.env.prefilled/.env.dsn_processing.prefilled.txt?csf=1&web=1&e=E74wja).
 
 Pour exporter les variables de ce fichier, on pourra utiliser la fonction `bash` suivante.
 
