@@ -27,7 +27,7 @@ with DAG(
     catchup=False,
     params={
         "db": Param(
-            default="test",
+            default="champollion",
             description="Database",
             type="string",
             regex="^(champollion|test|mock)$",

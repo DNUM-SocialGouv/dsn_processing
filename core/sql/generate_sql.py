@@ -944,38 +944,9 @@ if __name__ == "__main__":
             "sys.metadata_scripts", freeze=False, encoding="UTF8"
         )
 
-        write_sql_file("init_database", "extract_and_load_metadata_scripts", query)
-
-    # if generate_all or args.file == "extract_and_load_categories_juridiques_insee":
-    #     query = "\n" + get_copy_query(
-    #         "public.categories_juridiques_insee", freeze=False
-    #     )
-
-    #     write_sql_file(
-    #         "init_database", "extract_and_load_categories_juridiques_insee", query
-    #     )
-
-    # if generate_all or args.file == "extract_and_load_conventions_collectives":
-    #     query = "\n" + get_copy_query("public.conventions_collectives", freeze=False)
-
-    #     write_sql_file(
-    #         "init_database", "extract_and_load_conventions_collectives", query
-    #     )
-
-    # if generate_all or args.file == "extract_and_load_motifs_recours":
-    #     query = "\n" + get_copy_query("public.motifs_recours", freeze=False)
-
-    #     write_sql_file("init_database", "extract_and_load_motifs_recours", query)
-
-    # if generate_all or args.file == "extract_and_load_naf":
-    #     query = "\n" + get_copy_query("public.naf", freeze=False)
-
-    #     write_sql_file("init_database", "extract_and_load_naf", query)
-
-    # if generate_all or args.file == "extract_and_load_natures_contrats":
-    #     query = "\n" + get_copy_query("public.natures_contrats", freeze=False)
-
-    #     write_sql_file("init_database", "extract_and_load_natures_contrats", query)
+        write_sql_file(
+            "update_database", "extract_and_load_metadata_scripts", query, True
+        )
 
     if generate_all or args.file == "update_calendar":
         query = """
@@ -2676,7 +2647,6 @@ if __name__ == "__main__":
             """
         DROP SCHEMA IF EXISTS anonymous CASCADE;
         CREATE SCHEMA anonymous;
-        -- grant privilege to do
 
         CREATE TABLE anonymous.selection_etablissements (
             etablissement_key BIGINT NOT NULL,
@@ -2829,4 +2799,28 @@ if __name__ == "__main__":
         )
 
         query = combine_queries(queries)
-        write_sql_file("update_database", "create_anonymous_schema", query)
+        write_sql_file("update_database", "create_anonymous_schema", query, True)
+
+    if generate_all or args.file == "clean_database":
+        query = """
+        DO $$ 
+        DECLARE 
+            table_name text; 
+        BEGIN 
+            FOR table_name IN (SELECT tables.table_name FROM information_schema.tables WHERE table_schema = 'raw') 
+            LOOP 
+                EXECUTE 'TRUNCATE TABLE raw.' || table_name || ' CASCADE'; 
+            END LOOP; 
+        END $$;
+
+        DO $$ 
+        DECLARE 
+            table_name text; 
+        BEGIN 
+            FOR table_name IN (SELECT tables.table_name FROM information_schema.tables WHERE table_schema = 'source') 
+            LOOP 
+                EXECUTE 'TRUNCATE TABLE source.' || table_name || ' CASCADE'; 
+            END LOOP; 
+        END $$;
+        """
+        write_sql_file("monthly_integration", "clean_database", query, True)

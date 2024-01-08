@@ -7,3 +7,4 @@ python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s update
 python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s update_database/update_calendar.sql
 python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s update_database/update_holidays.sql -csf holidays_calendar
 python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s update_database/update_zonage.sql -csf zonage
+python ${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/bash/orchestrator.py -s update_database/extract_and_load_metadata_scripts.sql -csf metadata_scripts

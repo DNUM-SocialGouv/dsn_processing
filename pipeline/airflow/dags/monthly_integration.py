@@ -37,7 +37,7 @@ with DAG(
     dag_id=DAG_ID,
     default_args=default_args,
     description="Monthly integration",
-    schedule_interval=f"0 8 {INTEGRATION_DAY} * *",  # on intègre le 10 de chaque mois à 8h
+    schedule_interval=None,  # f"0 8 {INTEGRATION_DAY} * *",  # on intègre le INTEGRATION_DAY de chaque mois à 8h
     max_active_runs=1,
     start_date=START_DATE,
     template_searchpath=SQL_TEMPLATE_SEARCHPATH,

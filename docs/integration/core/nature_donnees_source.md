@@ -1,13 +1,14 @@
 # Les données source : les déclarations sociales nominatives
 
-La DSN, Déclaration Sociale Nominative, est une déclaration envoyée tous les mois par tous les employeurs (c.a.d toutes les entités ayant des salariés, les indépendants et auto-entrepreneurs ne la remplissent donc pas). Elle contient toutes les informations relatives à la vie professionnelle des salariés : modalités du contrat de travail, heures travaillées, rémunérations, absences, etc. La DSN répond à la [norme Neodes](https://www.net-entreprises.fr/media/documentation/dsn-cahier-technique-2023.1.pdf) qui est mise à jour chaque année. Elle se structure en bloc puis en champ. La lecture du cahier technique de la norme Neodes est un pré-requis pour la pleine compréhension de la suite de la documentation.
+La DSN, Déclaration Sociale Nominative, est une déclaration envoyée tous les mois par tous les employeurs (c.à.d toutes les entités ayant des salariés, les indépendants et auto-entrepreneurs ne la remplissent donc pas). Elle contient toutes les informations relatives à la vie professionnelle des salariés : modalités du contrat de travail, heures travaillées, rémunérations, absences, etc. La DSN répond à la [norme Neodes](https://www.net-entreprises.fr/media/documentation/dsn-cahier-technique-2023.1.pdf) qui est mise à jour chaque année. Elle se structure en bloc puis en champ. La lecture du cahier technique de la norme Neodes est un pré-requis pour la pleine compréhension de la suite de la documentation.
 
-On ne s'intéresse qu'aux DSN mensuelles, les DSN
+On ne s'intéresse qu'aux DSN mensuelles, les DSN signal reprise travail, signal fin de contrat, signal arrêt travail, signal fin contrat unique et signal amorçage ne sont pas prises en compte.
+
 Dans la suite de cette documentation, on définit l'objectif de la mise en qualité de la DSN et on explicite certains points de la norme Neodes qui sont particulièrement importants pour la mise en qualité de la DSN.
 
 ## DSN *brute* vs DSN *mise en qualité*
 
-La DSN *brute* correspond aux déclarations DSN structurées dans une base contenant les données telles que déclarées. A contrario, la DSN *mise en qualité* a fait l'objet de traitements qui rendent l'information plus synthétique et cohérente. On liste ci-dessous les différences : 
+La DSN *brute* correspond aux déclarations DSN enregistrées dans une base contenant les données telles que déclarées. A contrario, la DSN *mise en qualité* a fait l'objet de traitements qui rendent l'information plus synthétique et cohérente. On liste ci-dessous les différences : 
 
 |                                                                                    | DSN *brute* | DSN *mise en qualité* |
 |------------------------------------------------------------------------------------|-------------|-----------------------|
@@ -15,7 +16,7 @@ La DSN *brute* correspond aux déclarations DSN structurées dans une base conte
 | Informations uniquement déclaratives                                               | Oui         | Non                   |
 | Chaînage mensuel des informations                                                  | Non         | Oui                   |
 | Unicité des éléments (entreprises, établissements, salariés, contrats, etc.)       | Non         | Oui                   |
-| Prise en compte des blocs de changement d'informations                             | Non         | Oui                   |
+| Prise en compte des blocs de changements d'informations                             | Non         | Oui                   |
 | Allocation des salariés et contrats d'intérim vers les établissements utilisateurs | Non         | Oui                   |
 | Suppression des données trop anciennes                                             | Non         | Oui                   |
 
@@ -24,7 +25,7 @@ La DSN *brute* correspond aux déclarations DSN structurées dans une base conte
 >
 > En base DSN *brute*, la table des salariés comportera trois lignes avec Yolande DURAND et deux lignes avec Yolande THOMAS. De plus, la table des contrats comportera 5 lignes CDD, trois au nom de DURAND et deux au nom de THOMAS. Pour finir, dans une table recensant les fins de contrats, il y aura la mention que le CDD de Mme THOMAS a fini le 15 mai.
 >
-> En base DSN *mise en qualité*, la table des salariés ne contiendra qu'une ligne au nom de Yolande THOMAS avec un CDD terminé le 15 mai.
+> En base DSN *mise en qualité*, la table des salariés ne contiendra qu'une ligne au nom de Yolande THOMAS associée un CDD terminé le 15 mai dans la table des contrats.
 >
 
 A noter que le terme de DSN *brute* est un abus de langage dans le sens où la *vraie DSN brute* est traitée en amont par les organismes qui la réceptionnent directement des employeurs sous format numérique non structuré.
@@ -43,31 +44,43 @@ On appelle *donnée identifiante*, une information qui permet, couplée à d'aut
 - Numéro du contrat (S21.G00.40.009) → champ obligatoire + CCH-12 (unicité du numéro de contrat dans un établissement et pour un individu) ;
 - Date de début du contrat (S21.G00.40.001) → champ obligatoire.
 
-A noter que le NTT, numéro technique temporaire (S21.G00.30.020), peut être utilisé comme identifiant en cas d'absence de NIR. C'est un numéro temporaire pour les individus qui n'ont pas la nationalité française. Néanmoins, ce champ est très mal rempli de la part des entreprises donc son utilisation est déconseillé.
+A noter que le NTT, numéro technique temporaire (S21.G00.30.020), peut être utilisé comme identifiant en cas d'absence de NIR. C'est un numéro temporaire pour les individus qui n'ont pas la nationalité française. Néanmoins, ce champ est très mal rempli de la part des entreprises donc son utilisation est déconseillée.
 
-De plus, dans la base DSNP3, les versions certifiées par la SNGI des NIR, noms de famille, prénoms et dates de naissance des salariés sont disponibles. N'ayant pas constaté une qualité de données hautement supérieur aux informations non certifiées, et souhaitant collés aux déclarations des établissements, la base Champollion exploite les versions non certifiées.
+De plus, dans la base DSNP3, les versions certifiées par la SNGI des NIR, noms de famille, prénoms et dates de naissance des salariés sont disponibles. N'ayant pas constaté une qualité de données hautement supérieure aux informations non certifiées, la base Champollion exploite les versions non certifiées afin de répertorier les états civils tels que déclarés par les établissements.
 
 ### Déclaration des changements d'informations
 
-Les changements d'information sur les salariés et les contrats sont déclarés dans les blocs S21.G00.31 et S21.G00.41. Les changements relatifs aux contrats et aux salariés sont déclarés dans les blocs dits *changement* de la DSN. Pour déclarer qu'un salarié S a une information I qui, à la date D, est passée de la valeur A à B, l'établissement lors de sa prochaine déclaration déclarera le salarié S avec I=B mais avec également un bloc changement attaché à S qui stipule que I=A jusqu'à la date D. Pour plus d'informations, se référer au [cahier technique de la DSN](https://www.net-entreprises.fr/media/documentation/dsn-cahier-technique-2023.1.pdf).
+Les changements d'information sur les salariés et les contrats sont déclarés dans les blocs S21.G00.31 et S21.G00.41. Les changements relatifs aux contrats et aux salariés sont déclarés dans les blocs dits *changement* de la DSN. Pour déclarer qu'un salarié S a une information I qui, à la date D, est passée de la valeur A à B, l'établissement, lors de sa prochaine déclaration, déclarera le salarié S avec I=B mais avec également un bloc changement attaché à S qui stipule que I=A jusqu'à la date D. Pour plus d'informations, se référer au [cahier technique de la DSN](https://www.net-entreprises.fr/media/documentation/dsn-cahier-technique-2023.1.pdf).
 
 On donne les deux exemples suivants pour les salariés et les contrats : 
 
-| Bloc Individu 	|  	|  	|  	|  	| Bloc Changement Individu 	|  	|
-|---	|---	|---	|---	|---	|---	|---	|
-| Id Individu 	| 1 	|  	|  	|  	| Id Individu 	| 1 	|
-| Nom 	| DURAND 	|  	|  	|  	| Nom 	| THOMAS 	|
-| Prénoms 	| Yolande 	|  	|  	|  	| Date Modification 	| 2021-01-02 	|
-| Date de naissance 	| 16-07-1967 	|  	|  	|  	|  	|  	|
+| Bloc Individu 	|  	|
+|---	|---	|
+| Id Individu 	| 1 	|
+| Nom 	| DURAND 	|
+| Prénoms 	| Yolande 	|
+| Date de naissance 	| 16-07-1967 	|
+
+| Bloc Changement Individu 	|  	|
+|---	|---	|
+| Id Individu 	| 1 	|
+| Nom 	| THOMAS 	|
+| Date Modification 	| 2021-01-02 	|
+
 
 Cela signifie que jusqu'au 2 janvier 2021 la salarié de l'entreprise X, Mme Yolande DURAND née le 16/07/1967 s'appelait Mme Yolande THOMAS.
 
-| Bloc Contrat 	|  	|  	|  	|  	| Bloc Changement Contrat 	|  	|
-|---	|---	|---	|---	|---	|---	|---	|
-| Id Contrat 	| 1 	|  	|  	|  	| Id Contrat 	| 1 	|
-| Numéro 	| 0008 	|  	|  	|  	| Numéro 	| erreur 	|
-| Date de début 	| 2007-01-05 	|  	|  	|  	| Date modification 	| 2021-01-02 	|
-|  	|  	|  	|  	|  	|  	|  	|
+| Bloc Contrat 	|  	|
+|---	|---	|
+| Id Contrat 	| 1 	|
+| Numéro 	| 0008 	|
+| Date de début 	| 2007-01-05 	|
+
+| Bloc Changement Contrat 	|  	|
+|---	|---	|
+| Id Contrat 	| 1 	|
+| Numéro 	| erreur 	|
+| Date modification 	| 2021-01-02 	|
 
 Cela signifie que jusqu'au 2 janvier 2021, le contrat n°1 de l'entreprise X de numéro "0008" et de date de début 2007-01-05 avait comme numéro "erreur".
 
@@ -83,7 +96,7 @@ Ces oublis sont malheureusement assez fréquents et on observe notamment un pic 
 
 #### Cas particulier : changements de montants
 
-Pour effectuer un correctif quant à un montant (financier ou horaire par exemple), un établissement peut déclarer un montant négatif. Par exemple, si un établissement déclare au mois M avoir versé 100 euros le 1er janvier au salarié S et qu'il se rend compte que c'est une erreur, il peut déclarer un montant versé de -100 euros le 1er janvier au salarié S sur sa déclaration du mois M-1.
+Pour effectuer un correctif quant à un montant (financier ou horaire par exemple), un établissement peut déclarer un montant négatif. Par exemple, si un établissement déclare au mois M avoir versé 100 euros le 1er janvier au salarié S et qu'il se rend compte que c'est une erreur, il peut déclarer un montant versé de -100 euros le 1er janvier au salarié S sur sa déclaration du mois M+1.
 
 ### Déclaration de fin de contrat
 
@@ -101,11 +114,11 @@ Le champ quotité de travail du bloc Contrat (S21.G00.40.013) retranscrit quant 
 
 Quotité de travail [S21.G00.40.013] = ∑ (Activité rémunérée [S21.G00.53.002 avec S21.G00.53.001 = 01] + Absence non rémunérée [S21.G00.53.002 avec S21.G00.53.001 = 02])
 
-En réalité, ce n'est pas souvent le cas. Il faut donc manipuler le champ quotité avec prudence, il est davantage un indicateur de la quotité relative de travail (plein temps, mi-temps, etc.) qu'un indicateur du nombre d'heures réellement effectuées.
+En réalité, ce n'est pas souvent le cas. Il faut donc manipuler le champ quotité avec prudence. Il est davantage un indicateur de la quotité relative de travail (plein temps, mi-temps, etc.) grâce à un comparaison avec le champ S21.G00.40.012 (quotité de référence pour la catégorie du salarié) qu'un indicateur du nombre d'heures réellement effectuées.
 
 ### Déclaration des lieux de travail
 
-Le champ Lieu de Travail (S21.G00.40.019) du bloc Contrat renseigne le lieu de travail effectif d'un contrat de travail : le code du chantier, le siret de l'établissement utilisateur, etc. Il arrive même que certaines entreprises déclarent tous leurs contrats sur leur siège social avec comme lieu de travail leurs autres établissements, même si cela n'est pas censé être déclaré comme ceci.
+Le champ Lieu de Travail (S21.G00.40.019) du bloc Contrat renseigne le lieu de travail effectif d'un contrat de travail : le code du chantier, le SIRET de l'établissement utilisateur, etc. Il arrive même que certaines entreprises déclarent tous leurs contrats sur leur siège social avec comme lieu de travail leurs autres établissements, même si cela n'est pas censé être déclaré comme ceci.
 
 #### Cas particulier : salariés intérimaires et contrats d'intérim
 
@@ -119,13 +132,13 @@ Sur le diagramme précédent, seuls les contrats de travail (côté ETT) sont d�
 
 #### Cas particulier : CDI intérimaire
 
-Une ETT peut conclure avec un salarié un CDI intérimaire. Ainsi, ce dernier est employé en CDI par l'ETT et est envoyé chez des ETU dans ce cadre. Pour un CDI intérimaire, il est difficile de reconstruire les contrats de mission entre l'intérimaire et les ETU. En effet, même si le champ du siret de l'ETU est renseigné par l'ETT, il est impossible de savoir sur quelle période le STT a travaillé pour cette ETU.
+Une ETT peut conclure avec un salarié un CDI intérimaire. Ainsi, ce dernier est employé en CDI par l'ETT et est envoyé chez des ETU dans ce cadre. Pour un CDI intérimaire, il est difficile de reconstruire les contrats de mission entre l'intérimaire et les ETU. En effet, même si le champ du SIRET de l'ETU est renseigné par l'ETT, il est impossible de savoir sur quelle période l'intérimaire a travaillé pour cette ETU.
 
 ### Autres
 
 #### Déclarations en fractions
 
-Les établissements peuvent déclarer leurs DSN en fractions. Pour l'exploitation de données *infra-établissement* (relatives aux salariés, contrats, etc.), cela n'a pas d'impact. Par contre, l'utilisation de champs agrégés au niveau des blocs Entreprise et Etablissement tels que le S21.G00.11.008 (effectif de fin de période déclarée de l'établissement) doit fait l'objet d'une étude plus attentive (est-ce qu'il faut sommer les valeurs des différentes fractions ou non ?).
+Les établissements peuvent déclarer leurs DSN en fractions. Pour l'exploitation de données infra-établissement (relatives aux salariés, contrats, etc.), cela n'a pas d'impact. Par contre, l'utilisation de champs agrégés au niveau des blocs Entreprise et Etablissement tels que le S21.G00.11.008 (effectif de fin de période déclarée de l'établissement) doit fait l'objet d'une étude plus attentive (ex : est-ce qu'il faut sommer les valeurs des différentes fractions ou non ?).
 
 #### Gestion des déclarations de type *annule et remplace*
 

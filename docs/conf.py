@@ -40,3 +40,6 @@ html_css_files = [
     "increase_width.css",
 ]
 myst_heading_anchors = 5
+myst_enable_extensions = [
+    "dollarmath",
+]

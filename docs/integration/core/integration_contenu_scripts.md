@@ -2,7 +2,7 @@
 
 ## Tuples identifiants 
 
-L'intégration de données mensuelles dans une base apériodique (c.a.d qui ne fait pas état de découpage temporel des *objets*) nécessite de mapper les données mensuelles vers des lignes nouvelles ou existantes.
+L'intégration de données mensuelles dans une base apériodique (c.à.d qui ne fait pas état de découpage temporel des *objets*) nécessite de mapper les données mensuelles vers des lignes nouvelles ou existantes.
 
 <ins>Définition</ins> : On appelle **objet** tout élément qui est déclaré mensuellement ou infra-mensuellement mais a une existence apériodique.
 
@@ -47,7 +47,7 @@ Dans la base, la clef identifiante correspond dans chaque table au champ `<nom o
 - `contrat_key` dans la table `contrats` : (numéro du contrat + date de début)
 - `mois` dans la table `activites` : mois de l'activité
 
-A noter que le champ `etablissement_key` ne pourrait être que le NIC. Néanmoins, pour des questions d'optimisation de requête, nous avons opté pour le SIRET même si la partie "SIREN" du siret est une information redondante avec l'identifiant généalogique, c'est-à-dire la clef identifiante de l'entreprise.
+A noter que le champ `etablissement_key` ne pourrait être que le NIC. Néanmoins, pour des questions d'optimisation de requête, nous avons opté pour le SIRET même si la partie "SIREN" du SIRET est une information redondante avec l'identifiant généalogique, c'est-à-dire la clef identifiante de l'entreprise.
 
 De plus, à chaque objet, donc à chaque tuple identifiant, correspond un `id`. Dès lors, on définit le **tuple identifiant fonctionnel** tel que `ti(O) = id(P) + ci(O)` avec `id(P)`, l'id du parent.
 
@@ -69,11 +69,11 @@ Les scripts *create* sont au nombre de 4, ils permettent l'initialisation de la 
 
 Dans `create_permanent_tables`, on créé les 5 schémas de la base (`public`, `log`, `raw`, `source`, `sys`) et les tables permanentes dans `public`, `sys` et `log`. 
 
-Les types des colonnes sont spécifiés grâce à la [norme Neodes du cahier technique de la DSN](https://www.net-entreprises.fr/media/documentation/dsn-cahier-technique-2023.1.pdf). En ce qui concerne la nomenclature des colonnes, se référer à la documentation de la base. 
+Les types des colonnes sont spécifiés grâce à la [norme Neodes du cahier technique de la DSN](https://www.net-entreprises.fr/media/documentation/dsn-cahier-technique-2023.1.pdf). En ce qui concerne la nomenclature des colonnes, se référer à la [documentation de la base](../../database/guide_technique_bases_de_donnees.md#conventions). 
 
-Dans chaque table des contraintes `uk_...` servent à assurer l'unicité du tuple identifiant fonctionnel. Les contraintes `vk_...` quant à elle s'assurent de la cohérence du champ `..._key`. De plus, des contraintes `FOREIGN KEY` sont déclarées afin d'assurer la cohérence des données, la suppression d'une contrainte `FOREIGN KEY` est fortement déconseillée et doit faire l'objet d'une étude attentive.
+Dans chaque table, des contraintes `uk_...` servent à assurer l'unicité du tuple identifiant fonctionnel. Les contraintes `vk_...`, quant à elle, s'assurent de la cohérence du champ `..._key`. De plus, des contraintes `FOREIGN KEY` sont déclarées afin d'assurer la consistance des données entre les tables. La suppression d'une contrainte `FOREIGN KEY` est fortement déconseillée et doit faire l'objet d'une étude attentive.
 
-Les contraintes d'unicité sur les tuples identifiants fonctionnels impliquent la création d'un index par défaut sur ce tuple de colonnes, voir la [documentation Postgres](https://www.postgresql.org/docs/current/indexes-unique.html#:~:text=PostgreSQL%20automatically%20creates%20a%20unique,mechanism%20that%20enforces%20the%20constraint.). Si d'autres index doivent être créés pour accélérer les traitements, ils le sont dans ce script. Pour le moment, seul un index sur la colonne `salarie_id` de la table `contrats` a été nécessaire.
+Les contraintes d'unicité sur les tuples identifiants fonctionnels impliquent la création d'un index par défaut sur ce tuple de colonnes, voir la [documentation Postgres](https://www.postgresql.org/docs/current/indexes-unique.html#:~:text=PostgreSQL%20automatically%20creates%20a%20unique,mechanism%20that%20enforces%20the%20constraint.). Si d'autres index doivent être créés pour accélérer les traitements, ils le sont dans ce script. Pour le moment, seul un index sur la colonne `salarie_id` de la table `contrats` a été nécessaire. Pour plus d'informations, voir [la page dédiée](../../database/guide_technique_bases_de_donnees.md#index).
 
 ### `create_integration_tables`
 
@@ -81,24 +81,24 @@ Le script `create_integration_tables` créé les tables d'intégration des sché
 
 ### `create_trigger_logs`
 
-La base possède trois niveaux de log (au niveau de l'intégration, du script et de l'opération). Pour plus d'informations, voir la documentation sur la base (TO DO). Dans le script `create_trigger_logs`, on définit les procédures et fonctions qui vont permettent l'écriture des logs aux niveaux scripts et opérations :
+La base possède trois niveaux de log (au niveau de l'intégration, du script et de l'opération). Pour plus d'informations, voir la [documentation](./integration_structure_scripts.md#tables-de-log) sur les tables de log. Dans le script `create_trigger_logs`, on définit les procédures et fonctions qui vont permettent l'écriture des logs aux niveaux scripts et opérations :
 
 - la procédure `log.log_script` permet, lorsqu'elle est appelée, d'inscrire, dans la table `log.scripts_logs`, l'heure et le nombre de ligne. Cette procédure doit être appelée au début et à la fin de chaque script.
-- la *trigger function* `log_process` permet d'inscrire dans la table `log.processes_logs` le type d'action, l'heure et le nombre de ligne lorsqu'elle est appelée. On la rend valide sur toutes les tables des schémas `public`, `raw` et `source` de telle sorte que dès qu'une action de type `INSERT`, `DELETE`, `UPDATE` et `TRUNCATE` est effectuée sur une table de ces trois schémas, le log soit automatique.
+- la *trigger function* `log.log_process` permet d'inscrire dans la table `log.processes_logs` le type d'action, l'heure et le nombre de lignes lorsqu'elle est appelée. On la rend valide sur toutes les tables des schémas `public`, `raw` et `source` de telle sorte que dès qu'une action de type `INSERT`, `DELETE`, `UPDATE` et `TRUNCATE` est effectuée sur une table de ces trois schémas, le log soit automatique.
 
-De plus, les scripts `integration_log_begin` et `integration_log_end` qui sont appelés au début et à la fin de chaque intégration permettent le logging dans la table `log.integrations_logs`.
+De plus, les scripts `integration_log_begin` et `integration_log_end` qui sont appelés au début et à la fin de chaque intégration permettent l'écriture des logs dans la table `log.integrations_logs`.
 
 ### `create_dag_status_functions`
 
 La fonction `set_status_to_ongoing` créée par le script `create_dag_status_functions` sert à mettre le statut de la base (champ `sys.current_status.status`) à la valeur `ONGOING` au démarrage d'une intégration. Si le statut est déjà à la valeur `ONGOING`, une erreur est levée.
 
-La fonction `set_status_to_success` quant à elle sert à mettre le statut de la base à la valeur `SUCCESS` à la fin d'une intégration réussie.
+La fonction `set_status_to_success`, quant à elle, sert à mettre le statut de la base à la valeur `SUCCESS` à la fin d'une intégration réussie.
 
-Ce script est notamment utile pour l'utilisation de airflow, voir la documentation sur la pipeline.
+Ce script est notamment utile pour l'utilisation de [Airflow](../pipeline/dags_et_orchestrateurs.md#lancer-une-procédure-de-reprise-historique-avec-les-données-réelles-via-airflow).
 
 ## Script d'insertion des données statiques
 
-Les tables dites *statiques* (voir documentation de la base pour plus de détails) sont des tables de données de contexte qui ne font pas l'objet d'intégrations mensuelles. Lorsque les fichiers source sur lesquels les scripts `update` se basent changent (ex : mise à jour des NAF en France), les scripts :
+Les  [tables dites *statiques*](../../database/guide_technique_bases_de_donnees.md#types-des-tables--dynamiques-et-statiques) sont des tables de données de contexte qui ne font pas l'objet d'intégrations mensuelles. Lorsque les fichiers source sur lesquels les scripts `update` se basent changent (ex : mise à jour des NAF en France), les scripts :
 
 - `update_calendar`
 - `update_categories_juridiques_insee`
@@ -110,11 +110,11 @@ Les tables dites *statiques* (voir documentation de la base pour plus de détail
 
 complètent les données existantes.
 
-Les scripts `extract_and_load_metadata` et `update_zonage`, quant à eux, écrasent les données existantes avec la dernière version de leur fichier csv.
+Les scripts `extract_and_load_metadata` et `update_zonage`, quant à eux, écrasent les données existantes avec la dernière version du fichier csv.
 
 ## Scripts *extract*
 
-Les scripts *extract* permettent l'extraction des données brutes dans les [tables *raw*](integration_structure_scripts.md#natures-des-tables-dintégration). Ils sont tous construits grâce à la fonction `get_copy_query` de `core/sql/utils.py`. La plupart des scripts *extract* ont donc la forme suivante :
+Les scripts *extract* permettent l'extraction des données brutes dans les [tables *raw*](integration_structure_scripts.md#natures-des-tables-dintégration). Ils sont tous construits grâce à la fonction `get_copy_query` de `dsn_processing/core/sql/utils.py`. La plupart des scripts *extract* ont donc la forme suivante :
 
 ```sql
 TRUNCATE TABLE table_name CASCADE;
@@ -141,11 +141,11 @@ Les scripts *transform* permettent de sélectionner les colonnes nécessaires, d
 | Script 	| Traitement spécifique 	|
 |---	|---	|
 | `transform_entreprises` 	| * Conversion du SIREN en entier. 	|
-| `transform_etablissements` 	| * Conversion du SIREN et du SIRET en entier.  A noter qu'une fois transformés en entier, les SIREN et SIRET peuvent *perdre* les zéros frontaux (par exemple la string "001234567" devient l'entier 1234567), c'est pourquoi il faut veiller à toujours convertir dans un sens (`CAST ... AS BIGINT`) ou dans l'autre (`TO_CHAR(..., 'fm000000000')` avec `'fm000000000'` correspondant à la taille de la string souhaitée) lorsqu'on compare deux valeurs de types différents. <br>* Inférence du statut de siège social : `COALESCE(nicentre = nic, FALSE)` &rarr; si le NIC du siège social est renseigné et que le NIC de l'établissement est égal au NIC du siège social, alors il s'agit du siège social. 	|
+| `transform_etablissements` 	| * Conversion du SIREN et du SIRET en entiers.  A noter qu'une fois transformés en entiers, les SIREN et SIRET peuvent *perdre* les zéros frontaux (par exemple la string "001234567" devient l'entier 1234567), c'est pourquoi il faut veiller à toujours convertir dans un sens (`CAST ... AS BIGINT`) ou dans l'autre (`TO_CHAR(..., 'fm000000000')` avec `'fm000000000'` correspondant à la taille de la string souhaitée) lorsqu'on compare deux valeurs de types différents. <br>* Inférence du statut de siège social : `COALESCE(nicentre = nic, FALSE)` &rarr; si le NIC du siège social est renseigné et que le NIC de l'établissement est égal au NIC du siège social, alors il s'agit du siège social. 	|
 | `transform_salaries`  	| * Conversion en lettres majuscules (`UPPER`) sans *trailing whitespaces* (`TRIM`) des noms de famille, noms d'usage et prénoms. <br>* Conversion au format `DD-MM-YYYY` de la date de naissance. A noter que l'on utilise pas une fonction de conversion en format date car la date de naissance peut comporter des suites de 9 pour les informations inconnues par l'employeur. Par exemple, si un employeur sait qu'un salarié est né en 1990 mais ne connaît ni le jour ni le mois de naissance de celui-ci, il remplira comme date de naissance 99-99-1990. <br>* Création du champ `salarie_key` qui correspond à `(NIR \| NOM_FAMILLE+PRENOMS+DATE_NAISSANCE)` (exemple : pour un individu sans NIR s'appelant Yolande DURAND née le 16-07-1967, son identifiant `salarie_key` sera `DURANDYolande16-07-1967`). 	|
-| `transform_contrats`  	| * Jointure avec la table `source.source_salaries` pour récupérer l'id de l'établissement (id dans la base de données brute). <br>* Conversion du numéro de contrat en lettres majuscules sans *trailing whitespaces*. <br>* Jointure avec la table `public.postes` (qui a été complétée avant l'exécution de ce script) afin de récupérer l'id du libellé de poste du contrat dans la base. <br>* Sous conditions que le string soit de taille 14 et qu'il ne contienne que des chiffres, conversion en entier du siret de l'établissement utilisateur pour les contrats d'intérim puis jointure avec la table `public.etablissements` pour retrouver l'id correspondant à cet établissement utilisateur. A noter que cette étape nécessite que le script `load_etablissements` soit bien exécuté avant celui-ci. <br>* Création du champ `contrat_key` qui correspond à la concaténation suivante `(NUMERO_CONTRAT + '_' + DATE_DEBUT_CONTRAT)`.|
-| `transform_changements_salaries`  	| * Concaténation des changements fragmentés (voir ci-dessous pour plus d'explications). <br>* Conversion de l'ancien nom de famille et des anciens prénoms en lettres majuscules sans *trailing whitespaces*. <br>* Conversion au format `DD-MM-YYYY` de l'ancienne date de naissance. <br>* Sélection des seules lignes qui comportent des changements relatifs à la clef identifiante. |
-| `transform_changements_contrats` 	| * Concaténation des changements fragmentés (voir ci-dessous pour plus d'explications). <br>* Conversion du siret de l'ancien employeur en entier. <br>* Conversion de l'ancien numéro de contrat en lettres majuscules sans *trailing whitespaces*. <br>* Sélection des seules lignes qui comportent des changements relatifs à la clef identifiante. |
+| `transform_contrats`  	| * Jointure avec la table `source.source_salaries` pour récupérer l'id de l'établissement (id dans la base de données brute). <br>* Conversion du numéro de contrat en lettres majuscules sans *trailing whitespaces*. <br>* Jointure avec la table `public.postes` (qui a été complétée avant l'exécution de ce script) afin de récupérer l'id du libellé de poste du contrat dans la base. <br>* Sous conditions que le string soit de taille 14 et qu'il ne contienne que des chiffres, conversion en entier du SIRET de l'établissement utilisateur pour les contrats d'intérim puis jointure avec la table `public.etablissements` pour retrouver l'id correspondant à cet établissement utilisateur. A noter que cette étape nécessite que le script `load_etablissements` soit bien exécuté avant celui-ci. <br>* Création du champ `contrat_key` qui correspond à la concaténation suivante `(NUMERO_CONTRAT + '_' + DATE_DEBUT_CONTRAT)`.|
+| `transform_changements_salaries`  	| * Concaténation des [changements fragmentés](#concaténation-des-changements-fragmentés). <br>* Conversion de l'ancien nom de famille et des anciens prénoms en lettres majuscules sans *trailing whitespaces*. <br>* Conversion au format `DD-MM-YYYY` de l'ancienne date de naissance. <br>* Sélection des seules lignes qui comportent des changements relatifs à la clef identifiante. |
+| `transform_changements_contrats` 	| * Concaténation des [changements fragmentés](#concaténation-des-changements-fragmentés). <br>* Conversion du SIRET de l'ancien employeur en entier. <br>* Conversion de l'ancien numéro de contrat en lettres majuscules sans *trailing whitespaces*. <br>* Sélection des seules lignes qui comportent des changements relatifs à la clef identifiante. |
 | `transform_fins_contrats`  	| *Aucun traitement spécifique.* |
 | `transform_activites`  	| * Sélection des lignes correspondant à un type de rémunération `002` (Salaire brut soumis à contributions d'Assurance chômage), `017` (Heures supplémentaires ou complémentaires aléatoires) ou `018` (Heures supplémentaires structurelle) et création d'un champ `type_heures` pour distinguer les heures rémunérées des heures non rémunérées et des heures supplémentaires. <br>* Jointures avec les tables `raw.raw_remunerations`, `raw.raw_versements`, `raw.raw_contrats` pour récupérer l'id du contrat concerné par les heures déclarées. <br>* Conversion du volume horaire en heures selon l'unité de mesure déclarée. |
 
@@ -153,7 +153,7 @@ A noter qu'il n'existe pas de script `transform_postes` par souci de simplicité
 
 ### Concaténation des changements fragmentés
 
-La déclaration de changements simultanés de données identifiantes doit faire l'objet d'un seul et même bloc changement (cf cahier technique de la DSN). Malheureusement, tous les établissements ne respectent pas cette norme. Ainsi, si un établissement déclare au mois M, une salariée, Mme Yolande DURAND née le 16/07/1967, telle que : 
+La déclaration de changements simultanés de données identifiantes doit faire l'objet d'un seul et même bloc changement (cf section 2.1.2.3 du cahier technique de la DSN). Malheureusement, tous les établissements ne respectent pas cette norme. Ainsi, si un établissement déclare au mois M, une salariée, Mme Yolande DURAND née le 16/07/1967, telle que : 
 
 | Id Salarié 	| Nom 	| Prénoms 	| Date de naissance 	|
 |---	|---	|---	|---	|
@@ -203,23 +203,23 @@ Dès lors, il nous faut *concaténer* la déclaration de changements (2) en déc
 | 6 	| 1 	|  	| Brigitte 	| 01-01-1980 	| une Brigitte DURAND née le 01/01/1980 	|
 | 7 	| 1 	| THOMAS 	| Brigitte 	| 01-01-1980 	| une Brigitte THOMAS née le 01/01/1980 	|
 
-Ces opérations de concaténation des changements fragmentés par les scripts `transform_changements_salaries` et `transform_changements_contrats` sont testées de manière ad-hoc dans les tests unitaires (TO DO : mettre lien doc) par la fonction `test_data_augmentation_keys_changes` du fichier `tests.py` (TO DO mettre lien git).
+Ces opérations de concaténation des changements fragmentés par les scripts `transform_changements_salaries` et `transform_changements_contrats` sont testées de manière ad-hoc dans les [tests unitaires](../pipeline/dags_et_orchestrateurs.md#vérification-de-la-mise-en-qualité-des-données-tests-unitaires) par la [fonction `test_data_augmentation_keys_changes`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/tests/tests.py#L223) du fichier `dsn_processing/tests/tests.py`.
 
 ## Scripts *load*
 
 ### Appariement
-Comme leurs noms l'indiquent, les scripts *load* permettent de charger les données arrivantes dans les tables existantes en base. Ils implémentent toute la logique d'appariement. On appelle ici appariement le procédé suivant :
+Comme leurs noms l'indiquent, les scripts *load* permettent de charger les données arrivantes dans les tables existantes en base. Ils implémentent toute la logique d'appariement. On appelle appariement, le procédé suivant :
 
 ```
-Soit un *objet* O entrant (entreprise, établissement, salarié, contrat, etc.).
+Soit un objet O entrant (entreprise, établissement, salarié, contrat, etc.).
 
 On teste si O existe déjà en base grâce à son tuple identifiant fonctionnel. 
 |
 └─── Si oui, on met à jour ses données non identifiantes.
-└─── Si non, on insert ce nouvel objet.
+└─── Si non, on insère ce nouvel objet.
 ```
 
-A noter qu'une des caractéristiques centrales de la base est la non-historisation des changements. Si un objet change de valeurs pour la colonne `c` d'un mois sur l'autre, seule la valeur la plus récente va apparaître.
+A noter qu'une des caractéristiques centrales de la base est la non-historisation des changements sur les données non identifiantes. Si un objet change de valeurs pour la colonne `c` d'un mois sur l'autre, seule la valeur la plus récente va apparaître.
 
 L'implémentation de cette étape s'appuie sur la fonction [`MERGE`](https://www.postgresql.org/docs/current/sql-merge.html) de PostgreSQL telle que :
 
@@ -244,22 +244,22 @@ Pour éviter cela, des tables *link* sont maintenues tout au long de l'intégrat
 
 - jointure avec la table *link* correspondant à `P` pour récupérer l'`id` de `P` dans la présente base.
 
-A noter qu'ici l'objet `O` n'a qu'un parent, si ce dernier a également un *grand-parent*, alors le nombre de jointure augmente.
+A noter qu'ici l'objet `O` n'a qu'un parent, si ce dernier a également un *grand-parent*, alors le nombre de jointures augmente.
 
 ### Etape de dé-duplication
 
 La fonction `MERGE` de Postgres ne peut pas fonctionner si les données entrantes comportent des doublons. Dès lors, une étape de dé-duplication des données entrantes est essentielle. Pour chaque table *source*, on sélectionne une seule ligne par tuple identifiant fonctionnel, on choisit la ligne ayant la date de déclaration la plus récente.
 
-### Structure des scripts pour les tables `entreprises`, `établissements`, `salaries`, `contrats`
+### Structure des scripts pour les tables `entreprises`, `etablissements`, `salaries`, `contrats`
 
-La majorité des scripts `load` sont générés par les fonctions python `get_grandparent_load_query`, `get_parent_load_query`, `get_child_load_query` du fichier `core/sql/utils.sql`.
+La majorité des scripts `load` sont générés par les fonctions python `get_grandparent_load_query`, `get_parent_load_query`, `get_child_load_query` du fichier `dsn_processing/core/sql/utils.sql`.
 
-Comme leurs noms l'indiquent, elles correspondent aux différents degrés de généalogie, c.a.d au nombre de parents au-dessus d'eux. Ainsi : 
+Comme leurs noms l'indiquent, elles correspondent aux différents degrés de généalogie, c.à.d au nombre de parents au-dessus d'eux. Ainsi : 
 
 | Table        | Degré        |
 |---------------|---------------|
 | `entreprises`    | grandparent |
-| `établissements` | parent       |
+| `etablissements` | parent       |
 | `salaries`       | parent (car la construction de la base fait qu'elle hérite directement du SIRET [établissement] et non du SIREN [entreprise] et du NIC [établissement])       |
 | `contrats`      | child      |
 
@@ -301,11 +301,11 @@ On remarquera qu'on effectue deux fois l'étape de link car cette dernière est 
 
 ### Autres scripts
 
-Le script `load_postes` implémente une information de `transform` (libellés passés en majuscules sans *trailing whitespace*) mais ne fait rien d'autre que du chargement de données sans logique d'appariement.
+Le script `load_postes` comprend une opération de type `transform` (libellés passés en majuscules sans *trailing whitespace*) mais ne fait rien d'autre que du chargement de données sans logique d'appariement.
 
-Le script `load_activites`, quant à lui, est plus complexe que les autres scripts puisqu'il permet de recouvrer les informations sur les volumes d'activités en effectuant des découpages ou des regroupements temporels. Pour en savoir plus sur les déclarations de volumes horaires, se référer au fichier [Les données source : les déclarations sociales nominatives](nature_donnees_source.md#déclaration-des-heures-travaillées).
+Le script `load_activites`, quant à lui, est plus complexe que les autres scripts puisqu'il permet de recouvrer les informations sur les volumes d'activités en effectuant des découpages ou des regroupements temporels. Pour en savoir plus sur les déclarations de volumes horaires, se référer  à la [documentation](./nature_donnees_source.md#déclaration-des-heures-travaillées) sur les heures travaillées en DSN.
 
-On cherche à *redistribuer* les volumes d'activité déclarés sur des périodes quelconques vers chaque mois calendaire. Pour ce faire, on *découpe* chaque ligne d'activité en autant de lignes que de mois calendaires concernés. Par exemple, l'activité suivante : 
+On cherche à redistribuer les volumes d'activité déclarés sur des périodes quelconques vers chaque mois calendaire. Pour ce faire, on découpe chaque ligne d'activité en autant de lignes que de mois calendaires concernés. Par exemple, l'activité suivante : 
 
 | Début de la période de paie 	| Fin de la période de paie 	| Volume horaire travaillé 	|
 |---	|---	|---	|
@@ -320,7 +320,7 @@ devient :
 
 La part du volume horaire attribuée à chaque mois correspond à la formule suivante : volume_total x (nombre de jours ouvrés sur ce mois) / (nombre de jours ouvrés sur la période de paie totale). Dans l'exemple précèdent, il y a 26 jours travaillés entre le 25/10/2023 et le 31/11/2023 dont 5 en octobre et 21 en novembre. Le volume horaire attribué au mois d'octobre est donc 160 * (5/26) = 30.8.
 
-De façon similaire aux scripts *load* des autres tables, on met à jour ou on insert ensuite les lignes correspondantes dans la table `activites` grâce à la fonction `MERGE`. A noter néanmoins que dans le cas de la mise à jour des informations (si la ligne existe déjà), on ne remplace pas les valeurs pré-existantes mais on les somme. Dès lors, si, dans la table `activites`, un contrat a 10 heures standards rémunérées sur le mois M et qu'une nouvelle déclaration fait état de 30 heures pour ce même contrat sur le mois M, on décomptera désormais 40 heures pour ce contrat sur le mois M.
+De façon similaire aux scripts *load* des autres tables, on met à jour ou on insère ensuite les lignes correspondantes dans la table `activites` grâce à la fonction `MERGE`. A noter néanmoins que dans le cas de la mise à jour des informations (si la ligne existe déjà), on ne remplace pas les valeurs pré-existantes mais on les somme. Dès lors, si, dans la table `activites`, un contrat a 10 heures standards rémunérées sur le mois M et qu'une nouvelle déclaration fait état de 30 heures pour ce même contrat sur le mois M, on décomptera désormais 40 heures pour ce contrat sur le mois M.
 
 ## Scripts *modify*
 
@@ -328,7 +328,7 @@ Les scripts *modify* permettent de modifier les données une fois qu'elles ont �
 
 ### Prise en compte des changements de données identifiantes
 
-Lorsque les données identifiantes (voir section [Tuples identifiants](#tuples-identifiants)) d'une entité changent d'une déclaration à l'autre, ce changement doit faire l'objet d'un [bloc changement](nature_donnees_source.md#déclaration-des-changements-dinformations). Dans les scripts `transform_changements_salaries.sql` et `transform_changements_contrats.sql` documentés plus haut, les changements déclarés par les établissements sont chargés et consolidés dans les tables `source.source_changements_salaries` et `source.source_changements_contrats`. Dans les scripts `modify_changements_salaries` et `modify_changements_contrats`, on exploite ces deux tables afin de *fusionner* les entités (salarié ou contrat) doublonnées. On donne l'exemple théorique ci-dessous :
+Lorsque les [données identifiantes](#tuples-identifiants) d'une entité changent d'une déclaration à l'autre, ce changement doit faire l'objet d'un [bloc changement](nature_donnees_source.md#déclaration-des-changements-dinformations). Dans les scripts `transform_changements_salaries` et `transform_changements_contrats` documentés plus haut, les changements déclarés par les établissements sont chargés et consolidés dans les tables `source.source_changements_salaries` et `source.source_changements_contrats`. Dans les scripts `modify_changements_salaries` et `modify_changements_contrats`, on exploite ces deux tables afin de *fusionner* les entités (salarié ou contrat) doublonnées. On donne l'exemple théorique ci-dessous :
 
 1. Un objet $O$ est déclaré au mois $1$ avec la clef identifiante $ci(O) = A$. Il est donc enregistré dans la table $T$ tel que :
 
@@ -351,7 +351,7 @@ Lorsque les données identifiantes (voir section [Tuples identifiants](#tuples-i
 
 #### Fonctionnement théorique commun aux deux scripts
 
-On considère la variable `X` qui est soit `salaries` soit `contrats`.
+On considère la variable `T` qui est soit `salaries` soit `contrats`.
 
 1. On créé une `map_table` ayant trois colonnes telle que :
 
@@ -364,10 +364,10 @@ contenant respectivement :
 - les id des lignes à conserver (suffixe `_new` dans le code);
 - la date de la modification de la ou les donnée.s identifiante.s.
 
-Pour la remplir, on s'appuie sur la table `source.source_changements_X` dont on fait la jointure avec :
-- la table `source.link_X` pour récupérer l'id de la ligne à conserver ;
-- la table `public.X` pour récupérer les valeurs des données identifiantes de la ligne à conserver, on appelle cette table jointe `X_new`;
-- la table `public.X` pour récupérer l'id de la ligne à supprimer à partir des données identifiantes en utilisant `COALESCE(source_changements_X.data, X_new.data)`. En effet, dans le cas où un bloc changement ne fait pas état d'une ancienne valeur pour toutes les données identifiantes, on prend la valeur actuelle. 
+Pour la remplir, on s'appuie sur la table `source.source_changements_T` dont on fait la jointure avec :
+- la table `source.link_T` pour récupérer l'id de la ligne à conserver ;
+- la table `public.T` pour récupérer les valeurs des données identifiantes de la ligne à conserver, on appelle cette table jointe `T_new`;
+- la table `public.T` pour récupérer l'id de la ligne à supprimer à partir des données identifiantes en utilisant `COALESCE(source_changements_T.data, T_new.data)`. En effet, dans le cas où un bloc changement ne fait pas état d'une ancienne valeur pour toutes les données identifiantes, on prend la valeur actuelle. 
 
 > 
 > Exemple : Si un établissement déclare au mois M, une salariée, Mme Yolande DURAND née le 16/07/1967, telle que : 
@@ -403,9 +403,9 @@ Pour la remplir, on s'appuie sur la table `source.source_changements_X` dont on 
 |   y    |    z   |     2019-01-02    |
 |   z    |    x   |     2019-01-03    |
 
-Pour ce faire on utilise une [CTE recursive](https://www.postgresql.org/docs/current/queries-with.html#QUERIES-WITH-RECURSIVE). L'idée est de détecter tous les cycles de manière récursive. Une fois détectés, on supprime le changement avec la date de modification la plus ancienne. 
+Pour ce faire on utilise une [CTE recursive](https://www.postgresql.org/docs/current/queries-with.html#QUERIES-WITH-RECURSIVE). L'idée est de détecter tous les cycles de manière récursive. Une fois détectés, on supprime le changement ayant la date de modification la plus ancienne. 
 
-Pour l'exemple précédent, on supprime donc la première ligne telle que : 
+Dans l'exemple précédent, on supprime donc la première ligne telle que : 
 
 | id_old | id_new | date_modification |
 | ------ | ------ | ----------------- |
@@ -420,7 +420,7 @@ Pour l'exemple précédent, on supprime donc la première ligne telle que :
 |   b    |    c   |     AAAA-MM-DD    |
 |   c    |    d   |     AAAA-MM-DD    |
 
-Il ne s'agit pas d'un cycle mais bien d'un chemin a devient d si on applique plusieurs fois la matrice des changements. On cherche donc à *pousser au maximum* ces chemins de manière à ce que la table devienne :
+Il ne s'agit pas d'un cycle mais bien d'un chemin, a devient d si on applique plusieurs fois la matrice des changements. On cherche donc à *pousser au maximum* ces chemins de manière à ce que la table devienne :
 
 | id_old | id_new | date_modification |
 | ------ | ------ | ----------------- |
@@ -443,9 +443,9 @@ Ici x devient y mais devient aussi z, c'est absurde. On ne garde que le changeme
 | ------ | ------ | ----------------- |
 |   x    |    z   |     2019-01-02    |
 
-6. Si la table `X` sur laquelle on va appliquer les suppressions de ligne est la table *parente* d'une autre table, alors on répercute les changements sur cette table *fille* (référençant les id de la table `X`). Pour plus d'informations, voir les sections ci-dessous spécifiques à chaque script. Il faut veiller à appliquer ces changements sur les tables *filles* avant de procéder aux changements sur la table *parente* pour ne pas entrer en conflit avec les contraintes `FOREIGN KEY` de la base. Plus aucune référence aux lignes ayant les `id_old` dans la table `X` ne doit être trouvée dans la base.
+6. Si la table `X` sur laquelle on va appliquer les suppressions de lignes est la table *parente* d'une autre table, alors on répercute les changements sur cette table *fille* (référençant les id de la table `T`). Pour plus d'informations, voir les sections ci-dessous spécifiques à chaque script. Il faut veiller à appliquer ces changements sur les tables *filles* avant de procéder aux changements sur la table *parente* pour ne pas entrer en conflit avec les contraintes `FOREIGN KEY` de la base. Plus aucune référence aux lignes ayant les `id_old` dans la table `T` ne doit être trouvée dans la base.
 
-7. On supprime (`DELETE`) les lignes ayant les `id_old` de la `map_table` dans la table `X`.
+7. On supprime (`DELETE`) les lignes ayant les `id_old` de la `map_table` dans la table `T`.
 
 #### `modify_changements_salaries`
 
@@ -527,7 +527,7 @@ Au niveau de l'étape 6, on gère l'impact des changements de la table `salaries
 
 On gère également le cas où deux salariés seraient *supprimés* au profit d'un même salarié et que ces deux lignes à supprimer seraient référencées par des contrats aux mêmes clefs identifiantes.
 
-On applique ensuite les étapes 2 à 5 à la table `source.map_changes_salaries_impact_contrats`. Puis on gère l'impact des changements de la table `contrats` sur la table `activites`. Pour plus de détails sur cette étape, se référer à la section consacrée au script `modify_changements_contrats` qui comporte la même brique.
+On applique ensuite les étapes 2 à 5 à la table `source.map_changes_salaries_impact_contrats`. Puis on gère l'impact des changements de la table `contrats` sur la table `activites`. Pour plus de détails sur cette étape, se référer à la [section suivante](#modify_changements_contrats).
 
 Au final, l'étape 6 correspond aux opérations suivantes sur les tables *filles* de la tables `salaries` :
 
@@ -544,7 +544,7 @@ Au final, l'étape 6 correspond aux opérations suivantes sur les tables *filles
 
 Le script `modify_changements_contrats` suit la structure théorique précédemment décrite. La `map_table` s'appelle `source.map_changes_contrats` et comporte trois colonnes `old_contrat_id`, `new_contrat_id` et `date_modification`.
 
-A l'étape 6, la table `activites` est modifiée en récupercussion des futurs changements sur la table `contrats`. En effet, la table `activites` référence un `contrat_id` donc si une ligne de `contrats` doit être supprimée au profit d'une autre ligne existante, il faut redistribuer les volumes horaires des la table `activites`. Ainsi, pour chaque `new_contrat_id` distinct de la `map_table` et pour chaque mois, on somme les volumes horaires de ce mois pour les `old_contrat_id` correspondants puis, si une ligne pour ce mois existe déjà pour le `new_contrat_id` on y ajoute ces valeurs, sinon on insert une nouvelle ligne.
+A l'étape 6, la table `activites` est modifiée en répercussion des futurs changements sur la table `contrats`. En effet, la table `activites` référence un `contrat_id` donc, si une ligne de `contrats` doit être supprimée au profit d'une autre ligne existante, il faut redistribuer les volumes horaires des la table `activites`. Ainsi, pour chaque `new_contrat_id` distinct de la `map_table` et pour chaque mois, on somme les volumes horaires de ce mois pour les `old_contrat_id` correspondants puis, si une ligne pour ce mois existe déjà pour le `new_contrat_id`, on y ajoute cette somme, sinon on insère une nouvelle ligne.
 
 > Exemple : La table `source.map_changes_contrats` est telle que :
 > 
@@ -552,7 +552,7 @@ A l'étape 6, la table `activites` est modifiée en récupercussion des futurs c
 > | -------------- | -------------- | ----------------- |
 > |      1         |       2        | AAAA-MM-DD        |
 > 
-> et que la table `activites` comporte les lignes suivantes :
+> et la table `activites` comporte les lignes suivantes :
 > 
 > | contrat_id  |  mois      |  heures |
 > | ----------- | ---------- | ------- |
@@ -588,7 +588,7 @@ La date de début d'un contrat reste a priori inchangée dès la première décl
 
 Pour ce faire, le script `modify_debuts_contrats` utilise le champ `siret_ancien_employeur` de la table `source.source_changements_contrats` et vient remplir le champ `date_debut_effective` des contrats qui ont été déclarés comme transférés à l'aide des blocs changement.
 
-Cas particulier : si un contrat est chez l'employeur A passe chez d'autres employeurs et revient chez l'employeur A, alors la date de début effective sera la dernière date de transfert.
+Cas particulier : si un contrat est chez l'employeur A puis passe chez d'autres employeurs et revient chez l'employeur A, alors la date de début effective sera la dernière date de transfert.
 
 La date de début effective n'est pas systématiquement pertinente selon les cas d'usage. Cette information est complémentaire mais **le champ `date_debut` reste la donnée identifiante centrale**.
 
@@ -637,7 +637,7 @@ On identifie les salariés intérimaires à l'aide des critères suivants :
 - salarié appartenant à un établissement ayant le NAF 7820Z (`etablissements.code_naf`) ;
 - salarié ayant au moins un contrat de nature (`contrats.code_nature_contrat`) 03 et avec un champ `etu_id` non nul (champ inféré dans le script `transform_contrats`).
 
-On insert ensuite ces salariés dans le ou les établissement.s utilisateur.s `etu_id` de leurs contrats. S'il existe déjà (par exemple si un établissement utilisateur déclare en DSN ses intérimaires alors qu'il n'y ait pas tenu), on ne l'insert pas (`ON CONFLICT ON CONSTRAINT uk_salarie DO NOTHING`). A noter que le champ booléen `salaries.allocated_from_ett` sert à savoir si ce salarié a été alloué par un ETT.
+On insère ensuite ces salariés dans le ou les établissement.s utilisateur.s `etu_id` de leurs contrats. S'il existe déjà (par exemple si un établissement utilisateur déclare en DSN ses intérimaires alors qu'il n'y ait pas tenu), on ne l'insère pas (`ON CONFLICT ON CONSTRAINT uk_salarie DO NOTHING`). A noter que le champ booléen `salaries.allocated_from_ett` sert à savoir si ce salarié a été alloué par un ETT.
 
 #### `allocate_ctt`
 
@@ -645,9 +645,11 @@ On identifie les contrats d'intérim à l'aide des critères suivants :
 - contrat appartenant à un établissement ayant le NAF 7820Z (`etablissements.code_naf`) ;
 - contrat de nature (`contrats.code_nature_contrat`) 03 et avec un champ `etu_id` non nul (champ inféré dans le script `transform_contrats`).
 
-On insert ensuite ces contrats dans leur.s établissement.s utilisateur.s `etu_id` avec le.s bon.s `salarie_id` issu.s du résultat de `allocate_stt`. S'il existe déjà (par exemple si un établissement utilisateur déclare en DSN ses contrats d'intérim alors qu'il n'y ait pas tenu), on ne l'insert pas (`ON CONFLICT ON CONSTRAINT uk_salarie DO NOTHING`). A noter que le champ `contrats.ett_contrat_id` sert à faire la passerelle vers le contrat d'intérim côté ETT.
+On insère ensuite ces contrats dans leur.s établissement.s utilisateur.s `etu_id` avec le.s bon.s `salarie_id` issu.s du résultat de `allocate_stt`. S'il existe déjà (par exemple si un établissement utilisateur déclare en DSN ses contrats d'intérim alors qu'il n'y ait pas tenu), on ne l'insère pas (`ON CONFLICT ON CONSTRAINT uk_salarie DO NOTHING`). A noter que le champ `contrats.ett_contrat_id` sert à faire la passerelle vers le contrat d'intérim côté ETT.
 
-La seule différence entre le contrat côté ETT et côté ETU est que, lorsqu'il est copié de l'ETT vers l'ETU, on ajoute comme suffixe au numéro du contrat le siret de l'ETT. Cela permet que si une ETU a fait appel à deux ETT différentes pour deux contrats différents mais que ces deux contrats ont le même numéro et la même date de début (donc la même clef identifiante) alors cela ne créé pas de conflit.
+La seule différence entre le contrat côté ETT et côté ETU est que, lorsqu'il est copié de l'ETT vers l'ETU, on ajoute comme suffixe au numéro du contrat le SIRET de l'ETT. Cela permet que si une ETU a fait appel à deux ETT différentes pour deux contrats différents mais que ces deux contrats ont le même numéro et la même date de début (donc la même clef identifiante) alors cela ne créé pas de conflit.
+
+Lien avec la table `activites` : Pour éviter d'augmenter la volumétrie de la table `activites` inutilement, les lignes de cette table ne sont pas dupliquées pour les ctt. Ainsi, si on cherche les volumes d'activité pour un contrat de la table `contrats` dont le champ `contrats.ett_contrat_id` n'est pas nul, il faut utiliser cet id pour faire la jointure avec la table `activites` plutôt que `contrats.contrat_id`. En d'autres termes, la jointure avec la table `activites` doit se baser sur l'id `COALESCE(contrats.ett_contrat_id, contrats.contrat_id)`.
 
 #### `remove_stt`
 
@@ -686,3 +688,7 @@ Le script `monthly_sanity_checks` analyse la cohérence des tables en fin d'int�
 
 - que les champs `etablissement_id` des tables `salaries` et `contrats` sont cohérents ;
 - et que les tables `link` référencent des id existants dans la base.
+
+#### `clean_database`
+
+Supprime les données des tables contenues dans les schéma `raw` et `source` afin d'alléger la base.

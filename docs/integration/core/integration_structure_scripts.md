@@ -4,7 +4,7 @@
 
 ### Natures des tables d'intégration
 
-La base Champollion comporte des tables permanentes (*permanent*) qu'elles soient de natures statiques (tables contextuelles) ou dynamiques (tables mises à jour chaque mois). Pour plus de détails, voir le cahier technique de la base Champollion (TO DO : mettre lien). En complément de ces tables, des tables temporaires sont nécessaires afin d'intégrer de nouvelles données. On distingue quatre types de tables temporaires :
+La base Champollion comporte des tables permanentes qu'elles soient de natures statiques (tables contextuelles) ou dynamiques (tables mises à jour chaque mois). Pour plus de détails, voir le [cahier technique](../../database/guide_technique_bases_de_donnees.md) de la base Champollion. En complément de ces tables, des tables temporaires sont nécessaires afin d'intégrer de nouvelles données. On distingue quatre types de tables temporaires :
 
 - les **tables raw** permettent l'import en base de données brutes à partir de fichiers csv ;
 - les **tables source** sont créées à partir des tables *raw* et permettent le formattage des données brutes ;
@@ -24,26 +24,26 @@ Ainsi, l'import de données suit le schéma suivant :
 Les opérations effectuées sur la base sont logguées à trois niveaux :
 
 - dans la table `log.integrations_logs`, chaque intégration fait l'objet de deux lignes (une `BEGIN` et une `END`) enregistrant l'heure de début et de fin de l'intégration ainsi que le mois de déclaration concerné ;
-- dans la table `log.scripts_logs`, chaque exécution de script SQL est recensée dans deux lignes (une `BEGIN` et une `END`) enregistrant l'heure et le nombre de ligne de la table principalement impactée au début et à la fin d'exécution du script ; 
-- dans la table `log.processes_logs`, sur chaque table, chaque procédure (fonctions `INSERT`, `UPDATE`, `DELETE`, `TRUNCATE`) est répertoriée par deux lignes (une `BEGIN` et une `END`) contenant l'heure et le nombre de ligne de la table au début et à la fin de la procédure.
+- dans la table `log.scripts_logs`, chaque exécution de script SQL est recensée dans deux lignes (une `BEGIN` et une `END`) enregistrant l'heure et le nombre de lignes de la table principalement impactée au début et à la fin de l'exécution du script ; 
+- dans la table `log.processes_logs`, sur chaque table, chaque procédure (fonctions `INSERT`, `UPDATE`, `DELETE`, `TRUNCATE`) est répertoriée par deux lignes (une `BEGIN` et une `END`) contenant l'heure et le nombre de lignes de la table au début et à la fin de la procédure.
 
-La correspondance entre chaque script SQL et sa table principale est issue de la table statique `sys.metadata_scripts`, elle-même alimentée à partir du fichier `metadata_scripts.csv` (TO DO : mettre lien ).
+La correspondance entre chaque script SQL et sa table principale est issue de la table statique `sys.metadata_scripts`, elle-même alimentée à partir du fichier [`dsn_processing/resources/metadata_scripts.csv`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/resources/metadata_scripts.csv).
 
 ### Classification des scripts
 
 #### Axes de classification
 
-Les scripts SQL composant l'ETLM de la base Champollion peuvent être classifiés selon trois dimensions :
+Les scripts SQL composant l'ETLM (Extract-Transform-Load-Modify) de la base Champollion peuvent être classifiés selon trois dimensions :
 -	la famille (aussi appelée dag) qui correspond à la procédure dans lequel il s'inscrit ;
 -	le type qui correspond à l’opération effectuée ;
 -	et la nature qui correspond à la tâche effectuée.
 
 On distingue trois familles principales (dags) de scripts : 
 -	les **scripts `init_database`** relatifs à l'initialisation de la base ;
--   les **scripts `update_database`** relatifs à la mise à jour périodique (annuelle ou sur demande) de la base ;
+-   les **scripts `update_database`** relatifs à la mise à jour périodique (annuelle ou sur demande) des informations statiques de la base ;
 -	les **scripts `monthly_integration`** qui encodent toutes les opérations nécessaires pour importer mensuellement des données.
 
-Chaque famille de script fait l'objet d'un dossier spécifique dans `core/sql/`.
+Chaque famille de script fait l'objet d'un dossier spécifique dans `dsn_processing/core/sql/`.
 
 De plus, il existe deux types de scripts :
 -	les **processing (P) scripts** : ils encodent une action effectuée sur la base sans import de données.
@@ -110,7 +110,8 @@ Pour finir, la plupart des scripts peuvent être classifiés selon la nomenclatu
 |  `monthly_integration` | P | M | `allocate_stt`  | 350 | Redistribution des salariés de travail temporaire des ETT vers les ETU.  |
 |  `monthly_integration` | P | M | `allocate_ctt`  | 360 | Redistribution des contrats de travail temporaire des ETT vers les ETU.  |
 |  `monthly_integration` | P | | `monthly_sanity_checks` | 370 | Vérification de tests de cohérence sur la base. |
-|  `monthly_integration` | P | L | `integration_log_end` | 380 | Déclaration de la fin de l'intégration dans la table de logs des intégrations. |
+|  `monthly_integration` | P | | `clean_database` | 380 | Suppression des données des tables des schémas `raw` et `source`. |
+|  `monthly_integration` | P | L | `integration_log_end` | 390 | Déclaration de la fin de l'intégration dans la table de logs des intégrations. |
 
 ## Génération
 
@@ -118,11 +119,11 @@ Pour finir, la plupart des scripts peuvent être classifiés selon la nomenclatu
 
 Les scripts SQL sont générés via Python car cela permet l'utilisation de fonctions génériques. 
 
-**Dès lors, les scripts SQL ne doivent être générés et modifiés que via le fichier `core/sql/generate_sql.py`.**
+**Dès lors, les scripts SQL ne doivent être générés et modifiés que via le fichier `dsn_processing/core/sql/generate_sql.py`.**
 
 #### Utilisation du fichier de génération
 
-Le fichier `core/sql/generate_sql.py` s'utilise de la façon suivante.
+Le [fichier `dsn_processing/core/sql/generate_sql.py`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/core/sql/generate_sql.py) s'utilise de la façon suivante.
 
 ```bash
 usage: generate_sql.py [-h] [-f FILE] [-d DAG] [-v]
@@ -142,7 +143,7 @@ python core/sql/generate_sql.py
 
 #### Modification et ajout de script
 
-Au sein du fichier `core/sql/generate_sql.py`, le code qui permet l'écriture d'un script en particulier est sous la forme :
+Au sein du fichier `dsn_processing/core/sql/generate_sql.py`, le code qui permet l'écriture d'un script en particulier est sous la forme :
 
 ```python
 if generate_all or args.file == <script_name>:
@@ -150,9 +151,9 @@ if generate_all or args.file == <script_name>:
     write_sql_file(<default_dag>, <script_name>, query, to_log=<True/False>)
 ```
 
-Le paramètre `to_log` de la fonction `write_sql_file` permet, s'il est renseigné à `True` d'ajouter les appels aux fonctions de logging au début et à la fin du script.
+Le paramètre `to_log` de la fonction `write_sql_file` permet, s'il est renseigné à `True`, d'ajouter les appels aux fonctions de log au début et à la fin du script.
 
-Les ... font référence soit à une chaîne de caractère encodant une requête SQL soit à une fonction Python qui renvoie une chaîne de caractère encodant une requête SQL. Lorsqu'il s'agit d'une fonction, sauf exception, cette dernière doit être stockée dans le fichier `core/sql/utils.py`. Voir les deux exemples ci-dessous.
+Les ... font référence soit à une chaîne de caractère encodant une requête SQL soit à une fonction Python qui renvoie une chaîne de caractère encodant une requête SQL. Lorsqu'il s'agit d'une fonction, sauf exception, cette dernière doit être stockée dans le fichier `dsn_processing/core/sql/utils.py`. Voir les deux exemples ci-dessous.
 
 *Génération d'un script via une chaîne de caractère.*
 
@@ -168,12 +169,12 @@ if generate_all or args.file == "create_test":
     create_table('test')
     write_sql_file("create_dag", "create_test", query, to_log=True)
 
-# dans le fichier core/sql/utils.py 
+# dans le fichier dsn_processing/core/sql/utils.py 
 def create_table(name):
     return  f"""CREATE TABLE {name} (id INTEGER PRIMARY KEY, field TEXT);"""
 ```
 
-Une fois les modifications du fichier `core/sql/generate_sql.py` effectuées, il faut re-générer l'ensemble des scripts impactés ou tout re-générer.
+Une fois les modifications du fichier `dsn_processing/core/sql/generate_sql.py` effectuées, il faut re-générer l'ensemble des scripts impactés ou tout re-générer.
 
 ### Standards SQL - linter
 
