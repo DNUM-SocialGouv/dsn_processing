@@ -61,7 +61,7 @@ Ces dags Bash peuvent ensuite être appelés directement en lignes de commande :
 ```bash
 bash pipeline/bash/dags/init_database.sh
 bash pipeline/bash/dags/monthly_integration.sh <year> <month> <folder_type>
-bash pipeline/bash/dags/update_static_files.sh <year>
+bash pipeline/bash/dags/update_static_files.sh <year at format YY>
 bash pipeline/bash/dags/historical_integration.sh <start_year> <end_date> <folder_type>
 bash pipeline/bash/dags/test_integration.sh
 bash pipeline/bash/dags/mock_integration.sh
@@ -175,7 +175,7 @@ La liste des DAGs disponibles est la suivante :
 | init_database | Initialisation de la base de données. | NA | [x](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/bash/dags/init_database.sh) | [x](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/dags/init_database.py) |
 | monthly_integration | Intégration mensuelle de données. | Le 10 de chaque mois après [réception des données source](import_et_acces_donnees_source.md#planning-des-imports). | [x](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/bash/dags/monthly_integration.sh) | [x](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/dags/monthly_integration.py) |
 | update_static_files | Mise à jour des fichiers de contexte, dits fichiers statiques. | Une fois par an. | [x](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/bash/dags/update_static_files.sh) | [x](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/dags/update_static_files.py) |
-| update_database | Mise à jour des tables contextuelles, dites statiques. | Une fois par an. | [x](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/bash/dags/update_database.sh) | [x](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/dags/update_database.py) |
+| update_database | Mise à jour des tables contextuelles, dites statiques. | Une fois par an. | [x](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/bash/dags/update_database.sh) | |
 | historical_integration | Intégration successive de plusieurs mois de données. | NA | [x](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/bash/dags/historical_integration.sh) | [x](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/dags/historical_integration.sh) (via un fichier bash) |
 | test_integration | Intégration de test. | NA |  [x](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/bash/dags/test_integration.sh) |  |
 | mock_integration | Intégration des données mockées. | NA | [x](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/bash/dags/mock_integration.sh) | [x](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/dags/mock_integration.py) |
@@ -219,11 +219,11 @@ La durée d'exécution du DAG `monthly_integration` augmente avec la taille de l
 
 ### `update_static_files`
 
-/!\ Ce DAG nécessite une connexion internet. Ce dernier ne peut donc pas fonctionner sur toutes les machines.
+/!\ Ce DAG nécessite une connexion internet. Ce dernier ne peut donc pas fonctionner sur toutes les machines. De plus, les variables de proxy, `HTTP_PROXY` et `HTTPS_PROXY` doivent être définies.
 
 Le DAG fait appel aux fonctions Python des fichiers [`dsn_processing/core/python/raw_files_management/generate_static_table_files.py`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/core/python/raw_files_management/generate_static_table_files.py) et [`dsn_processing/core/python/raw_files_management/generate_holiday_calendar.py`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/core/python/raw_files_management/generate_holiday_calendar.py) du dossier `dsn_processing/core/python/raw_files_management`. Ces fonctions accèdent aux données source sur internet et la bonne exécution du DAG requiert donc une connexion internet.
 
-A noter que, pour ce DAG, la version d'Airflow ne se base pas sur celle Bash pour des raisons de simplicité d'implémentation de la fonction `register_tasks`.
+Les fichiers sont envoyés vers le dossier défini par la variable `WORKFLOW_SOURCES_DATA_PATH`.
 
 ### `update_database`
 
@@ -257,7 +257,9 @@ Ces onglets sont remplis à la main par l'équipe de développement. A noter que
 
 #### Création des échantillons de fichiers bruts
 
-A partir du fichier de référence  [`dsn_processing/resources/source_file_test_data.xlsx`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/resources/source_file_test_data.xlsx), on génère les échantillons de fichiers bruts DSN. Cette opération est effectuée par la fonction `generate_input_data_files` du fichier [`dsn_processing/core/python/raw_files_management/generate_test_data_files.py`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/core/python/raw_files_management/generate_test_data_files.py). L'opération est assez lourde puisqu'elle nécessite de :
+A partir du fichier de référence  [`dsn_processing/resources/source_file_test_data.xlsx`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/resources/source_file_test_data.xlsx), on génère les échantillons de fichiers bruts DSN.
+
+Cette opération est effectuée par la fonction `generate_input_data_files` du fichier [`dsn_processing/core/python/raw_files_management/generate_test_data_files.py`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/core/python/raw_files_management/generate_test_data_files.py). L'opération est assez lourde puisqu'elle nécessite de :
 
 - décompresser les archives de données brutes,
 - et sélectionner toutes les données liées directement ou indirectement aux `IdContrat` renseignés dans l'onglet *Input*.
@@ -268,7 +270,9 @@ Les fichiers ainsi générés sont stockés dans le dossier correspondant à la 
 
 #### Création des fichiers de comparaison
 
-A partir du document de référence `dsn_processing/resources/source_file_test_data.xlsx`, on génère également les fichiers `csv` correspondant aux tables *expected*. Cette étape est implémentée par la fonction `generate_expected_data_files` du fichier [`dsn_processing/core/python/raw_files_management/generate_test_data_files.py`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/core/python/raw_files_management/generate_test_data_files.py).
+A partir du document de référence `dsn_processing/resources/source_file_test_data.xlsx`, on génère également les fichiers `csv` correspondant aux tables *expected*.
+
+Cette étape est implémentée par la fonction `generate_expected_data_files` du fichier [`dsn_processing/core/python/raw_files_management/generate_test_data_files.py`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/core/python/raw_files_management/generate_test_data_files.py).
 
 Les fichiers ainsi générés sont stockés dans le dossier correspondant à la variable d'environnement `WORKFLOW_SOURCES_DATA_PATH`.
 
@@ -307,7 +311,9 @@ On pourra également les lancer avec cette même commande en dehors du DAG `test
 
 ### `mock_integration`
 
-Le fichier à l'origine de la construction de la base mockée est [`dsn_processing/resources/source_file_mock_data.xlsx`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/resources/source_file_mock_data.xlsx). Il comprend un onglet par table dynamique de la base. Le DAG `mock_integration` vient donc :
+Le fichier à l'origine de la construction de la base mockée est [`dsn_processing/resources/source_file_mock_data.xlsx`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/resources/source_file_mock_data.xlsx).
+
+Il comprend un onglet par table dynamique de la base. Le DAG `mock_integration` vient donc :
 
 - exporter la variable d'environnement `POSTGRES_DB` à la valeur `mock` ;
 - convertir les données de cet excel en fichiers `csv` stockés dans `WORKFLOW_SOURCES_DATA_PATH` à l'aide de la fonction `generate_mock_data_files` du fichier [`dsn_processing/core/python/raw_files_management/generate_mock_table_files.py`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/core/python/raw_files_management/generate_mock_table_files.py) ;
@@ -321,7 +327,7 @@ Pour les détails techniques sur la méthode d'anonymisation, se référer au [g
 Sur l'espace Teams, un [excel](https://msociauxfr.sharepoint.com/:x:/r/teams/EIG71/Documents%20partages/General/Commun/D%C3%A9veloppement/P%C3%A9rim%C3%A8tre%20de%20la%20base%20anonymis%C3%A9e%20pour%20les%20devs.xlsx?d=w652861c744a74cd3b11f0cf5431847a4&csf=1&web=1&e=fPbJn8) permet de répertorier les SIRET présents dans le schéma anonymisé. La procédure pour étendre le périmètre de données est la suivante :
 
 1. Le développeur, qui souhaite ajouter le SIRET x au schéma anonymisé, l'ajoute à l'excel avec un commentaire indiquant la raison de sa demande.
-2. Un membre de l'équipe ayant accès au schéma ``public` ouvre une merge request qui permet l'ajout de ce SIRET dans le fichier [`dsn_processing/resources/anonymous_database_selection.csv`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/resources/anonymous_database_selection.csv) délimitant le périmètre des données anonymisées. Il relance ensuite la création du schéma `anonymous` sur la base de son choix, à l'aide du dag [`dsn_processing/pipeline/bash/dags/anonymous_integration.sh`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/bash/dags/anonymous_integration.sh).
+2. Un membre de l'équipe ayant accès au schéma ``public` ouvre une merge request qui permet l'ajout de ce SIRET dans le fichier [`dsn_processing/resources/anonymous_database_selection.csv`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/resources/anonymous_database_selection.csv) délimitant le périmètre des données anonymisées. Il relance ensuite la création du schéma `anonymous` sur la base de son choix, à l'aide du dag [`dsn_processing/pipeline/bash/dags/anonymous_integration.sh`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/bash/dags/anonymous_integration.sh). Attention, le fichier `dsn_processing/resources/anonymous_database_selection.csv` doit être stocké dans le dossier `WORKFLOW_SOURCES_DATA_PATH` donc si `WORKFLOW_SOURCES_DATA_PATH` ne pointe pas vers le dossier `dsn_processing/resources`, il faut copier le fichier dans le dossier renseigné.
 3. Il faut ensuite mettre à jour l'excel de l'espace Teams avec les données issues de la requête SQL suivante : 
 
     ```sql

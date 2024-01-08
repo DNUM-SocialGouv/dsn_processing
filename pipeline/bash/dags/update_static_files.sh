@@ -1,6 +1,6 @@
 set -e
 if [ $# -ne 1 ]; then
-    echo "Usage: $0 <year>"
+    echo "Usage: $0 <year at format YY (ex : 23 for 2023)>"
     exit 1
 fi
 

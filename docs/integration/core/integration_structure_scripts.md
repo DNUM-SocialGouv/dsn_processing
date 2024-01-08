@@ -27,7 +27,7 @@ Les opérations effectuées sur la base sont logguées à trois niveaux :
 - dans la table `log.scripts_logs`, chaque exécution de script SQL est recensée dans deux lignes (une `BEGIN` et une `END`) enregistrant l'heure et le nombre de lignes de la table principalement impactée au début et à la fin de l'exécution du script ; 
 - dans la table `log.processes_logs`, sur chaque table, chaque procédure (fonctions `INSERT`, `UPDATE`, `DELETE`, `TRUNCATE`) est répertoriée par deux lignes (une `BEGIN` et une `END`) contenant l'heure et le nombre de lignes de la table au début et à la fin de la procédure.
 
-La correspondance entre chaque script SQL et sa table principale est issue de la table statique `sys.metadata_scripts`, elle-même alimentée à partir du fichier [`dsn_processing/resources/metadata_scripts.csv`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/resources/metadata_scripts.csv).
+La correspondance entre chaque script SQL et sa table principale est issue de la table statique `sys.metadata_scripts`, elle-même alimentée à partir du fichier [`dsn_processing/resources/metadata_scripts.csv`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/resources/metadata_scripts.csv). Attention, le fichier doit être stocké dans le dossier `WORKFLOW_SOURCES_DATA_PATH` donc si `WORKFLOW_SOURCES_DATA_PATH` ne pointe pas vers le dossier `dsn_processing/resources`, il faut copier le fichier dans le dossier renseigné.
 
 ### Classification des scripts
 
