@@ -15,6 +15,10 @@
                 datenaissance,
                 datedeclaration
             FROM raw.raw_changements_salaries
+            WHERE anciennir IS NOT NULL
+                OR nomfamille IS NOT NULL
+                OR prenoms IS NOT NULL
+                OR datenaissance IS NOT NULL
         ),
 
         round2 AS (

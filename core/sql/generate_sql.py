@@ -1003,6 +1003,10 @@ if __name__ == "__main__":
                 datenaissance,
                 datedeclaration
             FROM raw.raw_changements_salaries
+            WHERE anciennir IS NOT NULL
+                OR nomfamille IS NOT NULL
+                OR prenoms IS NOT NULL
+                OR datenaissance IS NOT NULL
         ),
 
         round2 AS (
@@ -1096,6 +1100,9 @@ if __name__ == "__main__":
                 datedebut,
                 datedeclaration
             FROM raw.raw_changements_contrats
+            WHERE siretetab IS NOT NULL 
+                OR numero IS NOT NULL 
+                OR datedebut IS NOT NULL
         ),
 
         round2 AS (

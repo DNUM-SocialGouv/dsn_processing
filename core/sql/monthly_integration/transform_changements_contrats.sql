@@ -14,6 +14,9 @@
                 datedebut,
                 datedeclaration
             FROM raw.raw_changements_contrats
+            WHERE siretetab IS NOT NULL 
+                OR numero IS NOT NULL 
+                OR datedebut IS NOT NULL
         ),
 
         round2 AS (
