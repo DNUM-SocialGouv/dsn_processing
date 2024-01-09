@@ -226,17 +226,20 @@ def test_data_augmentation_keys_changes(db_conn):
     TRUNCATE TABLE raw.raw_changements_contrats;
 
     INSERT INTO raw.raw_changements_salaries (idindividuchangement, idindividu, datemodification, anciennir, nomfamille, prenoms, datenaissance, datedeclaration, iddeclaration, datechargement, iddatechargement) VALUES (1, 1, '2022-01-01', '9876543211234', NULL, NULL, NULL, '2023-01-01', 20230101, '2023-01-01', 20230101);
-    INSERT INTO raw.raw_changements_salaries (idindividuchangement, idindividu, datemodification, anciennir, nomfamille, prenoms, datenaissance, datedeclaration, iddeclaration, datechargement, iddatechargement) VALUES (2, 1, '2022-01-01', '9876543211234', 'COSSON', NULL, NULL, '2023-01-01', 20230101, '2023-01-01', 20230101);
-    INSERT INTO raw.raw_changements_salaries (idindividuchangement, idindividu, datemodification, anciennir, nomfamille, prenoms, datenaissance, datedeclaration, iddeclaration, datechargement, iddatechargement) VALUES (3, 1, '2022-01-01', '9876543211234', NULL, 'Margot', NULL, '2023-01-01', 20230101, '2023-01-01', 20230101);
-    INSERT INTO raw.raw_changements_salaries (idindividuchangement, idindividu, datemodification, anciennir, nomfamille, prenoms, datenaissance, datedeclaration, iddeclaration, datechargement, iddatechargement) VALUES (4, 1, '2022-01-01', '9876543211234', NULL, NULL, '16991997', '2023-01-01', 20230101, '2023-01-01', 20230101);
+    INSERT INTO raw.raw_changements_salaries (idindividuchangement, idindividu, datemodification, anciennir, nomfamille, prenoms, datenaissance, datedeclaration, iddeclaration, datechargement, iddatechargement) VALUES (2, 1, '2022-01-01', '9876543211234', 'BRUNO', NULL, NULL, '2023-01-01', 20230101, '2023-01-01', 20230101);
+    INSERT INTO raw.raw_changements_salaries (idindividuchangement, idindividu, datemodification, anciennir, nomfamille, prenoms, datenaissance, datedeclaration, iddeclaration, datechargement, iddatechargement) VALUES (3, 1, '2022-01-01', '9876543211234', NULL, 'VERONIQUE', NULL, '2023-01-01', 20230101, '2023-01-01', 20230101);
+    INSERT INTO raw.raw_changements_salaries (idindividuchangement, idindividu, datemodification, anciennir, nomfamille, prenoms, datenaissance, datedeclaration, iddeclaration, datechargement, iddatechargement) VALUES (4, 1, '2022-01-01', '9876543211234', NULL, NULL, '16991977', '2023-01-01', 20230101, '2023-01-01', 20230101);
     INSERT INTO raw.raw_changements_salaries (idindividuchangement, idindividu, datemodification, anciennir, nomfamille, prenoms, datenaissance, datedeclaration, iddeclaration, datechargement, iddatechargement) VALUES (5, 1, '2022-01-01', NULL, 'DURENCEAU', NULL, NULL, '2023-01-01', 20230101, '2023-01-01', 20230101);
     INSERT INTO raw.raw_changements_salaries (idindividuchangement, idindividu, datemodification, anciennir, nomfamille, prenoms, datenaissance, datedeclaration, iddeclaration, datechargement, iddatechargement) VALUES (6, 1, '2022-01-01', NULL, NULL, 'Joséphine', NULL, '2023-01-01', 20230101, '2023-01-01', 20230101);
     INSERT INTO raw.raw_changements_salaries (idindividuchangement, idindividu, datemodification, anciennir, nomfamille, prenoms, datenaissance, datedeclaration, iddeclaration, datechargement, iddatechargement) VALUES (7, 2, '2022-01-01', NULL, NULL, NULL, '06051989', '2023-01-01', 20230101, '2023-01-01', 20230101);
-
+    INSERT INTO raw.raw_changements_salaries (idindividuchangement, idindividu, datemodification, anciennir, nomfamille, prenoms, datenaissance, datedeclaration, iddeclaration, datechargement, iddatechargement) VALUES (8, 2, '2022-01-01', NULL, NULL, 'Elisabeth', '06051990', '2023-01-01', 20230101, '2023-01-01', 20230101);
+    
     INSERT INTO raw.raw_changements_contrats (idcontratchangement, idcontrat, datemodification, siretetab, numero, datedebut, datedeclaration, iddeclaration, datechargement, iddatechargement) VALUES (1, 1, '2022-01-01', '12345678912345', NULL, NULL, '2022-02-01', 20220201, '2022-02-01', 20220201);
     INSERT INTO raw.raw_changements_contrats (idcontratchangement, idcontrat, datemodification, siretetab, numero, datedebut, datedeclaration, iddeclaration, datechargement, iddatechargement) VALUES (2, 1, '2022-01-02', NULL, '001', '2021-07-01', '2022-02-01', 20220201, '2022-02-01', 20220201);
     INSERT INTO raw.raw_changements_contrats (idcontratchangement, idcontrat, datemodification, siretetab, numero, datedebut, datedeclaration, iddeclaration, datechargement, iddatechargement) VALUES (3, 2, '2022-01-01', '123', '000', '2012-01-01', '2022-02-01', 20220201, '2022-02-01', 20220201);
     INSERT INTO raw.raw_changements_contrats (idcontratchangement, idcontrat, datemodification, siretetab, numero, datedebut, datedeclaration, iddeclaration, datechargement, iddatechargement) VALUES (4, 2, '2022-01-02', NULL, NULL, '2015-07-01', '2022-02-01', 20220201, '2022-02-01', 20220201);
+    INSERT INTO raw.raw_changements_contrats (idcontratchangement, idcontrat, datemodification, siretetab, numero, datedebut, datedeclaration, iddeclaration, datechargement, iddatechargement) VALUES (5, 3, '2022-01-02', '12345678912345', NULL, '2015-07-01', '2022-02-01', 20220201, '2022-02-01', 20220201);
+    INSERT INTO raw.raw_changements_contrats (idcontratchangement, idcontrat, datemodification, siretetab, numero, datedebut, datedeclaration, iddeclaration, datechargement, iddatechargement) VALUES (6, 3, '2022-01-02', NULL, 'numero', NULL, '2022-02-01', 20220201, '2022-02-01', 20220201);
     """
 
     db_conn.execute_query(query, commit=True)
@@ -290,6 +293,7 @@ def test_data_augmentation_keys_changes(db_conn):
                 9: 1,
                 10: 1,
                 11: 1,
+                12: 2,
             },
             "ancien_nir": {
                 0: np.nan,
@@ -304,48 +308,52 @@ def test_data_augmentation_keys_changes(db_conn):
                 9: 9876543211234.0,
                 10: 9876543211234.0,
                 11: 9876543211234.0,
+                12: np.nan,
             },
             "ancien_nom_famille": {
                 0: "DURENCEAU",
-                1: "COSSON",
+                1: "BRUNO",
                 2: None,
-                3: "COSSON",
-                4: "COSSON",
+                3: "BRUNO",
+                4: "BRUNO",
                 5: "DURENCEAU",
                 6: None,
-                7: "COSSON",
+                7: "BRUNO",
                 8: None,
                 9: None,
                 10: None,
                 11: None,
+                12: None,
             },
             "anciens_prenoms": {
                 0: "JOSÉPHINE",
                 1: None,
                 2: "JOSÉPHINE",
-                3: "MARGOT",
-                4: "MARGOT",
+                3: "VERONIQUE",
+                4: "VERONIQUE",
                 5: None,
-                6: "MARGOT",
+                6: "VERONIQUE",
                 7: None,
                 8: None,
-                9: "MARGOT",
+                9: "VERONIQUE",
                 10: None,
                 11: None,
+                12: "ELISABETH",
             },
             "ancienne_date_naissance": {
                 0: None,
                 1: None,
                 2: None,
-                3: "16-99-1997",
+                3: "16-99-1977",
                 4: None,
                 5: None,
                 6: None,
-                7: "16-99-1997",
+                7: "16-99-1977",
                 8: "06-05-1989",
-                9: "16-99-1997",
+                9: "16-99-1977",
                 10: None,
-                11: "16-99-1997",
+                11: "16-99-1977",
+                12: "06-05-1990",
             },
         }
     )
@@ -363,21 +371,36 @@ def test_data_augmentation_keys_changes(db_conn):
 
     expected_res_changements_contrats = pd.DataFrame.from_dict(
         {
-            "source_contrat_id": {0: 2, 1: 1, 2: 1, 3: 1, 4: 2},
+            "source_contrat_id": {0: 2, 1: 1, 2: 1, 3: 1, 4: 2, 5: 3, 6: 3, 7: 3},
             "siret_ancien_employeur": {
                 0: np.nan,
                 1: 12345678912345.0,
                 2: np.nan,
                 3: 12345678912345.0,
                 4: 123.0,
+                5: 12345678912345.0,
+                6: np.nan,
+                7: 12345678912345.0,
             },
-            "ancien_numero": {0: None, 1: None, 2: "001", 3: "001", 4: "000"},
+            "ancien_numero": {
+                0: None,
+                1: None,
+                2: "001",
+                3: "001",
+                4: "000",
+                5: None,
+                6: "NUMERO",
+                7: "NUMERO",
+            },
             "ancienne_date_debut": {
                 0: dt.date(2015, 7, 1),
                 1: None,
                 2: dt.date(2021, 7, 1),
                 3: dt.date(2021, 7, 1),
                 4: dt.date(2012, 1, 1),
+                5: dt.date(2015, 7, 1),
+                6: None,
+                7: dt.date(2015, 7, 1),
             },
         }
     )

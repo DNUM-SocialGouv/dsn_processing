@@ -203,7 +203,7 @@ Dès lors, il nous faut *concaténer* la déclaration de changements (2) en déc
 | 6 	| 1 	|  	| Brigitte 	| 01-01-1980 	| une Brigitte DURAND née le 01/01/1980 	|
 | 7 	| 1 	| THOMAS 	| Brigitte 	| 01-01-1980 	| une Brigitte THOMAS née le 01/01/1980 	|
 
-Ces opérations de concaténation des changements fragmentés par les scripts `transform_changements_salaries` et `transform_changements_contrats` sont testées de manière ad-hoc dans les [tests unitaires](../pipeline/dags_et_orchestrateurs.md#vérification-de-la-mise-en-qualité-des-données-tests-unitaires) par la [fonction `test_data_augmentation_keys_changes`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/tests/tests.py#L223) du fichier `dsn_processing/tests/tests.py`.
+Ces opérations de concaténation des changements fragmentés, implémentées par les scripts `transform_changements_salaries` et `transform_changements_contrats`, sont testées de manière ad-hoc dans les [tests unitaires](../pipeline/dags_et_orchestrateurs.md#vérification-de-la-mise-en-qualité-des-données-tests-unitaires) par la [fonction `test_data_augmentation_keys_changes`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/tests/tests.py#L223) du fichier `dsn_processing/tests/tests.py`.
 
 ## Scripts *load*
 
