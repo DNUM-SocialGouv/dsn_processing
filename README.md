@@ -120,3 +120,31 @@ chore(all) : CHAM-506 move data processing code to an independent repo
     git checkout -B dev -t upstream/dev
     git push github-upstream dev
     ```
+
+## Documentation
+
+La documentation est déployée sur l'URL suivante : TO DO.
+
+Le dossier `dsn_processing/code` contient les fichiers de documentation. On génère un site statique à partir de ces derniers grâce à [Sphinx](https://www.sphinx-doc.org/en/master/index.html). Pour ce faire :
+
+1. S'assurer que `sphinx`, `myst-parser` et `sphinx-rtd-theme` sont bien installés :
+
+```bash
+pip show sphinx
+pip show myst-parser
+pip show sphinx-rtd-theme
+```
+
+2. Compiler les fichiers HTML
+
+```bash
+cd dsn_processing/docs
+make html
+```
+
+3. Visualiser le site statique sur le port XXXX
+
+```bash
+cd dsn_processing/docs/_build/html
+python -m http.server XXXX
+```
