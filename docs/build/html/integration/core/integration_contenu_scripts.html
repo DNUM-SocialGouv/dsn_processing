@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contenu des scripts d’intégration &mdash; DSN processing  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/avoid_rolling_tab.css?v=9d8e3617" />
+      <link rel="stylesheet" type="text/css" href="../../_static/increase_width.css?v=a0fc712e" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Mise en oeuvre de l’intégration" href="../pipeline/index.html" />
+    <link rel="prev" title="Structure des scripts d’intégration" href="integration_structure_scripts.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            DSN processing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Sommaire :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../database/index.html">Base(s) de données</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Intégration des données</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Contenu des scripts d’intégration</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="nature_donnees_source.html">Les données source : les déclarations sociales nominatives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_structure_scripts.html">Structure des scripts d’intégration</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Contenu des scripts d’intégration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tuples-identifiants">Tuples identifiants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#scripts-create">Scripts <em>create</em></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#script-d-insertion-des-donnees-statiques">Script d’insertion des données statiques</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#scripts-extract">Scripts <em>extract</em></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#scripts-transform">Scripts <em>transform</em></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#scripts-load">Scripts <em>load</em></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#scripts-modify">Scripts <em>modify</em></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline/index.html">Mise en oeuvre de l’intégration</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DSN processing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Intégration des données</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Contenu des scripts d’intégration</a></li>
+      <li class="breadcrumb-item active">Contenu des scripts d’intégration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/integration/core/integration_contenu_scripts.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="contenu-des-scripts-d-integration">
+<h1>Contenu des scripts d’intégration<a class="headerlink" href="#contenu-des-scripts-d-integration" title="Link to this heading"></a></h1>
+<section id="tuples-identifiants">
+<h2>Tuples identifiants<a class="headerlink" href="#tuples-identifiants" title="Link to this heading"></a></h2>
+<p>L’intégration de données mensuelles dans une base apériodique (c.à.d qui ne fait pas état de découpage temporel des <em>objets</em>) nécessite de mapper les données mensuelles vers des lignes nouvelles ou existantes.</p>
+<p><ins>Définition</ins> : On appelle <strong>objet</strong> tout élément qui est déclaré mensuellement ou infra-mensuellement mais a une existence apériodique.</p>
+<p>Ainsi, les entreprises, les établissements, les salariés, les contrats, etc. sont des objets.</p>
+<p><ins>Définition</ins> : On appelle <strong>tuple identifiant</strong> une combinaison de colonnes qui permet à tout objet d’être identifié de manière unique.</p>
+<p>Ainsi, <strong>la définition des tuples identifiants pour chaque objet de la base est critique</strong>. En base, on utilise les tuples identifiants suivants :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Objet</p></th>
+<th class="head"><p>Tuple identifiant</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Entreprise</p></td>
+<td><p>SIREN</p></td>
+</tr>
+<tr class="row-odd"><td><p>Etablissement</p></td>
+<td><p>SIREN + NIC = SIRET</p></td>
+</tr>
+<tr class="row-even"><td><p>Salarié</p></td>
+<td><p>SIRET, NIR ou (à défaut, nom + prénoms + date de naissance)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Contrat</p></td>
+<td><p>SIRET, NIR ou (à défaut, nom + prénoms + date de naissance), (numéro du contrat + date de début)</p></td>
+</tr>
+<tr class="row-even"><td><p>Activité</p></td>
+<td><p>SIRET, NIR ou (à défaut, nom + prénoms + date de naissance), (numéro du contrat + date de début), mois</p></td>
+</tr>
+</tbody>
+</table>
+<p>On remarque que les tuples identifiants ci-dessus mettent en lumière les liens de dépendance des objets de la base. En effet :</p>
+<ul class="simple">
+<li><p>un établissement n’existe qu’au sein d’une entreprise</p></li>
+<li><p>un salarié n’existe qu’au sein d’un établissement</p></li>
+<li><p>un contrat n’est valable que pour un salarié</p></li>
+<li><p>une activité (volume horaire) n’est valable que pour un contrat</p></li>
+</ul>
+<p>On dit qu’un objet est parent d’un autre lorsque le second n’est défini qu’à travers son appartenance au premier. Les liens hiérarchiques au sein de la base sont les suivants :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parent</p></th>
+<th class="head"><p>Enfant</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>entreprise</p></td>
+<td><p>établissement</p></td>
+</tr>
+<tr class="row-odd"><td><p>établissement</p></td>
+<td><p>salarié</p></td>
+</tr>
+<tr class="row-even"><td><p>salarié</p></td>
+<td><p>contrat</p></td>
+</tr>
+<tr class="row-odd"><td><p>contrat</p></td>
+<td><p>activité</p></td>
+</tr>
+</tbody>
+</table>
+<p><ins>Définition</ins> : Au sein d’un <strong>tuple identifiant</strong>, on distingue la <strong>clef identifiante</strong>, qui correspond aux informations relatives à l’objet considéré directement, et les <strong>identifiants généalogiques</strong> qui concernent les entités parentes de l’objet. On note <code class="docutils literal notranslate"><span class="pre">ti</span></code> les tuples identifiants et <code class="docutils literal notranslate"><span class="pre">ci</span></code> les clefs identifiantes.</p>
+<p><ins>Propriéte</ins> : Soit un objet <code class="docutils literal notranslate"><span class="pre">O</span></code> et son parent <code class="docutils literal notranslate"><span class="pre">P</span></code>. On a <code class="docutils literal notranslate"><span class="pre">ti(O)</span> <span class="pre">=</span> <span class="pre">(ti(P),</span> <span class="pre">ci(O))</span></code>.</p>
+<p>Dans la base, la clef identifiante correspond dans chaque table au champ <code class="docutils literal notranslate"><span class="pre">&lt;nom</span> <span class="pre">objet&gt;_key</span></code> à une exception près. On a :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">entreprise_key</span></code> dans la table <code class="docutils literal notranslate"><span class="pre">entreprises</span></code> : SIREN</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">etablissement_key</span></code> dans la table <code class="docutils literal notranslate"><span class="pre">etablissements</span></code> : SIRET</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">salarie_key</span></code> dans la table <code class="docutils literal notranslate"><span class="pre">salaries</span></code> : NIR ou, si le NIR n’est pas renseigné, (nom + prénoms + date de naissance)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">contrat_key</span></code> dans la table <code class="docutils literal notranslate"><span class="pre">contrats</span></code> : (numéro du contrat + date de début)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mois</span></code> dans la table <code class="docutils literal notranslate"><span class="pre">activites</span></code> : mois de l’activité</p></li>
+</ul>
+<p>A noter que le champ <code class="docutils literal notranslate"><span class="pre">etablissement_key</span></code> ne pourrait être que le NIC. Néanmoins, pour des questions d’optimisation de requête, nous avons opté pour le SIRET même si la partie “SIREN” du SIRET est une information redondante avec l’identifiant généalogique, c’est-à-dire la clef identifiante de l’entreprise.</p>
+<p>De plus, à chaque objet, donc à chaque tuple identifiant, correspond un <code class="docutils literal notranslate"><span class="pre">id</span></code>. Dès lors, on définit le <strong>tuple identifiant fonctionnel</strong> tel que <code class="docutils literal notranslate"><span class="pre">ti(O)</span> <span class="pre">=</span> <span class="pre">id(P)</span> <span class="pre">+</span> <span class="pre">ci(O)</span></code> avec <code class="docutils literal notranslate"><span class="pre">id(P)</span></code>, l’id du parent.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Objet</p></th>
+<th class="head"><p>Tuple identifiant fonctionnel en base</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Entreprise</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">entreprise_key</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Etablissement</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">entreprise_id</span></code>, <code class="docutils literal notranslate"><span class="pre">etablissement_key</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Salarié</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">etablissement_id</span></code>, <code class="docutils literal notranslate"><span class="pre">salarie_key</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Contrat</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">etablissement_id</span></code>, <code class="docutils literal notranslate"><span class="pre">salarie_id</span></code>, <code class="docutils literal notranslate"><span class="pre">contrat_key</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Activité</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">contrat_id</span></code>, <code class="docutils literal notranslate"><span class="pre">mois</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>On remarque que le tuple identifiant fonctionnel d’un contrat comporte une information redondante. En effet, le champ <code class="docutils literal notranslate"><span class="pre">etablissement_id</span></code> n’est pas nécessaire puisque l’information sous-jacente est déjà présente dans <code class="docutils literal notranslate"><span class="pre">salarie_id</span></code>. Néanmoins, il est plus pratique de l’inclure afin d’avoir le lien direct entre les tables <code class="docutils literal notranslate"><span class="pre">contrats</span></code> et <code class="docutils literal notranslate"><span class="pre">etablissements</span></code> plutôt que de devoir systématiquement passer par la table <code class="docutils literal notranslate"><span class="pre">salaries</span></code>.</p>
+</section>
+<section id="scripts-create">
+<h2>Scripts <em>create</em><a class="headerlink" href="#scripts-create" title="Link to this heading"></a></h2>
+<p>Les scripts <em>create</em> sont au nombre de 4, ils permettent l’initialisation de la structure de la base.</p>
+<section id="create-permanent-tables">
+<h3><code class="docutils literal notranslate"><span class="pre">create_permanent_tables</span></code><a class="headerlink" href="#create-permanent-tables" title="Link to this heading"></a></h3>
+<p>Dans <code class="docutils literal notranslate"><span class="pre">create_permanent_tables</span></code>, on créé les 5 schémas de la base (<code class="docutils literal notranslate"><span class="pre">public</span></code>, <code class="docutils literal notranslate"><span class="pre">log</span></code>, <code class="docutils literal notranslate"><span class="pre">raw</span></code>, <code class="docutils literal notranslate"><span class="pre">source</span></code>, <code class="docutils literal notranslate"><span class="pre">sys</span></code>) et les tables permanentes dans <code class="docutils literal notranslate"><span class="pre">public</span></code>, <code class="docutils literal notranslate"><span class="pre">sys</span></code> et <code class="docutils literal notranslate"><span class="pre">log</span></code>.</p>
+<p>Les types des colonnes sont spécifiés grâce à la <a class="reference external" href="https://www.net-entreprises.fr/media/documentation/dsn-cahier-technique-2023.1.pdf">norme Neodes du cahier technique de la DSN</a>. En ce qui concerne la nomenclature des colonnes, se référer à la <a class="reference internal" href="../../database/guide_technique_bases_de_donnees.html#conventions"><span class="std std-ref">documentation de la base</span></a>.</p>
+<p>Dans chaque table, des contraintes <code class="docutils literal notranslate"><span class="pre">uk_...</span></code> servent à assurer l’unicité du tuple identifiant fonctionnel. Les contraintes <code class="docutils literal notranslate"><span class="pre">vk_...</span></code>, quant à elle, s’assurent de la cohérence du champ <code class="docutils literal notranslate"><span class="pre">..._key</span></code>. De plus, des contraintes <code class="docutils literal notranslate"><span class="pre">FOREIGN</span> <span class="pre">KEY</span></code> sont déclarées afin d’assurer la consistance des données entre les tables. La suppression d’une contrainte <code class="docutils literal notranslate"><span class="pre">FOREIGN</span> <span class="pre">KEY</span></code> est fortement déconseillée et doit faire l’objet d’une étude attentive.</p>
+<p>Les contraintes d’unicité sur les tuples identifiants fonctionnels impliquent la création d’un index par défaut sur ce tuple de colonnes, voir la <a class="reference external" href="https://www.postgresql.org/docs/current/indexes-unique.html#:~:text=PostgreSQL%20automatically%20creates%20a%20unique,mechanism%20that%20enforces%20the%20constraint.">documentation Postgres</a>. Si d’autres index doivent être créés pour accélérer les traitements, ils le sont dans ce script. Pour le moment, seul un index sur la colonne <code class="docutils literal notranslate"><span class="pre">salarie_id</span></code> de la table <code class="docutils literal notranslate"><span class="pre">contrats</span></code> a été nécessaire. Pour plus d’informations, voir <a class="reference internal" href="../../database/guide_technique_bases_de_donnees.html#index"><span class="std std-ref">la page dédiée</span></a>.</p>
+</section>
+<section id="create-integration-tables">
+<h3><code class="docutils literal notranslate"><span class="pre">create_integration_tables</span></code><a class="headerlink" href="#create-integration-tables" title="Link to this heading"></a></h3>
+<p>Le script <code class="docutils literal notranslate"><span class="pre">create_integration_tables</span></code> créé les tables d’intégration des schémas <code class="docutils literal notranslate"><span class="pre">raw</span></code> et <code class="docutils literal notranslate"><span class="pre">source</span></code>. Les types des colonnes sont également spécifiés grâce à la <a class="reference external" href="https://www.net-entreprises.fr/media/documentation/dsn-cahier-technique-2023.1.pdf">norme Neodes du cahier technique de la DSN</a>.</p>
+</section>
+<section id="create-trigger-logs">
+<h3><code class="docutils literal notranslate"><span class="pre">create_trigger_logs</span></code><a class="headerlink" href="#create-trigger-logs" title="Link to this heading"></a></h3>
+<p>La base possède trois niveaux de log (au niveau de l’intégration, du script et de l’opération). Pour plus d’informations, voir la <a class="reference internal" href="integration_structure_scripts.html#tables-de-log"><span class="std std-ref">documentation</span></a> sur les tables de log. Dans le script <code class="docutils literal notranslate"><span class="pre">create_trigger_logs</span></code>, on définit les procédures et fonctions qui vont permettent l’écriture des logs aux niveaux scripts et opérations :</p>
+<ul class="simple">
+<li><p>la procédure <code class="docutils literal notranslate"><span class="pre">log.log_script</span></code> permet, lorsqu’elle est appelée, d’inscrire, dans la table <code class="docutils literal notranslate"><span class="pre">log.scripts_logs</span></code>, l’heure et le nombre de ligne. Cette procédure doit être appelée au début et à la fin de chaque script.</p></li>
+<li><p>la <em>trigger function</em> <code class="docutils literal notranslate"><span class="pre">log.log_process</span></code> permet d’inscrire dans la table <code class="docutils literal notranslate"><span class="pre">log.processes_logs</span></code> le type d’action, l’heure et le nombre de lignes lorsqu’elle est appelée. On la rend valide sur toutes les tables des schémas <code class="docutils literal notranslate"><span class="pre">public</span></code>, <code class="docutils literal notranslate"><span class="pre">raw</span></code> et <code class="docutils literal notranslate"><span class="pre">source</span></code> de telle sorte que dès qu’une action de type <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>, <code class="docutils literal notranslate"><span class="pre">DELETE</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code> et <code class="docutils literal notranslate"><span class="pre">TRUNCATE</span></code> est effectuée sur une table de ces trois schémas, le log soit automatique.</p></li>
+</ul>
+<p>De plus, les scripts <code class="docutils literal notranslate"><span class="pre">integration_log_begin</span></code> et <code class="docutils literal notranslate"><span class="pre">integration_log_end</span></code> qui sont appelés au début et à la fin de chaque intégration permettent l’écriture des logs dans la table <code class="docutils literal notranslate"><span class="pre">log.integrations_logs</span></code>.</p>
+</section>
+<section id="create-dag-status-functions">
+<h3><code class="docutils literal notranslate"><span class="pre">create_dag_status_functions</span></code><a class="headerlink" href="#create-dag-status-functions" title="Link to this heading"></a></h3>
+<p>La fonction <code class="docutils literal notranslate"><span class="pre">set_status_to_ongoing</span></code> créée par le script <code class="docutils literal notranslate"><span class="pre">create_dag_status_functions</span></code> sert à mettre le statut de la base (champ <code class="docutils literal notranslate"><span class="pre">sys.current_status.status</span></code>) à la valeur <code class="docutils literal notranslate"><span class="pre">ONGOING</span></code> au démarrage d’une intégration. Si le statut est déjà à la valeur <code class="docutils literal notranslate"><span class="pre">ONGOING</span></code>, une erreur est levée.</p>
+<p>La fonction <code class="docutils literal notranslate"><span class="pre">set_status_to_success</span></code>, quant à elle, sert à mettre le statut de la base à la valeur <code class="docutils literal notranslate"><span class="pre">SUCCESS</span></code> à la fin d’une intégration réussie.</p>
+<p>Ce script est notamment utile pour l’utilisation de <a class="reference internal" href="../pipeline/dags_et_orchestrateurs.html#lancer-une-procedure-de-reprise-historique-avec-les-donnees-reelles-via-airflow"><span class="std std-ref">Airflow</span></a>.</p>
+</section>
+</section>
+<section id="script-d-insertion-des-donnees-statiques">
+<h2>Script d’insertion des données statiques<a class="headerlink" href="#script-d-insertion-des-donnees-statiques" title="Link to this heading"></a></h2>
+<p>Les  <a class="reference internal" href="../../database/guide_technique_bases_de_donnees.html#types-des-tables-dynamiques-et-statiques"><span class="std std-ref">tables dites <em>statiques</em></span></a> sont des tables de données de contexte qui ne font pas l’objet d’intégrations mensuelles. Lorsque les fichiers source sur lesquels les scripts <code class="docutils literal notranslate"><span class="pre">update</span></code> se basent changent (ex : mise à jour des NAF en France), les scripts :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">update_calendar</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">update_categories_juridiques_insee</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">update_conventions_collectives</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">update_holidays</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">update_motifs_recours</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">update_naf</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">update_natures_contrats</span></code></p></li>
+</ul>
+<p>complètent les données existantes.</p>
+<p>Les scripts <code class="docutils literal notranslate"><span class="pre">extract_and_load_metadata</span></code> et <code class="docutils literal notranslate"><span class="pre">update_zonage</span></code>, quant à eux, écrasent les données existantes avec la dernière version du fichier csv.</p>
+</section>
+<section id="scripts-extract">
+<h2>Scripts <em>extract</em><a class="headerlink" href="#scripts-extract" title="Link to this heading"></a></h2>
+<p>Les scripts <em>extract</em> permettent l’extraction des données brutes dans les <a class="reference internal" href="integration_structure_scripts.html#natures-des-tables-d-integration"><span class="std std-ref">tables <em>raw</em></span></a>. Ils sont tous construits grâce à la fonction <code class="docutils literal notranslate"><span class="pre">get_copy_query</span></code> de <code class="docutils literal notranslate"><span class="pre">dsn_processing/core/sql/utils.py</span></code>. La plupart des scripts <em>extract</em> ont donc la forme suivante :</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">TRUNCATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">table_name</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+<span class="k">COPY</span><span class="w"> </span><span class="k">table_name</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">file_name</span>
+<span class="k">WITH</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">FORMAT</span><span class="w"> </span><span class="s1">&#39;csv&#39;</span><span class="p">,</span><span class="w"> </span><span class="c1">-- ce sont des fichiers csv</span>
+<span class="w">  </span><span class="n">HEADER</span><span class="p">,</span><span class="w"> </span><span class="c1">-- la première ligne contient le nom des colonnes</span>
+<span class="w">  </span><span class="k">FREEZE</span><span class="p">,</span><span class="w"> </span><span class="c1">-- améliore la performance mais nécessite que la table ait été créée ou tronquée précédemment</span>
+<span class="w">  </span><span class="k">DELIMITER</span><span class="w"> </span><span class="s1">&#39;;&#39;</span><span class="p">,</span><span class="w"> </span><span class="c1">-- séparateur entre les colonnes</span>
+<span class="w">  </span><span class="n">QUOTE</span><span class="w"> </span><span class="s1">&#39;|&#39;</span><span class="p">,</span><span class="w"> </span><span class="c1">-- symbole encadrant une donnée textuelle</span>
+<span class="w">  </span><span class="k">ENCODING</span><span class="w"> </span><span class="s1">&#39;WIN1252&#39;</span><span class="w"> </span><span class="c1">-- encodage windows</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>On utilise la fonction Postgres <code class="docutils literal notranslate"><span class="pre">COPY</span></code>, cela implique que les données ne transitent pas par un outil tierce (par exemple un orchestrateur python), le fichier csv est directement lu et <em>ingéré</em> par la base de données. En particulier, cela nécessite que l’utilisateur base de données, autrement dit l’<em>user</em> (<code class="docutils literal notranslate"><span class="pre">postgres</span></code> par exemple), ait les droits en lecture sur les fichiers csv concernés. La bonne pratique consiste à ajouter l’<em>user</em> dans le groupe UNIX detenant les fichiers csv. Pour plus d’informations sur la fonction <code class="docutils literal notranslate"><span class="pre">COPY</span></code> de Postgres se référer à la <a class="reference external" href="https://docs.postgresql.fr/16/sql-copy.html">documentation Postgres</a>.</p>
+<p>Pour avoir plus d’informations sur les fichiers bruts en entrée, voir <a class="reference internal" href="../pipeline/import_et_acces_donnees_source.html#format-des-fichiers-de-donnees"><span class="std std-ref">Import et accès aux données source</span></a>.</p>
+</section>
+<section id="scripts-transform">
+<h2>Scripts <em>transform</em><a class="headerlink" href="#scripts-transform" title="Link to this heading"></a></h2>
+<p>Les scripts <em>transform</em> permettent de sélectionner les colonnes nécessaires, de croiser les données des différentes tables <em>raw</em>, de convertir et de transformer certaines colonnes. Ils permettent le peuplement des <a class="reference internal" href="integration_structure_scripts.html#natures-des-tables-d-integration"><span class="std std-ref">tables <em>source</em></span></a>. Au-delà de la sélection de colonnes, nous listons ci-dessous les spécificités de chaque script :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Script</p></th>
+<th class="head"><p>Traitement spécifique</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">transform_entreprises</span></code></p></td>
+<td><p>* Conversion du SIREN en entier.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">transform_etablissements</span></code></p></td>
+<td><p>* Conversion du SIREN et du SIRET en entiers.  A noter qu’une fois transformés en entiers, les SIREN et SIRET peuvent <em>perdre</em> les zéros frontaux (par exemple la string “001234567” devient l’entier 1234567), c’est pourquoi il faut veiller à toujours convertir dans un sens (<code class="docutils literal notranslate"><span class="pre">CAST</span> <span class="pre">...</span> <span class="pre">AS</span> <span class="pre">BIGINT</span></code>) ou dans l’autre (<code class="docutils literal notranslate"><span class="pre">TO_CHAR(...,</span> <span class="pre">'fm000000000')</span></code> avec <code class="docutils literal notranslate"><span class="pre">'fm000000000'</span></code> correspondant à la taille de la string souhaitée) lorsqu’on compare deux valeurs de types différents. <br>* Inférence du statut de siège social : <code class="docutils literal notranslate"><span class="pre">COALESCE(nicentre</span> <span class="pre">=</span> <span class="pre">nic,</span> <span class="pre">FALSE)</span></code> → si le NIC du siège social est renseigné et que le NIC de l’établissement est égal au NIC du siège social, alors il s’agit du siège social.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">transform_salaries</span></code></p></td>
+<td><p>* Conversion en lettres majuscules (<code class="docutils literal notranslate"><span class="pre">UPPER</span></code>) sans <em>trailing whitespaces</em> (<code class="docutils literal notranslate"><span class="pre">TRIM</span></code>) des noms de famille, noms d’usage et prénoms. <br>* Conversion au format <code class="docutils literal notranslate"><span class="pre">DD-MM-YYYY</span></code> de la date de naissance. A noter que l’on utilise pas une fonction de conversion en format date car la date de naissance peut comporter des suites de 9 pour les informations inconnues par l’employeur. Par exemple, si un employeur sait qu’un salarié est né en 1990 mais ne connaît ni le jour ni le mois de naissance de celui-ci, il remplira comme date de naissance 99-99-1990. <br>* Création du champ <code class="docutils literal notranslate"><span class="pre">salarie_key</span></code> qui correspond à <code class="docutils literal notranslate"><span class="pre">(NIR</span> <span class="pre">|</span> <span class="pre">NOM_FAMILLE+PRENOMS+DATE_NAISSANCE)</span></code> (exemple : pour un individu sans NIR s’appelant Yolande DURAND née le 16-07-1967, son identifiant <code class="docutils literal notranslate"><span class="pre">salarie_key</span></code> sera <code class="docutils literal notranslate"><span class="pre">DURANDYolande16-07-1967</span></code>).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">transform_contrats</span></code></p></td>
+<td><p>* Jointure avec la table <code class="docutils literal notranslate"><span class="pre">source.source_salaries</span></code> pour récupérer l’id de l’établissement (id dans la base de données brute). <br>* Conversion du numéro de contrat en lettres majuscules sans <em>trailing whitespaces</em>. <br>* Jointure avec la table <code class="docutils literal notranslate"><span class="pre">public.postes</span></code> (qui a été complétée avant l’exécution de ce script) afin de récupérer l’id du libellé de poste du contrat dans la base. <br>* Sous conditions que le string soit de taille 14 et qu’il ne contienne que des chiffres, conversion en entier du SIRET de l’établissement utilisateur pour les contrats d’intérim puis jointure avec la table <code class="docutils literal notranslate"><span class="pre">public.etablissements</span></code> pour retrouver l’id correspondant à cet établissement utilisateur. A noter que cette étape nécessite que le script <code class="docutils literal notranslate"><span class="pre">load_etablissements</span></code> soit bien exécuté avant celui-ci. <br>* Création du champ <code class="docutils literal notranslate"><span class="pre">contrat_key</span></code> qui correspond à la concaténation suivante <code class="docutils literal notranslate"><span class="pre">(NUMERO_CONTRAT</span> <span class="pre">+</span> <span class="pre">'_'</span> <span class="pre">+</span> <span class="pre">DATE_DEBUT_CONTRAT)</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">transform_changements_salaries</span></code></p></td>
+<td><p>* Concaténation des <a class="reference internal" href="#concatenation-des-changements-fragmentes">changements fragmentés</a>. <br>* Conversion de l’ancien nom de famille et des anciens prénoms en lettres majuscules sans <em>trailing whitespaces</em>. <br>* Conversion au format <code class="docutils literal notranslate"><span class="pre">DD-MM-YYYY</span></code> de l’ancienne date de naissance. <br>* Sélection des seules lignes qui comportent des changements relatifs à la clef identifiante.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">transform_changements_contrats</span></code></p></td>
+<td><p>* Concaténation des <a class="reference internal" href="#concatenation-des-changements-fragmentes">changements fragmentés</a>. <br>* Conversion du SIRET de l’ancien employeur en entier. <br>* Conversion de l’ancien numéro de contrat en lettres majuscules sans <em>trailing whitespaces</em>. <br>* Sélection des seules lignes qui comportent des changements relatifs à la clef identifiante.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">transform_fins_contrats</span></code></p></td>
+<td><p><em>Aucun traitement spécifique.</em></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">transform_activites</span></code></p></td>
+<td><p>* Sélection des lignes correspondant à un type de rémunération <code class="docutils literal notranslate"><span class="pre">002</span></code> (Salaire brut soumis à contributions d’Assurance chômage), <code class="docutils literal notranslate"><span class="pre">017</span></code> (Heures supplémentaires ou complémentaires aléatoires) ou <code class="docutils literal notranslate"><span class="pre">018</span></code> (Heures supplémentaires structurelle) et création d’un champ <code class="docutils literal notranslate"><span class="pre">type_heures</span></code> pour distinguer les heures rémunérées des heures non rémunérées et des heures supplémentaires. <br>* Jointures avec les tables <code class="docutils literal notranslate"><span class="pre">raw.raw_remunerations</span></code>, <code class="docutils literal notranslate"><span class="pre">raw.raw_versements</span></code>, <code class="docutils literal notranslate"><span class="pre">raw.raw_contrats</span></code> pour récupérer l’id du contrat concerné par les heures déclarées. <br>* Conversion du volume horaire en heures selon l’unité de mesure déclarée.</p></td>
+</tr>
+</tbody>
+</table>
+<p>A noter qu’il n’existe pas de script <code class="docutils literal notranslate"><span class="pre">transform_postes</span></code> par souci de simplicité. La seule opération à effectuer étant la récupération du libellé d’emploi en majuscules et sans <em>trailing whitespaces</em> dans la table <code class="docutils literal notranslate"><span class="pre">raw_contrats</span></code>, cette dernière est effectuée dans le script <code class="docutils literal notranslate"><span class="pre">load_postes</span></code>.</p>
+<section id="concatenation-des-changements-fragmentes">
+<h3>Concaténation des changements fragmentés<a class="headerlink" href="#concatenation-des-changements-fragmentes" title="Link to this heading"></a></h3>
+<p>La déclaration de changements simultanés de données identifiantes doit faire l’objet d’un seul et même bloc changement (cf section 2.1.2.3 du cahier technique de la DSN). Malheureusement, tous les établissements ne respectent pas cette norme. Ainsi, si un établissement déclare au mois M, une salariée, Mme Yolande DURAND née le 16/07/1967, telle que :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Id Salarié</p></th>
+<th class="head"><p>Nom</p></th>
+<th class="head"><p>Prénoms</p></th>
+<th class="head"><p>Date de naissance</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>DURAND</p></td>
+<td><p>Yolande</p></td>
+<td><p>16-07-1967</p></td>
+</tr>
+</tbody>
+</table>
+<p>pour déclarer que cette dernière s’appelait en réalité Brigitte THOMAS jusqu’au 1er janvier 2021, l’établissement doit envoyer un bloc changement de la forme suivante :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Id Salarié Changement</p></th>
+<th class="head"><p>Id Salarié</p></th>
+<th class="head"><p>Ancien Nom</p></th>
+<th class="head"><p>Anciens prénoms</p></th>
+<th class="head"><p>Ancienne date de naissance</p></th>
+<th class="head"><p>Date de modification</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>THOMAS</p></td>
+<td><p>Brigitte</p></td>
+<td><p></p></td>
+<td><p>01-01-2021</p></td>
+</tr>
+</tbody>
+</table>
+<p>Mais certaines entreprises vont, à tord, déclarer ces deux changements identifiants de manière fragmentée tels que :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Id Salarié Changement</p></th>
+<th class="head"><p>Id Salarié</p></th>
+<th class="head"><p>Ancien Nom</p></th>
+<th class="head"><p>Anciens prénoms</p></th>
+<th class="head"><p>Ancienne date de naissance</p></th>
+<th class="head"><p>Date de modification</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p></p></td>
+<td><p>Brigitte</p></td>
+<td><p></p></td>
+<td><p>01-01-2021</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>THOMAS</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>01-01-2021</p></td>
+</tr>
+</tbody>
+</table>
+<p>Dès lors, les fonctions implémentées dans les scripts <em>load</em> (voir section suivante) vont chercher à apparier :</p>
+<ul class="simple">
+<li><p>une ligne existante “Brigitte DURAND” à la ligne arrivante “Yolande DURAND” ;</p></li>
+<li><p>et une ligne existante “Yolande THOMAS” à la ligne arrivante “Yolande DURAND”.</p></li>
+</ul>
+<p>alors qu’il faut chercher à apparier :</p>
+<ul class="simple">
+<li><p>une ligne existante “Brigitte THOMAS” à la ligne arrivante “Yolande DURAND”.</p></li>
+</ul>
+<p>Dès lors, il nous faut <em>concaténer</em> la déclaration de changements (2) en déclaration de changements (1). C’est ce que font les CTE <code class="docutils literal notranslate"><span class="pre">round1</span></code>, <code class="docutils literal notranslate"><span class="pre">round2</span></code> et <code class="docutils literal notranslate"><span class="pre">round3</span></code> des scripts <code class="docutils literal notranslate"><span class="pre">transform_changements_salaries</span></code> et <code class="docutils literal notranslate"><span class="pre">transform_changements_contrats</span></code>. On fait le choix d’incorporer toutes les combinaisons possibles d’anciennes données identifiantes afin de maximiser les chances de récupérer la bonne ancienne clef identifiante. On donne un exemple ci-dessous. Etant donné la ligne arrivante d’une salarié s’appelant Yolande DURAND née le 16/07/1967 et d’id 1, les lignes associées dans la table des changements relatifs aux salariés seront :</p>
+<ul class="simple">
+<li><p>sans concaténation des changements fragmentés</p></li>
+</ul>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Id Salarié Changement</p></th>
+<th class="head"><p>Id Salarié</p></th>
+<th class="head"><p>Ancien Nom</p></th>
+<th class="head"><p>Anciens prénoms</p></th>
+<th class="head"><p>Ancienne date de naissance</p></th>
+<th class="head"><p>On cherche parmi les lignes existantes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>THOMAS</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>une Yolande THOMAS née le 16/07/1967</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>1</p></td>
+<td><p></p></td>
+<td><p>Brigitte</p></td>
+<td><p></p></td>
+<td><p>une Brigitte DURAND née le 16/07/1967</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>1</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>01-01-1980</p></td>
+<td><p>une Yolande DURAND née le 01/01/1980</p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>avec concaténation des changements fragmentés</p></li>
+</ul>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Id Salarié Changement</p></th>
+<th class="head"><p>Id Salarié</p></th>
+<th class="head"><p>Ancien Nom</p></th>
+<th class="head"><p>Anciens prénoms</p></th>
+<th class="head"><p>Ancienne date de naissance</p></th>
+<th class="head"><p>On cherche parmi les lignes existantes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>THOMAS</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>une Yolande THOMAS née le 16/07/1967</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>1</p></td>
+<td><p></p></td>
+<td><p>Brigitte</p></td>
+<td><p></p></td>
+<td><p>une Brigitte DURAND née le 16/07/1967</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>1</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>01-01-1980</p></td>
+<td><p>une Yolande DURAND née le 01/01/1980</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>1</p></td>
+<td><p>THOMAS</p></td>
+<td><p>Brigitte</p></td>
+<td><p></p></td>
+<td><p>une Brigitte THOMAS née le 16/07/1967</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>1</p></td>
+<td><p>THOMAS</p></td>
+<td><p></p></td>
+<td><p>01-01-1980</p></td>
+<td><p>une Yolande THOMAS née le 01/01/1980</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>1</p></td>
+<td><p></p></td>
+<td><p>Brigitte</p></td>
+<td><p>01-01-1980</p></td>
+<td><p>une Brigitte DURAND née le 01/01/1980</p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>1</p></td>
+<td><p>THOMAS</p></td>
+<td><p>Brigitte</p></td>
+<td><p>01-01-1980</p></td>
+<td><p>une Brigitte THOMAS née le 01/01/1980</p></td>
+</tr>
+</tbody>
+</table>
+<p>Ces opérations de concaténation des changements fragmentés, implémentées par les scripts <code class="docutils literal notranslate"><span class="pre">transform_changements_salaries</span></code> et <code class="docutils literal notranslate"><span class="pre">transform_changements_contrats</span></code>, sont testées de manière ad-hoc dans les <a class="reference internal" href="../pipeline/dags_et_orchestrateurs.html#verification-de-la-mise-en-qualite-des-donnees-tests-unitaires"><span class="std std-ref">tests unitaires</span></a> par la <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/tests/tests.py#L223">fonction <code class="docutils literal notranslate"><span class="pre">test_data_augmentation_keys_changes</span></code></a> du fichier <code class="docutils literal notranslate"><span class="pre">dsn_processing/tests/tests.py</span></code>.</p>
+</section>
+</section>
+<section id="scripts-load">
+<h2>Scripts <em>load</em><a class="headerlink" href="#scripts-load" title="Link to this heading"></a></h2>
+<section id="appariement">
+<h3>Appariement<a class="headerlink" href="#appariement" title="Link to this heading"></a></h3>
+<p>Comme leurs noms l’indiquent, les scripts <em>load</em> permettent de charger les données arrivantes dans les tables existantes en base. Ils implémentent toute la logique d’appariement. On appelle appariement, le procédé suivant :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Soit un objet O entrant (entreprise, établissement, salarié, contrat, etc.).
+
+On teste si O existe déjà en base grâce à son tuple identifiant fonctionnel. 
+|
+└─── Si oui, on met à jour ses données non identifiantes.
+└─── Si non, on insère ce nouvel objet.
+</pre></div>
+</div>
+<p>A noter qu’une des caractéristiques centrales de la base est la non-historisation des changements sur les données non identifiantes. Si un objet change de valeurs pour la colonne <code class="docutils literal notranslate"><span class="pre">c</span></code> d’un mois sur l’autre, seule la valeur la plus récente va apparaître.</p>
+<p>L’implémentation de cette étape s’appuie sur la fonction <a class="reference external" href="https://www.postgresql.org/docs/current/sql-merge.html"><code class="docutils literal notranslate"><span class="pre">MERGE</span></code></a> de PostgreSQL telle que :</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">MERGE</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="p">...</span>
+<span class="k">USING</span><span class="w"> </span><span class="p">...</span><span class="w"> </span>
+<span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="p">...</span>
+<span class="k">WHEN</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="n">MATCHED</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="p">...</span>
+<span class="k">WHEN</span><span class="w"> </span><span class="n">MATCHED</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">    </span><span class="k">UPDATE</span><span class="w"> </span><span class="p">...</span>
+</pre></div>
+</div>
+</section>
+<section id="etape-de-link">
+<h3>Etape de <em>link</em><a class="headerlink" href="#etape-de-link" title="Link to this heading"></a></h3>
+<p>Pour effectuer cette opération, on va s’appuyer sur les tuples identifiants fonctionnels (voir <a class="reference internal" href="#tuples-identifiants">section 1</a>). Dans les tables <em>source</em>, les tuples identifiants fonctionnels de la base brute (base dont sont issues les données brutes) sont présents puisque les colonnes <code class="docutils literal notranslate"><span class="pre">id</span></code> contiennent les <code class="docutils literal notranslate"><span class="pre">id</span></code> dans la base brute. Cependant, l’opération nécessite de récupérer les tuples identifiants fonctionnels dans la présente base et donc, en particulier, les <code class="docutils literal notranslate"><span class="pre">id</span></code> des objets parents. Pour ce faire, nous pourrions effectuer les jointures suivantes pour chaque objet <code class="docutils literal notranslate"><span class="pre">O</span></code> ayant un parent <code class="docutils literal notranslate"><span class="pre">P</span></code> :</p>
+<ul class="simple">
+<li><p>jointure avec la table <em>source</em> contenant <code class="docutils literal notranslate"><span class="pre">P</span></code> pour récupérer la clef identifiante de <code class="docutils literal notranslate"><span class="pre">P</span></code> ;</p></li>
+<li><p>jointure avec la table permanente contenant <code class="docutils literal notranslate"><span class="pre">P</span></code> pour récupérer l’<code class="docutils literal notranslate"><span class="pre">id</span></code> de <code class="docutils literal notranslate"><span class="pre">P</span></code> dans la présente base.</p></li>
+</ul>
+<p>Pour éviter cela, des tables <em>link</em> sont maintenues tout au long de l’intégration. Elles contiennent le mapping entre les <code class="docutils literal notranslate"><span class="pre">id</span></code> de la base brute et les <code class="docutils literal notranslate"><span class="pre">id</span></code> dans la présente base pour les données déjà intégrées. Ainsi, dans le cas précedemment cité, une seule jointure est nécessaire :</p>
+<ul class="simple">
+<li><p>jointure avec la table <em>link</em> correspondant à <code class="docutils literal notranslate"><span class="pre">P</span></code> pour récupérer l’<code class="docutils literal notranslate"><span class="pre">id</span></code> de <code class="docutils literal notranslate"><span class="pre">P</span></code> dans la présente base.</p></li>
+</ul>
+<p>A noter qu’ici l’objet <code class="docutils literal notranslate"><span class="pre">O</span></code> n’a qu’un parent, si ce dernier a également un <em>grand-parent</em>, alors le nombre de jointures augmente.</p>
+</section>
+<section id="etape-de-de-duplication">
+<h3>Etape de dé-duplication<a class="headerlink" href="#etape-de-de-duplication" title="Link to this heading"></a></h3>
+<p>La fonction <code class="docutils literal notranslate"><span class="pre">MERGE</span></code> de Postgres ne peut pas fonctionner si les données entrantes comportent des doublons. Dès lors, une étape de dé-duplication des données entrantes est essentielle. Pour chaque table <em>source</em>, on sélectionne une seule ligne par tuple identifiant fonctionnel, on choisit la ligne ayant la date de déclaration la plus récente.</p>
+</section>
+<section id="structure-des-scripts-pour-les-tables-entreprises-etablissements-salaries-contrats">
+<h3>Structure des scripts pour les tables <code class="docutils literal notranslate"><span class="pre">entreprises</span></code>, <code class="docutils literal notranslate"><span class="pre">etablissements</span></code>, <code class="docutils literal notranslate"><span class="pre">salaries</span></code>, <code class="docutils literal notranslate"><span class="pre">contrats</span></code><a class="headerlink" href="#structure-des-scripts-pour-les-tables-entreprises-etablissements-salaries-contrats" title="Link to this heading"></a></h3>
+<p>La majorité des scripts <code class="docutils literal notranslate"><span class="pre">load</span></code> sont générés par les fonctions python <code class="docutils literal notranslate"><span class="pre">get_grandparent_load_query</span></code>, <code class="docutils literal notranslate"><span class="pre">get_parent_load_query</span></code>, <code class="docutils literal notranslate"><span class="pre">get_child_load_query</span></code> du fichier <code class="docutils literal notranslate"><span class="pre">dsn_processing/core/sql/utils.sql</span></code>.</p>
+<p>Comme leurs noms l’indiquent, elles correspondent aux différents degrés de généalogie, c.à.d au nombre de parents au-dessus d’eux. Ainsi :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Table</p></th>
+<th class="head"><p>Degré</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">entreprises</span></code></p></td>
+<td><p>grandparent</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">etablissements</span></code></p></td>
+<td><p>parent</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">salaries</span></code></p></td>
+<td><p>parent (car la construction de la base fait qu’elle hérite directement du SIRET [établissement] et non du SIREN [entreprise] et du NIC [établissement])</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">contrats</span></code></p></td>
+<td><p>child</p></td>
+</tr>
+</tbody>
+</table>
+<p>Pour tous, le script complet a la structure suivante :</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Appariement</span>
+<span class="k">WITH</span><span class="w"> </span><span class="n">sourcewithdependences</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="c1">-- étape de link</span>
+<span class="w">  </span><span class="p">...</span>
+<span class="p">),</span>
+<span class="n">sourcewithoutduplicates</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="c1">-- étape de dé-duplication</span>
+<span class="w">  </span><span class="p">...</span>
+<span class="p">)</span>
+<span class="n">MERGE</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">target</span>
+<span class="k">USING</span><span class="w"> </span><span class="n">sourcewithoutduplicates</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">source</span>
+<span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="k">source</span><span class="p">.</span><span class="n">tuple_identifiant_fonctionnel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">target</span><span class="p">.</span><span class="n">tuple_identifiant_fonctionnel</span>
+<span class="k">WHEN</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="n">MATCHED</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="p">...</span>
+<span class="k">WHEN</span><span class="w"> </span><span class="n">MATCHED</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">    </span><span class="k">UPDATE</span><span class="w"> </span><span class="p">...</span>
+
+<span class="c1">-- Enregistrement dans link</span>
+<span class="k">WITH</span><span class="w"> </span><span class="n">sourcewithdependences</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="c1">-- étape de link</span>
+<span class="w">  </span><span class="p">...</span>
+<span class="p">)</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">source</span><span class="p">.</span><span class="n">link</span>
+<span class="k">SELECT</span>
+<span class="w">  </span><span class="p">...</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">sourcewithdependences</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">source</span>
+<span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">target</span>
+<span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="n">target</span><span class="p">.</span><span class="n">tuple_identifiant_fonctionnel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">source</span><span class="p">.</span><span class="n">tuple_identifiant_fonctionnel</span>
+<span class="w">  </span>
+</pre></div>
+</div>
+<p>On remarquera qu’on effectue deux fois l’étape de link car cette dernière est peu coûteuse en temps. Cela permet ainsi de recourir aux CTE et d’éviter la création d’une table temporaire.</p>
+</section>
+<section id="autres-scripts">
+<h3>Autres scripts<a class="headerlink" href="#autres-scripts" title="Link to this heading"></a></h3>
+<p>Le script <code class="docutils literal notranslate"><span class="pre">load_postes</span></code> comprend une opération de type <code class="docutils literal notranslate"><span class="pre">transform</span></code> (libellés passés en majuscules sans <em>trailing whitespace</em>) mais ne fait rien d’autre que du chargement de données sans logique d’appariement.</p>
+<p>Le script <code class="docutils literal notranslate"><span class="pre">load_activites</span></code>, quant à lui, est plus complexe que les autres scripts puisqu’il permet de recouvrer les informations sur les volumes d’activités en effectuant des découpages ou des regroupements temporels. Pour en savoir plus sur les déclarations de volumes horaires, se référer  à la <a class="reference internal" href="nature_donnees_source.html#declaration-des-heures-travaillees"><span class="std std-ref">documentation</span></a> sur les heures travaillées en DSN.</p>
+<p>On cherche à redistribuer les volumes d’activité déclarés sur des périodes quelconques vers chaque mois calendaire. Pour ce faire, on découpe chaque ligne d’activité en autant de lignes que de mois calendaires concernés. Par exemple, l’activité suivante :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Début de la période de paie</p></th>
+<th class="head"><p>Fin de la période de paie</p></th>
+<th class="head"><p>Volume horaire travaillé</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2023-10-25</p></td>
+<td><p>2023-11-31</p></td>
+<td><p>160</p></td>
+</tr>
+</tbody>
+</table>
+<p>devient :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Mois</p></th>
+<th class="head"><p>Volume horaire travaillé</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2023-10-01</p></td>
+<td><p>30.8</p></td>
+</tr>
+<tr class="row-odd"><td><p>2023-11-01</p></td>
+<td><p>129.3</p></td>
+</tr>
+</tbody>
+</table>
+<p>La part du volume horaire attribuée à chaque mois correspond à la formule suivante : volume_total x (nombre de jours ouvrés sur ce mois) / (nombre de jours ouvrés sur la période de paie totale). Dans l’exemple précèdent, il y a 26 jours travaillés entre le 25/10/2023 et le 31/11/2023 dont 5 en octobre et 21 en novembre. Le volume horaire attribué au mois d’octobre est donc 160 * (5/26) = 30.8.</p>
+<p>De façon similaire aux scripts <em>load</em> des autres tables, on met à jour ou on insère ensuite les lignes correspondantes dans la table <code class="docutils literal notranslate"><span class="pre">activites</span></code> grâce à la fonction <code class="docutils literal notranslate"><span class="pre">MERGE</span></code>. A noter néanmoins que dans le cas de la mise à jour des informations (si la ligne existe déjà), on ne remplace pas les valeurs pré-existantes mais on les somme. Dès lors, si, dans la table <code class="docutils literal notranslate"><span class="pre">activites</span></code>, un contrat a 10 heures standards rémunérées sur le mois M et qu’une nouvelle déclaration fait état de 30 heures pour ce même contrat sur le mois M, on décomptera désormais 40 heures pour ce contrat sur le mois M.</p>
+</section>
+</section>
+<section id="scripts-modify">
+<h2>Scripts <em>modify</em><a class="headerlink" href="#scripts-modify" title="Link to this heading"></a></h2>
+<p>Les scripts <em>modify</em> permettent de modifier les données une fois qu’elles ont été chargées dans les tables permanentes. Les différents processus sont décrits ci-dessous.</p>
+<section id="prise-en-compte-des-changements-de-donnees-identifiantes">
+<h3>Prise en compte des changements de données identifiantes<a class="headerlink" href="#prise-en-compte-des-changements-de-donnees-identifiantes" title="Link to this heading"></a></h3>
+<p>Lorsque les <a class="reference internal" href="#tuples-identifiants">données identifiantes</a> d’une entité changent d’une déclaration à l’autre, ce changement doit faire l’objet d’un <a class="reference internal" href="nature_donnees_source.html#declaration-des-changements-d-informations"><span class="std std-ref">bloc changement</span></a>. Dans les scripts <code class="docutils literal notranslate"><span class="pre">transform_changements_salaries</span></code> et <code class="docutils literal notranslate"><span class="pre">transform_changements_contrats</span></code> documentés plus haut, les changements déclarés par les établissements sont chargés et consolidés dans les tables <code class="docutils literal notranslate"><span class="pre">source.source_changements_salaries</span></code> et <code class="docutils literal notranslate"><span class="pre">source.source_changements_contrats</span></code>. Dans les scripts <code class="docutils literal notranslate"><span class="pre">modify_changements_salaries</span></code> et <code class="docutils literal notranslate"><span class="pre">modify_changements_contrats</span></code>, on exploite ces deux tables afin de <em>fusionner</em> les entités (salarié ou contrat) doublonnées. On donne l’exemple théorique ci-dessous :</p>
+<ol class="arabic simple">
+<li><p>Un objet <span class="math notranslate nohighlight">\(O\)</span> est déclaré au mois <span class="math notranslate nohighlight">\(1\)</span> avec la clef identifiante <span class="math notranslate nohighlight">\(ci(O) = A\)</span>. Il est donc enregistré dans la table <span class="math notranslate nohighlight">\(T\)</span> tel que :</p></li>
+</ol>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>id</p></th>
+<th class="head"><p>ci</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>A</p></td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic simple" start="2">
+<li><p>Au mois <span class="math notranslate nohighlight">\(2\)</span>, il est cette fois déclaré avec la clef identifiante <span class="math notranslate nohighlight">\(ci(O) = B\)</span>. Tels qu’ils ont été implémentés, les scripts <em>load</em> vont insérer une nouvelle ligne puisqu’ils ne <em>savent</em> pas qu’il s’agit du même objet. La table <span class="math notranslate nohighlight">\(T\)</span> contient donc les lignes suivantes :</p></li>
+</ol>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>id</p></th>
+<th class="head"><p>ci</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>A</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>B</p></td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic simple" start="3">
+<li><p>Néanmoins, au mois <span class="math notranslate nohighlight">\(2\)</span>, l’établissement a aussi déclaré un bloc changement qui dit que l’objet <span class="math notranslate nohighlight">\(O\)</span> avait précédemment comme clef identifiante <span class="math notranslate nohighlight">\(ci\)</span> la valeur <span class="math notranslate nohighlight">\(A\)</span>. Ainsi les scripts <em>modify</em> vont venir <em>fusionner</em> les deux lignes, ce qui revient à supprimer la ligne la plus ancienne. A l’issue de cette opération, la table <span class="math notranslate nohighlight">\(T\)</span> devient :</p></li>
+</ol>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>id</p></th>
+<th class="head"><p>ci</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>B</p></td>
+</tr>
+</tbody>
+</table>
+<section id="fonctionnement-theorique-commun-aux-deux-scripts">
+<h4>Fonctionnement théorique commun aux deux scripts<a class="headerlink" href="#fonctionnement-theorique-commun-aux-deux-scripts" title="Link to this heading"></a></h4>
+<p>On considère la variable <code class="docutils literal notranslate"><span class="pre">T</span></code> qui est soit <code class="docutils literal notranslate"><span class="pre">salaries</span></code> soit <code class="docutils literal notranslate"><span class="pre">contrats</span></code>.</p>
+<ol class="arabic simple">
+<li><p>On créé une <code class="docutils literal notranslate"><span class="pre">map_table</span></code> ayant trois colonnes telle que :</p></li>
+</ol>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>id_old</p></th>
+<th class="head"><p>id_new</p></th>
+<th class="head"><p>date_modification</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>x</p></td>
+<td><p>y</p></td>
+<td><p>AAAA-MM-DD</p></td>
+</tr>
+</tbody>
+</table>
+<p>contenant respectivement :</p>
+<ul class="simple">
+<li><p>les id des lignes à supprimer (suffixe <code class="docutils literal notranslate"><span class="pre">_old</span></code> dans le code);</p></li>
+<li><p>les id des lignes à conserver (suffixe <code class="docutils literal notranslate"><span class="pre">_new</span></code> dans le code);</p></li>
+<li><p>la date de la modification de la ou les donnée.s identifiante.s.</p></li>
+</ul>
+<p>Pour la remplir, on s’appuie sur la table <code class="docutils literal notranslate"><span class="pre">source.source_changements_T</span></code> dont on fait la jointure avec :</p>
+<ul class="simple">
+<li><p>la table <code class="docutils literal notranslate"><span class="pre">source.link_T</span></code> pour récupérer l’id de la ligne à conserver ;</p></li>
+<li><p>la table <code class="docutils literal notranslate"><span class="pre">public.T</span></code> pour récupérer les valeurs des données identifiantes de la ligne à conserver, on appelle cette table jointe <code class="docutils literal notranslate"><span class="pre">T_new</span></code>;</p></li>
+<li><p>la table <code class="docutils literal notranslate"><span class="pre">public.T</span></code> pour récupérer l’id de la ligne à supprimer à partir des données identifiantes en utilisant <code class="docutils literal notranslate"><span class="pre">COALESCE(source_changements_T.data,</span> <span class="pre">T_new.data)</span></code>. En effet, dans le cas où un bloc changement ne fait pas état d’une ancienne valeur pour toutes les données identifiantes, on prend la valeur actuelle.</p></li>
+</ul>
+<blockquote>
+<div><p>Exemple : Si un établissement déclare au mois M, une salariée, Mme Yolande DURAND née le 16/07/1967, telle que :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Id Salarié</p></th>
+<th class="head"><p>Nom</p></th>
+<th class="head"><p>Prénoms</p></th>
+<th class="head"><p>Date de naissance</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>DURAND</p></td>
+<td><p>Yolande</p></td>
+<td><p>16-07-1967</p></td>
+</tr>
+</tbody>
+</table>
+<p>pour déclarer que cette dernière s’appelait en réalité THOMAS jusqu’au 1er janvier 2021, l’établissement envoie un bloc changement de la forme suivante :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Id Salarié Changement</p></th>
+<th class="head"><p>Id Salarié</p></th>
+<th class="head"><p>Ancien Nom</p></th>
+<th class="head"><p>Anciens prénoms</p></th>
+<th class="head"><p>Ancienne date de naissance</p></th>
+<th class="head"><p>Date de modification</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>THOMAS</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>01-01-2021</p></td>
+</tr>
+</tbody>
+</table>
+<p>Donc on cherche bien une ligne telle que :</p>
+<ul class="simple">
+<li><p>Nom : <code class="docutils literal notranslate"><span class="pre">COALESCE('THOMAS',</span> <span class="pre">'DURAND')</span> <span class="pre">=</span> <span class="pre">'THOMAS'</span></code></p></li>
+<li><p>Prénoms : <code class="docutils literal notranslate"><span class="pre">COALESCE(NULL,</span> <span class="pre">'Yolande')</span> <span class="pre">=</span> <span class="pre">'Yolande'</span></code></p></li>
+<li><p>Date de naissance : <code class="docutils literal notranslate"><span class="pre">COALESCE(NULL,</span> <span class="pre">'16-07-1967')</span> <span class="pre">=</span> <span class="pre">'16-07-1967'</span></code></p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><p>Une fois cette <code class="docutils literal notranslate"><span class="pre">map_table</span></code> remplie, on va venir supprimer les changements dits <em>isomorphiques</em> tels que :</p></li>
+</ol>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>id_old</p></th>
+<th class="head"><p>id_new</p></th>
+<th class="head"><p>date_modification</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>x</p></td>
+<td><p>x</p></td>
+<td><p>AAAA-MM-DD</p></td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic simple" start="3">
+<li><p>Puis, on va <em>casser</em> les changements dits <em>cycliques</em> tels que :</p></li>
+</ol>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>id_old</p></th>
+<th class="head"><p>id_new</p></th>
+<th class="head"><p>date_modification</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>x</p></td>
+<td><p>y</p></td>
+<td><p>2019-01-01</p></td>
+</tr>
+<tr class="row-odd"><td><p>y</p></td>
+<td><p>z</p></td>
+<td><p>2019-01-02</p></td>
+</tr>
+<tr class="row-even"><td><p>z</p></td>
+<td><p>x</p></td>
+<td><p>2019-01-03</p></td>
+</tr>
+</tbody>
+</table>
+<p>Pour ce faire on utilise une <a class="reference external" href="https://www.postgresql.org/docs/current/queries-with.html#QUERIES-WITH-RECURSIVE">CTE recursive</a>. L’idée est de détecter tous les cycles de manière récursive. Une fois détectés, on supprime le changement ayant la date de modification la plus ancienne.</p>
+<p>Dans l’exemple précédent, on supprime donc la première ligne telle que :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>id_old</p></th>
+<th class="head"><p>id_new</p></th>
+<th class="head"><p>date_modification</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>y</p></td>
+<td><p>z</p></td>
+<td><p>2019-01-02</p></td>
+</tr>
+<tr class="row-odd"><td><p>z</p></td>
+<td><p>x</p></td>
+<td><p>2019-01-03</p></td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic simple" start="4">
+<li><p>On va ensuite modifier les changements dit <em>en chemin</em> tels que :</p></li>
+</ol>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>id_old</p></th>
+<th class="head"><p>id_new</p></th>
+<th class="head"><p>date_modification</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>a</p></td>
+<td><p>b</p></td>
+<td><p>AAAA-MM-DD</p></td>
+</tr>
+<tr class="row-odd"><td><p>b</p></td>
+<td><p>c</p></td>
+<td><p>AAAA-MM-DD</p></td>
+</tr>
+<tr class="row-even"><td><p>c</p></td>
+<td><p>d</p></td>
+<td><p>AAAA-MM-DD</p></td>
+</tr>
+</tbody>
+</table>
+<p>Il ne s’agit pas d’un cycle mais bien d’un chemin, a devient d si on applique plusieurs fois la matrice des changements. On cherche donc à <em>pousser au maximum</em> ces chemins de manière à ce que la table devienne :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>id_old</p></th>
+<th class="head"><p>id_new</p></th>
+<th class="head"><p>date_modification</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>a</p></td>
+<td><p>d</p></td>
+<td><p>AAAA-MM-DD</p></td>
+</tr>
+<tr class="row-odd"><td><p>b</p></td>
+<td><p>d</p></td>
+<td><p>AAAA-MM-DD</p></td>
+</tr>
+<tr class="row-even"><td><p>c</p></td>
+<td><p>d</p></td>
+<td><p>AAAA-MM-DD</p></td>
+</tr>
+</tbody>
+</table>
+<p>A noter qu’on peut réaliser cette opération sans tomber dans une boucle infinie parce qu’on a préalablement supprimé les changements cycliques.</p>
+<ol class="arabic simple" start="5">
+<li><p>On supprime ensuite les changements dits <em>non injectifs</em> tels que :</p></li>
+</ol>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>id_old</p></th>
+<th class="head"><p>id_new</p></th>
+<th class="head"><p>date_modification</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>x</p></td>
+<td><p>y</p></td>
+<td><p>2019-01-01</p></td>
+</tr>
+<tr class="row-odd"><td><p>x</p></td>
+<td><p>z</p></td>
+<td><p>2019-01-02</p></td>
+</tr>
+</tbody>
+</table>
+<p>Ici x devient y mais devient aussi z, c’est absurde. On ne garde que le changement ayant la date de modification la plus récente (si deux changements ont la même date de modification, c’est le hasard qui les départage). L’exemple précédent devient donc :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>id_old</p></th>
+<th class="head"><p>id_new</p></th>
+<th class="head"><p>date_modification</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>x</p></td>
+<td><p>z</p></td>
+<td><p>2019-01-02</p></td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic simple" start="6">
+<li><p>Si la table <code class="docutils literal notranslate"><span class="pre">X</span></code> sur laquelle on va appliquer les suppressions de lignes est la table <em>parente</em> d’une autre table, alors on répercute les changements sur cette table <em>fille</em> (référençant les id de la table <code class="docutils literal notranslate"><span class="pre">T</span></code>). Pour plus d’informations, voir les sections ci-dessous spécifiques à chaque script. Il faut veiller à appliquer ces changements sur les tables <em>filles</em> avant de procéder aux changements sur la table <em>parente</em> pour ne pas entrer en conflit avec les contraintes <code class="docutils literal notranslate"><span class="pre">FOREIGN</span> <span class="pre">KEY</span></code> de la base. Plus aucune référence aux lignes ayant les <code class="docutils literal notranslate"><span class="pre">id_old</span></code> dans la table <code class="docutils literal notranslate"><span class="pre">T</span></code> ne doit être trouvée dans la base.</p></li>
+<li><p>On supprime (<code class="docutils literal notranslate"><span class="pre">DELETE</span></code>) les lignes ayant les <code class="docutils literal notranslate"><span class="pre">id_old</span></code> de la <code class="docutils literal notranslate"><span class="pre">map_table</span></code> dans la table <code class="docutils literal notranslate"><span class="pre">T</span></code>.</p></li>
+</ol>
+</section>
+<section id="modify-changements-salaries">
+<h4><code class="docutils literal notranslate"><span class="pre">modify_changements_salaries</span></code><a class="headerlink" href="#modify-changements-salaries" title="Link to this heading"></a></h4>
+<p>Le script <code class="docutils literal notranslate"><span class="pre">modify_changements_salaries</span></code> suit la structure théorique précédemment décrite. Il comporte néanmoins quelques spécificités.</p>
+<p>Avant l’étape 1 : on infère certains changements qui n’ont pas été déclarés par les établissements. Plus précisément, on ajoute dans la <code class="docutils literal notranslate"><span class="pre">map_table</span></code> les id des lignes d’un même établissement qui ont les mêmes noms, prénoms et dates de naissance mais dont la plus ancienne des deux lignes (critère basé sur la date de la dernière déclaration pour chaque ligne) ne comporte pas de NIR. Cela permet de corriger les cas où un salarié a d’abord été déclaré sans NIR (clef identifiante → <code class="docutils literal notranslate"><span class="pre">NOM+PRENOMS+DDN</span></code>) puis avec un NIR (clef identifiante → <code class="docutils literal notranslate"><span class="pre">NIR</span></code>) sans bloc changement précisant que l’ancien NIR était <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.</p>
+<p>Au niveau de l’étape 6, on gère l’impact des changements de la table <code class="docutils literal notranslate"><span class="pre">salaries</span></code> sur la table <code class="docutils literal notranslate"><span class="pre">contrats</span></code> et l’impact des changements induits de la table <code class="docutils literal notranslate"><span class="pre">contrats</span></code> sur la table <code class="docutils literal notranslate"><span class="pre">activites</span></code>. Pour ce faire, on créé une table <code class="docutils literal notranslate"><span class="pre">source.map_changes_salaries_impact_contrats</span></code> qui comportent trois colonnes :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">old_contrat_id</span></code> : id du contrat à supprimer car le salarié lié à ce contrat <em>devient</em> un autre salarié qui possède déjà un contrat avec la même clef identifiante ;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">new_contrat_id</span></code> : id du contrat à conserver car appartenant au salarié <em>conservé</em> ;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">date_modification</span></code> : date de la modification <em>salarié</em>.</p></li>
+</ul>
+<blockquote>
+<div><p>Exemple : Un établissement déclare au mois M, une salariée, Mme Yolande THOMAS née le 16/07/1967. Elle est enregistrée dans la base telle que :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Id Salarié</p></th>
+<th class="head"><p>Nom</p></th>
+<th class="head"><p>Prénoms</p></th>
+<th class="head"><p>Date de naissance</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>THOMAS</p></td>
+<td><p>Yolande</p></td>
+<td><p>16-07-1967</p></td>
+</tr>
+</tbody>
+</table>
+<p>Il déclare également un contrat pour Mme DURAND, on le retrouve dans la base tel que :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Id Contrat</p></th>
+<th class="head"><p>Id Salarié</p></th>
+<th class="head"><p>Numéro</p></th>
+<th class="head"><p>Date de début</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>00001</p></td>
+<td><p>2022-01-01</p></td>
+</tr>
+</tbody>
+</table>
+<p>Au mois M+1, il déclare cette fois-ci une Mme Yolande DURAND née le 16/07/1967 avec son contrat. La base comporte donc les lignes suivantes :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Id Salarié</p></th>
+<th class="head"><p>Nom</p></th>
+<th class="head"><p>Prénoms</p></th>
+<th class="head"><p>Date de naissance</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>THOMAS</p></td>
+<td><p>Yolande</p></td>
+<td><p>16-07-1967</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>DURAND</p></td>
+<td><p>Yolande</p></td>
+<td><p>16-07-1967</p></td>
+</tr>
+</tbody>
+</table>
+<p>et</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Id Contrat</p></th>
+<th class="head"><p>Id Salarié</p></th>
+<th class="head"><p>Numéro</p></th>
+<th class="head"><p>Date de début</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>00001</p></td>
+<td><p>2022-01-01</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>00001</p></td>
+<td><p>2022-01-01</p></td>
+</tr>
+</tbody>
+</table>
+<p>Néanmoins, afin de déclarer que cette dernière s’appelait en réalité THOMAS jusqu’au 1er janvier 2021, l’établissement envoie également un bloc changement de la forme suivante :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Id Salarié Changement</p></th>
+<th class="head"><p>Id Salarié</p></th>
+<th class="head"><p>Ancien Nom</p></th>
+<th class="head"><p>Anciens prénoms</p></th>
+<th class="head"><p>Ancienne date de naissance</p></th>
+<th class="head"><p>Date de modification</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>2</p></td>
+<td><p>THOMAS</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>01-01-2021</p></td>
+</tr>
+</tbody>
+</table>
+<p>Ce changement doit aboutir à la suppression de la ligne Yolande THOMAS dans la table <code class="docutils literal notranslate"><span class="pre">salaries</span></code> mais alors la ligne 1 de la table <code class="docutils literal notranslate"><span class="pre">contrats</span></code> va référencer un Id Salarié inexistant. Il faut donc d’abord supprimer cette ligne de la table <code class="docutils literal notranslate"><span class="pre">contrats</span></code>. On se retrouve donc avec la base suivante :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Id Salarié</p></th>
+<th class="head"><p>Nom</p></th>
+<th class="head"><p>Prénoms</p></th>
+<th class="head"><p>Date de naissance</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>DURAND</p></td>
+<td><p>Yolande</p></td>
+<td><p>16-07-1967</p></td>
+</tr>
+</tbody>
+</table>
+<p>et</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Id Contrat</p></th>
+<th class="head"><p>Id Salarié</p></th>
+<th class="head"><p>Numéro</p></th>
+<th class="head"><p>Date de début</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>00001</p></td>
+<td><p>2022-01-01</p></td>
+</tr>
+</tbody>
+</table>
+<p>A noter qu’on supprime la ligne 1 de la table <code class="docutils literal notranslate"><span class="pre">contrats</span></code> car elle possède la même clef identifiante que la ligne 2. Si au mois M+1, l’établissement avait déclaré Mme DURAND avec un autre contrat tel que :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Id Contrat</p></th>
+<th class="head"><p>Id Salarié</p></th>
+<th class="head"><p>Numéro</p></th>
+<th class="head"><p>Date de début</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>00001</p></td>
+<td><p>2022-01-01</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>00002</p></td>
+<td><p>2022-02-01</p></td>
+</tr>
+</tbody>
+</table>
+<p>alors la base finale serait :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Id Salarié</p></th>
+<th class="head"><p>Nom</p></th>
+<th class="head"><p>Prénoms</p></th>
+<th class="head"><p>Date de naissance</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>DURAND</p></td>
+<td><p>Yolande</p></td>
+<td><p>16-07-1967</p></td>
+</tr>
+</tbody>
+</table>
+<p>et</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Id Contrat</p></th>
+<th class="head"><p>Id Salarié</p></th>
+<th class="head"><p>Numéro</p></th>
+<th class="head"><p>Date de début</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>2</p></td>
+<td><p>00001</p></td>
+<td><p>2022-01-01</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>00002</p></td>
+<td><p>2022-02-01</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>On gère également le cas où deux salariés seraient <em>supprimés</em> au profit d’un même salarié et que ces deux lignes à supprimer seraient référencées par des contrats aux mêmes clefs identifiantes.</p>
+<p>On applique ensuite les étapes 2 à 5 à la table <code class="docutils literal notranslate"><span class="pre">source.map_changes_salaries_impact_contrats</span></code>. Puis on gère l’impact des changements de la table <code class="docutils literal notranslate"><span class="pre">contrats</span></code> sur la table <code class="docutils literal notranslate"><span class="pre">activites</span></code>. Pour plus de détails sur cette étape, se référer à la <a class="reference internal" href="#modify-changements-contrats">section suivante</a>.</p>
+<p>Au final, l’étape 6 correspond aux opérations suivantes sur les tables <em>filles</em> de la tables <code class="docutils literal notranslate"><span class="pre">salaries</span></code> :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>N°</p></th>
+<th class="head"><p>Table <em>fille</em></p></th>
+<th class="head"><p>Table des changements</p></th>
+<th class="head"><p>Opération</p></th>
+<th class="head"><p></p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">public.activites</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">source.map_changes_salaries_impact_contrats</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">UPDATE</span></code> + <code class="docutils literal notranslate"><span class="pre">DELETE</span></code></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">source.link_contrats</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">source.map_changes_salaries_impact_contrats</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">UPDATE</span></code></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">source.link_salaries</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">source.map_changes_salaries</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">UPDATE</span></code></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">public.contrats</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">source.map_changes_salaries_impact_contrats</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DELETE</span></code></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">public.contrats</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">source.map_changes_salaries</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">UPDATE</span></code></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">public.salaries</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">source.map_changes_salaries</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DELETE</span></code></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="modify-changements-contrats">
+<h4><code class="docutils literal notranslate"><span class="pre">modify_changements_contrats</span></code><a class="headerlink" href="#modify-changements-contrats" title="Link to this heading"></a></h4>
+<p>Le script <code class="docutils literal notranslate"><span class="pre">modify_changements_contrats</span></code> suit la structure théorique précédemment décrite. La <code class="docutils literal notranslate"><span class="pre">map_table</span></code> s’appelle <code class="docutils literal notranslate"><span class="pre">source.map_changes_contrats</span></code> et comporte trois colonnes <code class="docutils literal notranslate"><span class="pre">old_contrat_id</span></code>, <code class="docutils literal notranslate"><span class="pre">new_contrat_id</span></code> et <code class="docutils literal notranslate"><span class="pre">date_modification</span></code>.</p>
+<p>A l’étape 6, la table <code class="docutils literal notranslate"><span class="pre">activites</span></code> est modifiée en répercussion des futurs changements sur la table <code class="docutils literal notranslate"><span class="pre">contrats</span></code>. En effet, la table <code class="docutils literal notranslate"><span class="pre">activites</span></code> référence un <code class="docutils literal notranslate"><span class="pre">contrat_id</span></code> donc, si une ligne de <code class="docutils literal notranslate"><span class="pre">contrats</span></code> doit être supprimée au profit d’une autre ligne existante, il faut redistribuer les volumes horaires des la table <code class="docutils literal notranslate"><span class="pre">activites</span></code>. Ainsi, pour chaque <code class="docutils literal notranslate"><span class="pre">new_contrat_id</span></code> distinct de la <code class="docutils literal notranslate"><span class="pre">map_table</span></code> et pour chaque mois, on somme les volumes horaires de ce mois pour les <code class="docutils literal notranslate"><span class="pre">old_contrat_id</span></code> correspondants puis, si une ligne pour ce mois existe déjà pour le <code class="docutils literal notranslate"><span class="pre">new_contrat_id</span></code>, on y ajoute cette somme, sinon on insère une nouvelle ligne.</p>
+<blockquote>
+<div><p>Exemple : La table <code class="docutils literal notranslate"><span class="pre">source.map_changes_contrats</span></code> est telle que :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>old_contrat_id</p></th>
+<th class="head"><p>new_contrat_id</p></th>
+<th class="head"><p>date_modification</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>2</p></td>
+<td><p>AAAA-MM-DD</p></td>
+</tr>
+</tbody>
+</table>
+<p>et la table <code class="docutils literal notranslate"><span class="pre">activites</span></code> comporte les lignes suivantes :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>contrat_id</p></th>
+<th class="head"><p>mois</p></th>
+<th class="head"><p>heures</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>2022-01-01</p></td>
+<td><p>100</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>2022-02-01</p></td>
+<td><p>100</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>2022-03-01</p></td>
+<td><p>100</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>2022-03-01</p></td>
+<td><p>100</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>2022-04-01</p></td>
+<td><p>100</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>2022-05-01</p></td>
+<td><p>100</p></td>
+</tr>
+</tbody>
+</table>
+<p>La table <code class="docutils literal notranslate"><span class="pre">activites</span></code> est modifiée telle que :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>contrat_id</p></th>
+<th class="head"><p>mois</p></th>
+<th class="head"><p>heures</p></th>
+<th class="head"><p>commentaire</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>2022-01-01</p></td>
+<td><p>100</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>2022-02-01</p></td>
+<td><p>100</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>2022-03-01</p></td>
+<td><p>200</p></td>
+<td><p>100 + 100</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>2022-04-01</p></td>
+<td><p>100</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>2022-05-01</p></td>
+<td><p>100</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Le choix a été fait de sommer les heures des fusions plutôt qu’un montant écrase l’autre, néanmoins, il est impossible de savoir s’il ne vaudrait pas mieux écraser dans certains cas.</p>
+</section>
+</section>
+<section id="determination-des-dates-de-debut-et-de-fin-effectives-des-contrats">
+<h3>Détermination des dates de début et de fin effectives des contrats<a class="headerlink" href="#determination-des-dates-de-debut-et-de-fin-effectives-des-contrats" title="Link to this heading"></a></h3>
+<p>La table <code class="docutils literal notranslate"><span class="pre">contrats</span></code> comporte deux champs complémentaires pour la date de début du contrat (<code class="docutils literal notranslate"><span class="pre">date_debut</span></code> renseigné par la DSN directement et <code class="docutils literal notranslate"><span class="pre">date_debut_effective</span></code>) ainsi que deux champs pour la date de fin du contrat (<code class="docutils literal notranslate"><span class="pre">date_fin_previsionnelle</span></code> renseigné par la DSN directement et <code class="docutils literal notranslate"><span class="pre">date_fin_effective</span></code>). La détermination des champs <code class="docutils literal notranslate"><span class="pre">date_debut_effective</span></code> et <code class="docutils literal notranslate"><span class="pre">date_fin_effective</span></code> est l’objet des scripts <code class="docutils literal notranslate"><span class="pre">modify_debuts_contrats</span></code> et <code class="docutils literal notranslate"><span class="pre">modify_fins_contrats</span></code>. Leurs fonctionnements sont décrits ci-dessous.</p>
+<section id="inference-de-la-date-de-debut-effective">
+<h4>Inférence de la date de début effective<a class="headerlink" href="#inference-de-la-date-de-debut-effective" title="Link to this heading"></a></h4>
+<p>Script : <code class="docutils literal notranslate"><span class="pre">modify_debuts_contrats</span></code></p>
+<p>La date de début d’un contrat reste a priori inchangée dès la première déclaration de ce contrat. Néanmoins, il existe un cas de figure où l’on souhaite disposer d’une information supplémentaire sur la date de début. En effet, si un contrat est transféré d’un employeur à un autre, la date de de début effective est la date du transfert.</p>
+<p>Pour ce faire, le script <code class="docutils literal notranslate"><span class="pre">modify_debuts_contrats</span></code> utilise le champ <code class="docutils literal notranslate"><span class="pre">siret_ancien_employeur</span></code> de la table <code class="docutils literal notranslate"><span class="pre">source.source_changements_contrats</span></code> et vient remplir le champ <code class="docutils literal notranslate"><span class="pre">date_debut_effective</span></code> des contrats qui ont été déclarés comme transférés à l’aide des blocs changement.</p>
+<p>Cas particulier : si un contrat est chez l’employeur A puis passe chez d’autres employeurs et revient chez l’employeur A, alors la date de début effective sera la dernière date de transfert.</p>
+<p>La date de début effective n’est pas systématiquement pertinente selon les cas d’usage. Cette information est complémentaire mais <strong>le champ <code class="docutils literal notranslate"><span class="pre">date_debut</span></code> reste la donnée identifiante centrale</strong>.</p>
+</section>
+<section id="inference-de-la-date-de-fin-effective">
+<h4>Inférence de la date de fin effective<a class="headerlink" href="#inference-de-la-date-de-fin-effective" title="Link to this heading"></a></h4>
+<p>Script : <code class="docutils literal notranslate"><span class="pre">modify_fins_contrats</span></code></p>
+<p>Lors de la fin d’un contrat de travail une déclaration spécifique doit être émise (un bloc fin, S21.G00.62), elle signale la date de fin de ce dernier. Au sein des précédentes déclarations, une date de fin prévisionnelle peut être renseignée mais elle n’est pas fiable (prolongation du contrat, rupture anticipée, etc.). On cherche donc à qualifier la date de fin effective des contrats. Pour ce faire, on distingue plusieurs statuts de date de fin effective :</p>
+<ul class="simple">
+<li><p><strong>STATUT 0</strong> (ou NULL) : on ne connaît pas la date de fin effective du contrat, on suppose donc que le contrat est toujours en cours ;</p></li>
+<li><p><strong>STATUT 1</strong> : la date de fin effective est déduite à partir des informations disponibles en base ;</p></li>
+<li><p><strong>STATUT 2</strong> : la date de fin effective a fait l’objet d’une déclaration spécifique de l’établissement (<em>bloc fin</em>).</p></li>
+</ul>
+<p>En statut 1 ou 2, on dira que le contrat est fermé alors qu’en statut 0, il est dit ouvert. Les dates de fin effectives de statut 2 ont une valeur supérieure puisqu’elles sont celles déclarées directement par l’établissement. Par défaut, un contrat n’a pas de date de fin effective et est donc en statut 0. Il peut changer de statut de la manière suivante :</p>
+<p><img alt="graphe_des_statuts_dates_fin_effective" src="../../_images/statuts_date_fin_effective.png" /></p>
+<p><a class="reference external" href="https://excalidraw.com/#json=R5RKpaQ2vhFSjcS6wv4k7,sNAk0R_S1_vH1fFSC63WGw">Lien éditable</a></p>
+<ol class="arabic simple">
+<li><p>L’établissement déclare une date de fin effective via un <em>bloc fin</em>.</p></li>
+<li><p>L’établissement déclare l’annulation d’une date de fin effective via un <em>bloc fin</em> avec motif <code class="docutils literal notranslate"><span class="pre">099</span></code>.</p></li>
+<li><p>Si la dernière déclaration d’un contrat a trois mois ou plus de retard par rapport à la dernière déclaration de son établissement, on lui assigne comme date de fin effective en statut 1 :</p></li>
+</ol>
+<ul class="simple">
+<li><p>sa date de fin prévisionnelle si cette dernière appartient au mois de la dernière déclaration du contrat ;</p></li>
+<li><p>le dernier jour du mois de sa dernière déclaration sinon.</p></li>
+</ul>
+<ol class="arabic simple" start="4">
+<li><p>Idem que 3 si l’établissement a fermé.</p></li>
+<li><p>Si un contrat fait l’objet d’une nouvelle déclaration et qu’ainsi sa dernière déclaration date de moins de trois mois par rapport à la dernière déclaration de son établissement, et que son établissement est ouvert, on rouvre ce contrat.</p></li>
+<li><p>Si un changement d’employeur est déclaré (un contrat est transféré d’un employeur à un autre) alors on ferme le contrat chez l’ancien employeur à la veille de la date du transfert en statut 2.</p></li>
+</ol>
+<p>Le script <code class="docutils literal notranslate"><span class="pre">modify_fins_contrats</span></code> encode ce graphe.</p>
+</section>
+</section>
+<section id="allocation-des-interimaires-et-des-contrats-d-interim">
+<h3>Allocation des intérimaires et des contrats d’intérim<a class="headerlink" href="#allocation-des-interimaires-et-des-contrats-d-interim" title="Link to this heading"></a></h3>
+<p>Les salariés intérimaires (stt) et les contrats d’intérim (ctt) sont déclarés dans les ETT (établissements de travail temporaire) et non dans les ETU (établissements utilisateurs). Pour plus de détails, voir la documentation <a class="reference internal" href="nature_donnees_source.html#cas-particulier-salaries-interimaires-et-contrats-d-interim"><span class="std std-ref">sur la DSN</span></a>. L’objectif des scripts <code class="docutils literal notranslate"><span class="pre">allocate_stt</span></code> et <code class="docutils literal notranslate"><span class="pre">allocate_ctt</span></code> est donc de réallouer les salariés et contrats d’intérim dans les ETU à la fin de chaque intégration mensuelle. Au début de l’intégration suivante, il faut désallouer ces salariés et contrats temporaires afin de pouvoir intégrer les nouvelles données, cela est l’objet des scripts <code class="docutils literal notranslate"><span class="pre">remove_stt</span></code> et <code class="docutils literal notranslate"><span class="pre">remove_ctt</span></code>. On a choisi une gestion sous la forme allocation - désallocation par souci de simplicité.</p>
+<p>Remarque : Cette opération n’est pas bijective. Un STT dans une ETU peut être la <em>copie</em> d’un salarié ayant travaillé pour plusieurs ETT. De plus, un salarié dans une ETT peut donner lieu à plusieurs <em>copies</em> dans différentes ETU.</p>
+<section id="allocate-stt">
+<h4><code class="docutils literal notranslate"><span class="pre">allocate_stt</span></code><a class="headerlink" href="#allocate-stt" title="Link to this heading"></a></h4>
+<p>On identifie les salariés intérimaires à l’aide des critères suivants :</p>
+<ul class="simple">
+<li><p>salarié appartenant à un établissement ayant le NAF 7820Z (<code class="docutils literal notranslate"><span class="pre">etablissements.code_naf</span></code>) ;</p></li>
+<li><p>salarié ayant au moins un contrat de nature (<code class="docutils literal notranslate"><span class="pre">contrats.code_nature_contrat</span></code>) 03 et avec un champ <code class="docutils literal notranslate"><span class="pre">etu_id</span></code> non nul (champ inféré dans le script <code class="docutils literal notranslate"><span class="pre">transform_contrats</span></code>).</p></li>
+</ul>
+<p>On insère ensuite ces salariés dans le ou les établissement.s utilisateur.s <code class="docutils literal notranslate"><span class="pre">etu_id</span></code> de leurs contrats. S’il existe déjà (par exemple si un établissement utilisateur déclare en DSN ses intérimaires alors qu’il n’y ait pas tenu), on ne l’insère pas (<code class="docutils literal notranslate"><span class="pre">ON</span> <span class="pre">CONFLICT</span> <span class="pre">ON</span> <span class="pre">CONSTRAINT</span> <span class="pre">uk_salarie</span> <span class="pre">DO</span> <span class="pre">NOTHING</span></code>). A noter que le champ booléen <code class="docutils literal notranslate"><span class="pre">salaries.allocated_from_ett</span></code> sert à savoir si ce salarié a été alloué par un ETT.</p>
+</section>
+<section id="allocate-ctt">
+<h4><code class="docutils literal notranslate"><span class="pre">allocate_ctt</span></code><a class="headerlink" href="#allocate-ctt" title="Link to this heading"></a></h4>
+<p>On identifie les contrats d’intérim à l’aide des critères suivants :</p>
+<ul class="simple">
+<li><p>contrat appartenant à un établissement ayant le NAF 7820Z (<code class="docutils literal notranslate"><span class="pre">etablissements.code_naf</span></code>) ;</p></li>
+<li><p>contrat de nature (<code class="docutils literal notranslate"><span class="pre">contrats.code_nature_contrat</span></code>) 03 et avec un champ <code class="docutils literal notranslate"><span class="pre">etu_id</span></code> non nul (champ inféré dans le script <code class="docutils literal notranslate"><span class="pre">transform_contrats</span></code>).</p></li>
+</ul>
+<p>On insère ensuite ces contrats dans leur.s établissement.s utilisateur.s <code class="docutils literal notranslate"><span class="pre">etu_id</span></code> avec le.s bon.s <code class="docutils literal notranslate"><span class="pre">salarie_id</span></code> issu.s du résultat de <code class="docutils literal notranslate"><span class="pre">allocate_stt</span></code>. S’il existe déjà (par exemple si un établissement utilisateur déclare en DSN ses contrats d’intérim alors qu’il n’y ait pas tenu), on ne l’insère pas (<code class="docutils literal notranslate"><span class="pre">ON</span> <span class="pre">CONFLICT</span> <span class="pre">ON</span> <span class="pre">CONSTRAINT</span> <span class="pre">uk_salarie</span> <span class="pre">DO</span> <span class="pre">NOTHING</span></code>). A noter que le champ <code class="docutils literal notranslate"><span class="pre">contrats.ett_contrat_id</span></code> sert à faire la passerelle vers le contrat d’intérim côté ETT.</p>
+<p>La seule différence entre le contrat côté ETT et côté ETU est que, lorsqu’il est copié de l’ETT vers l’ETU, on ajoute comme suffixe au numéro du contrat le SIRET de l’ETT. Cela permet que si une ETU a fait appel à deux ETT différentes pour deux contrats différents mais que ces deux contrats ont le même numéro et la même date de début (donc la même clef identifiante) alors cela ne créé pas de conflit.</p>
+<p>Lien avec la table <code class="docutils literal notranslate"><span class="pre">activites</span></code> : Pour éviter d’augmenter la volumétrie de la table <code class="docutils literal notranslate"><span class="pre">activites</span></code> inutilement, les lignes de cette table ne sont pas dupliquées pour les ctt. Ainsi, si on cherche les volumes d’activité pour un contrat de la table <code class="docutils literal notranslate"><span class="pre">contrats</span></code> dont le champ <code class="docutils literal notranslate"><span class="pre">contrats.ett_contrat_id</span></code> n’est pas nul, il faut utiliser cet id pour faire la jointure avec la table <code class="docutils literal notranslate"><span class="pre">activites</span></code> plutôt que <code class="docutils literal notranslate"><span class="pre">contrats.contrat_id</span></code>. En d’autres termes, la jointure avec la table <code class="docutils literal notranslate"><span class="pre">activites</span></code> doit se baser sur l’id <code class="docutils literal notranslate"><span class="pre">COALESCE(contrats.ett_contrat_id,</span> <span class="pre">contrats.contrat_id)</span></code>.</p>
+</section>
+<section id="remove-stt">
+<h4><code class="docutils literal notranslate"><span class="pre">remove_stt</span></code><a class="headerlink" href="#remove-stt" title="Link to this heading"></a></h4>
+<p>On supprime tous les salariés intérimaires précédemment alloués sur la base du champ booléen <code class="docutils literal notranslate"><span class="pre">salaries.allocated_from_ett</span></code>.</p>
+</section>
+<section id="remove-ctt">
+<h4><code class="docutils literal notranslate"><span class="pre">remove_ctt</span></code><a class="headerlink" href="#remove-ctt" title="Link to this heading"></a></h4>
+<p>On supprime tous les contrats d’intérim précédemment alloués sur la base du champ <code class="docutils literal notranslate"><span class="pre">public.contrats.ett_contrat_id</span></code>.</p>
+</section>
+</section>
+<section id="inference-du-statut-ouvert-ferme-des-etablissements">
+<h3>Inférence du statut ouvert/fermé des établissements<a class="headerlink" href="#inference-du-statut-ouvert-ferme-des-etablissements" title="Link to this heading"></a></h3>
+<p>En DSN, aucune déclaration particulière n’est faite à la fermeture d’un établissement. En base, on infère cette information à l’aide de la date de la dernière déclaration de chaque établissement. Ainsi, le script <code class="docutils literal notranslate"><span class="pre">modify_ouverture_etablissements</span></code> encode la règle de gestion suivante :</p>
+<ul class="simple">
+<li><p>si la dernière déclaration de l’établissement date de plus de trois mois, on le déclare fermé (<code class="docutils literal notranslate"><span class="pre">etablissements.ouvert</span></code> = <code class="docutils literal notranslate"><span class="pre">FALSE</span></code>) ;</p></li>
+<li><p>sinon il est ouvert.</p></li>
+</ul>
+</section>
+<section id="mise-a-jour-de-la-base-de-donnees">
+<h3>Mise à jour de la base de données<a class="headerlink" href="#mise-a-jour-de-la-base-de-donnees" title="Link to this heading"></a></h3>
+<p>Des tâches de maintenance et de mise à jour de la base de données sont effectuées lors de chaque intégration.</p>
+<section id="reindex-tables">
+<h4><code class="docutils literal notranslate"><span class="pre">reindex_tables</span></code><a class="headerlink" href="#reindex-tables" title="Link to this heading"></a></h4>
+<p>On réindexe les tables <code class="docutils literal notranslate"><span class="pre">contrats</span></code> et <code class="docutils literal notranslate"><span class="pre">salaries</span></code> au début de chaque intégration après la suppression des stt et ctt alloués lors de la précédente intégration. Cela permet d’avoir ensuite des performances optimisées pour l’exécution des autres scripts. A noter que cette opération est optionnelle.</p>
+</section>
+<section id="remove-old-data">
+<h4><code class="docutils literal notranslate"><span class="pre">remove_old_data</span></code><a class="headerlink" href="#remove-old-data" title="Link to this heading"></a></h4>
+<p>En base les entités (entreprise, établissement, salarié, contrat, poste) n’ayant pas fait l’objet de déclaration depuis plus de 72 mois (c.a.d 6 ans) sont supprimées.</p>
+</section>
+<section id="set-dernier-mois-de-declaration-integre">
+<h4><code class="docutils literal notranslate"><span class="pre">set_dernier_mois_de_declaration_integre</span></code><a class="headerlink" href="#set-dernier-mois-de-declaration-integre" title="Link to this heading"></a></h4>
+<p>Le dernier mois de déclaration intégré est renseigné dans la table <code class="docutils literal notranslate"><span class="pre">public.chargement_donnees</span></code> à l’aide du script <code class="docutils literal notranslate"><span class="pre">set_dernier_mois_de_declaration_integre</span></code></p>
+</section>
+<section id="monthly-sanity-checks">
+<h4><code class="docutils literal notranslate"><span class="pre">monthly_sanity_checks</span></code><a class="headerlink" href="#monthly-sanity-checks" title="Link to this heading"></a></h4>
+<p>Le script <code class="docutils literal notranslate"><span class="pre">monthly_sanity_checks</span></code> analyse la cohérence des tables en fin d’intégration pour prévenir les bugs les plus évidents. Il vérifie :</p>
+<ul class="simple">
+<li><p>que les champs <code class="docutils literal notranslate"><span class="pre">etablissement_id</span></code> des tables <code class="docutils literal notranslate"><span class="pre">salaries</span></code> et <code class="docutils literal notranslate"><span class="pre">contrats</span></code> sont cohérents ;</p></li>
+<li><p>et que les tables <code class="docutils literal notranslate"><span class="pre">link</span></code> référencent des id existants dans la base.</p></li>
+</ul>
+</section>
+<section id="clean-database">
+<h4><code class="docutils literal notranslate"><span class="pre">clean_database</span></code><a class="headerlink" href="#clean-database" title="Link to this heading"></a></h4>
+<p>Supprime les données des tables contenues dans les schéma <code class="docutils literal notranslate"><span class="pre">raw</span></code> et <code class="docutils literal notranslate"><span class="pre">source</span></code> afin d’alléger la base.</p>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="integration_structure_scripts.html" class="btn btn-neutral float-left" title="Structure des scripts d’intégration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../pipeline/index.html" class="btn btn-neutral float-right" title="Mise en oeuvre de l’intégration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Margot COSSON.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

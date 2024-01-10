@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exécution des scripts d’intégration : dags et orchestrateurs &mdash; DSN processing  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/avoid_rolling_tab.css?v=9d8e3617" />
+      <link rel="stylesheet" type="text/css" href="../../_static/increase_width.css?v=a0fc712e" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="Import et accès aux données source" href="import_et_acces_donnees_source.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            DSN processing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Sommaire :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../database/index.html">Base(s) de données</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Intégration des données</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../core/index.html">Contenu des scripts d’intégration</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Mise en oeuvre de l’intégration</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="import_et_acces_donnees_source.html">Import et accès aux données source</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Exécution des scripts d’intégration : dags et orchestrateurs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#orchestrateurs-de-scripts">Orchestrateurs de scripts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dags">Dags</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#procedure-de-reprise-historique">Procédure de reprise historique</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DSN processing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Intégration des données</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Mise en oeuvre de l’intégration</a></li>
+      <li class="breadcrumb-item active">Exécution des scripts d’intégration : dags et orchestrateurs</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/integration/pipeline/dags_et_orchestrateurs.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="execution-des-scripts-d-integration-dags-et-orchestrateurs">
+<h1>Exécution des scripts d’intégration : dags et orchestrateurs<a class="headerlink" href="#execution-des-scripts-d-integration-dags-et-orchestrateurs" title="Link to this heading"></a></h1>
+<p>Un DAG (directed acyclic graph) est une liste ordonnée de tâches matérialisées par des scripts Python ou SQL. En d’autres termes, il s’agit d’une liste de scripts qui sont exécutés successivement selon l’ordre de la liste.</p>
+<p>On parle d’orchestrateur pour parler d’une brique qui permet l’exécution de scripts seuls ou de DAG. A noter qu’un orchestrateur peut aussi comporter des fonctionnalités de planification afin de programmer l’exécution automatique de tâches.</p>
+<section id="orchestrateurs-de-scripts">
+<h2>Orchestrateurs de scripts<a class="headerlink" href="#orchestrateurs-de-scripts" title="Link to this heading"></a></h2>
+<p>Deux orchestrateurs aux usages complémentaires sont disponibles :</p>
+<ul class="simple">
+<li><p>un orchestrateur Bash (avec connexion à la base via Python) pour les besoins du développement ;</p></li>
+<li><p>un orchestrateur <a class="reference external" href="https://airflow.apache.org/docs/">Airflow</a> pour la production.</p></li>
+</ul>
+<p>Afin de limiter les risques de divergence entre les deux orchestrateurs, la majorité des dags définis dans Airflow le sont sur la base de ceux définis dans l’orchestrateur Bash.</p>
+<section id="orchestrateur-bash">
+<h3>Orchestrateur Bash<a class="headerlink" href="#orchestrateur-bash" title="Link to this heading"></a></h3>
+<p>Le code de l’orchestrateur Bash se situe dans le dossier <code class="docutils literal notranslate"><span class="pre">dsn_processing/pipeline/bash/</span></code>. Cet orchestrateur ne doit être utilisé qu’en développement. Bien qu’utile de par sa flexibilité et sa prise en main rapide, il n’offre pas les standards de robustesse, de tracabilité et de sécurité attendus pour le lancement d’intégrations en production.</p>
+<section id="le-coeur-orchestrator-py">
+<h4>Le coeur : <code class="docutils literal notranslate"><span class="pre">orchestrator.py</span></code><a class="headerlink" href="#le-coeur-orchestrator-py" title="Link to this heading"></a></h4>
+<p>Il s’appuie sur un fichier Python qui permet l’exécution d’un script SQL tel que :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>usage:<span class="w"> </span>orchestrator.py<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span>-s<span class="w"> </span>SCRIPT<span class="w"> </span><span class="o">[</span>-cmf<span class="w"> </span>COPY_MONTHLY_FILE<span class="o">]</span><span class="w"> </span><span class="o">[</span>-csf<span class="w"> </span>COPY_STATIC_FILE<span class="o">]</span><span class="w"> </span><span class="o">[</span>-d<span class="w"> </span>DATE<span class="o">]</span><span class="w"> </span><span class="o">[</span>-f<span class="w"> </span>FOLDER_TYPE<span class="o">]</span>
+
+Bash<span class="w"> </span>orchestrator
+
+optional<span class="w"> </span>arguments:
+<span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">            </span>show<span class="w"> </span>this<span class="w"> </span><span class="nb">help</span><span class="w"> </span>message<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
+<span class="w">  </span>-s<span class="w"> </span>SCRIPT,<span class="w"> </span>--script<span class="w"> </span>SCRIPT
+<span class="w">                        </span>Name<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>SQL<span class="w"> </span>script<span class="w"> </span>to<span class="w"> </span>execute<span class="w"> </span><span class="o">(</span>&lt;dag_name/script_name.sql&gt;<span class="o">)</span>.
+<span class="w">  </span>-cmf<span class="w"> </span>COPY_MONTHLY_FILE,<span class="w"> </span>--copy_monthly_file<span class="w"> </span>COPY_MONTHLY_FILE
+<span class="w">                        </span>If<span class="w"> </span>importing<span class="w"> </span>SQL<span class="w"> </span>script,<span class="w"> </span>the<span class="w"> </span>name<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>monthly<span class="w"> </span>csv<span class="w"> </span>file<span class="w"> </span><span class="o">(</span>&lt;csv_name&gt;<span class="o">)</span>.
+<span class="w">  </span>-csf<span class="w"> </span>COPY_STATIC_FILE,<span class="w"> </span>--copy_static_file<span class="w"> </span>COPY_STATIC_FILE
+<span class="w">                        </span>If<span class="w"> </span>importing<span class="w"> </span>SQL<span class="w"> </span>script,<span class="w"> </span>the<span class="w"> </span>name<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>static<span class="w"> </span>csv<span class="w"> </span>file<span class="w"> </span><span class="o">(</span>&lt;csv_name&gt;<span class="o">)</span>.
+<span class="w">  </span>-d<span class="w"> </span>DATE,<span class="w"> </span>--date<span class="w"> </span>DATE<span class="w">  </span>Declaration<span class="w"> </span>date<span class="w"> </span><span class="o">(</span>format<span class="w"> </span>:<span class="w"> </span>YYYY-MM-DD<span class="o">)</span>.
+<span class="w">  </span>-f<span class="w"> </span>FOLDER_TYPE,<span class="w"> </span>--folder_type<span class="w"> </span>FOLDER_TYPE
+<span class="w">                        </span>Folder<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="o">(</span>raw<span class="w"> </span>or<span class="w"> </span><span class="nb">test</span><span class="o">)</span>.
+</pre></div>
+</div>
+<p>A noter qu’il ne prend pas en argument les paramètres de connexion à la base de données (serveur, port, identifiant, etc.). En effet, les valeurs utilisées sont celles des variables d’environnement (<code class="docutils literal notranslate"><span class="pre">POSTGRES_DB,</span> <span class="pre">POSTGRES_PORT,</span> <span class="pre">POSTGRES_USER,</span> <span class="pre">POSTGRES_PASSWORD,</span> <span class="pre">POSTGRES_HOST</span></code>) d’où l’importance de les définir correctement avant de lancer l’orchestrateur. Sa verbosité peut également être modulée à l’aide de la variable d’environnement <code class="docutils literal notranslate"><span class="pre">BASH_ORCHESTRATOR_VERBOSE</span></code> (True/False).</p>
+</section>
+<section id="les-dags-bash">
+<h4>Les dags Bash<a class="headerlink" href="#les-dags-bash" title="Link to this heading"></a></h4>
+<p>Néanmoins, sauf exception, il sera rare de l’utiliser tel quel. En effet, si on souhaite exécuter un seul script, on préfèrera copier-coller directement la requête dans PGAdmin.</p>
+<p>L’intérêt du fichier Python est qu’il peut être appelé à plusieurs reprises au sein d’un fichier Bash. Cela permet d’exécuter séquentiellement des tâches. Autrement dit, on peut créer des fichiers Bash encodant des dags. Par exemple, le fichier <code class="docutils literal notranslate"><span class="pre">dsn_processing/pipeline/bash/dags/init_database.sh</span></code> encode le dag <code class="docutils literal notranslate"><span class="pre">init_database</span></code> de la façon suivante :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">set</span><span class="w"> </span>-e<span class="w"> </span><span class="c1"># l&#39;exécution du Bash s&#39;arrête en cas d&#39;erreur</span>
+python<span class="w"> </span><span class="si">${</span><span class="nv">DSN_PROCESSING_REPOSITORY_PATH</span><span class="si">}</span>/pipeline/bash/orchestrator.py<span class="w"> </span>-s<span class="w"> </span>init_database/create_permanent_tables.sql
+python<span class="w"> </span><span class="si">${</span><span class="nv">DSN_PROCESSING_REPOSITORY_PATH</span><span class="si">}</span>/pipeline/bash/orchestrator.py<span class="w"> </span>-s<span class="w"> </span>init_database/create_integration_tables.sql
+python<span class="w"> </span><span class="si">${</span><span class="nv">DSN_PROCESSING_REPOSITORY_PATH</span><span class="si">}</span>/pipeline/bash/orchestrator.py<span class="w"> </span>-s<span class="w"> </span>init_database/create_trigger_logs.sql
+python<span class="w"> </span><span class="si">${</span><span class="nv">DSN_PROCESSING_REPOSITORY_PATH</span><span class="si">}</span>/pipeline/bash/orchestrator.py<span class="w"> </span>-s<span class="w"> </span>init_database/create_dag_status_functions.sql
+bash<span class="w"> </span><span class="si">${</span><span class="nv">DSN_PROCESSING_REPOSITORY_PATH</span><span class="si">}</span>/pipeline/bash/dags/update_database.sh<span class="w"> </span><span class="c1"># appel d&#39;un sous-DAG</span>
+</pre></div>
+</div>
+<p>Ces dags Bash peuvent ensuite être appelés directement en lignes de commande :
+,</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash<span class="w"> </span>pipeline/bash/dags/init_database.sh
+bash<span class="w"> </span>pipeline/bash/dags/monthly_integration.sh<span class="w"> </span>&lt;year&gt;<span class="w"> </span>&lt;month&gt;<span class="w"> </span>&lt;folder_type&gt;
+bash<span class="w"> </span>pipeline/bash/dags/update_static_files.sh<span class="w"> </span>&lt;year<span class="w"> </span>at<span class="w"> </span>format<span class="w"> </span>YY&gt;
+bash<span class="w"> </span>pipeline/bash/dags/historical_integration.sh<span class="w"> </span>&lt;start_year&gt;<span class="w"> </span>&lt;end_date&gt;<span class="w"> </span>&lt;folder_type&gt;
+bash<span class="w"> </span>pipeline/bash/dags/test_integration.sh
+bash<span class="w"> </span>pipeline/bash/dags/mock_integration.sh
+bash<span class="w"> </span>pipeline/bash/dags/anonymous_integration.sh
+</pre></div>
+</div>
+</section>
+</section>
+<section id="orchestrateur-airflow">
+<h3>Orchestrateur Airflow<a class="headerlink" href="#orchestrateur-airflow" title="Link to this heading"></a></h3>
+<p>Le code de l’orchestrateur Airflow se situe dans le dossier <code class="docutils literal notranslate"><span class="pre">dsn_processing/pipeline/airflow/</span></code>. Si cet orchestrateur offre une interface de suivi et des briques d’orchestration robustes, il manque de flexibilité. En phase de test, on préfèrera l’orchestrateur Bash.</p>
+<section id="deploiement">
+<h4>Déploiement<a class="headerlink" href="#deploiement" title="Link to this heading"></a></h4>
+<p>Chaque Airflow est déployé pour un serveur de base donné, spécifié à l’aide des variables d’environnement <code class="docutils literal notranslate"><span class="pre">POSTGRES_HOST</span></code> et <code class="docutils literal notranslate"><span class="pre">POSTGRES_PORT</span></code>. Pour plus d’informations sur la procédure de déploiement, veuillez consulter la <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/champolib/blob/dev/documentation/7_utilisation_docker.md#d%C3%A9ploiements-docker-manuels-dans-lenvironnement-ovh-champollion">documentation dédiée</a>.</p>
+<section id="pre-requis">
+<h5>Pré-requis<a class="headerlink" href="#pre-requis" title="Link to this heading"></a></h5>
+<ol class="arabic simple">
+<li><p>Pour que les étapes suivantes fonctionnent, il faut qu’une <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/champolib/blob/dev/documentation/7_utilisation_docker.md#pr%C3%A9-requis">connexion au Hub de stockage</a> des images ait été activée.</p></li>
+<li><p>Il faut également que le dossier <code class="docutils literal notranslate"><span class="pre">dsn_processing</span></code> soit accessible en lecture et en exécution à tout utilisateur (droits <code class="docutils literal notranslate"><span class="pre">drwxr-xr-x</span></code> vérifiables avec la commande <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-la</span></code>). Si ce n’est pas le cas, il faut utiliser la commande <code class="docutils literal notranslate"><span class="pre">chmod</span> <span class="pre">755</span> <span class="pre">-R</span> <span class="pre">dsn_processing/</span></code>.</p></li>
+</ol>
+</section>
+<section id="en-dynamique-ou-en-statique">
+<h5>En dynamique ou en statique<a class="headerlink" href="#en-dynamique-ou-en-statique" title="Link to this heading"></a></h5>
+<p>Si Airflow est déployé sur une machine qui héberge le code, on peut déployer l’ochestrateur de manière dynamique. Les dags sont alors définis directement par le dossier contenant le code. Pour ce faire, on décommentera dans le fichier <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/docker-compose.yaml">dsn_processing/pipeline/airflow/docker-compose.yaml</a> les deux lignes suivantes :</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${DSN_PROCESSING_REPOSITORY_PATH}/pipeline/airflow/dags:/opt/airflow/dags</span><span class="w">                  </span><span class="c1"># only for development</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${DSN_PROCESSING_REPOSITORY_PATH}:/home/airflow/code/dsn_processing</span><span class="w">                        </span><span class="c1"># only for development</span>
+</pre></div>
+</div>
+<p>Dans le cas inverse, Airflow est déployé en statique, les dags sont définis par le code contenu dans l’image. Contrairement au déployement dynamique, la modification du code nécessite donc de repasser par une étape de build.</p>
+</section>
+<section id="etape-de-build">
+<h5>Etape de build<a class="headerlink" href="#etape-de-build" title="Link to this heading"></a></h5>
+<p>Trois images sont nécessaires pour la mise en route de ce service :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">airflow/common</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">airflow/postgres</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">airflow/redis</span></code></p></li>
+</ul>
+<ol class="arabic">
+<li><p>Créez un fichier de variables d’environnement sur la base du <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/.env.example">fichier <code class="docutils literal notranslate"><span class="pre">dsn_processing/pipeline/airflow/.env.example</span></code></a>. Veillez à incrémenter la valeur des tags des trois images (variables <code class="docutils literal notranslate"><span class="pre">AIRFLOW_COMMON_IMAGE_TAG</span></code>, <code class="docutils literal notranslate"><span class="pre">AIRFLOW_POSTGRES_IMAGE_TAG</span></code> et <code class="docutils literal notranslate"><span class="pre">AIRFLOW_REDIS_IMAGE_TAG</span></code>) afin de ne pas écraser les versions antérieures (sauf en cas de correctif sur une précédente image). Un fichier d’environnement en partie pré-rempli est disponible <a class="reference external" href="https://msociauxfr.sharepoint.com/:t:/r/teams/EIG71/Documents%20partages/General/Commun/D%C3%A9veloppement/.env.prefilled/.env.airflow.prefilled.txt?csf=1&amp;amp;web=1&amp;amp;e=4wsLue">ici</a>.</p></li>
+<li><p>Vérifiez que vous êtes sur la version du code que vous souhaitez déployer.</p></li>
+<li><p>Compilez et poussez les images (avec <code class="docutils literal notranslate"><span class="pre">ENV_FILE_PATH</span></code> le chemin vers votre fichier de variables d’environnement)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">ENV_FILE_PATH</span><span class="o">=</span>...<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<span class="nb">export</span><span class="w"> </span><span class="k">$(</span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^#&quot;</span><span class="w"> </span><span class="si">${</span><span class="nv">ENV_FILE_PATH</span><span class="si">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="k">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+bash<span class="w"> </span>pipeline/airflow/build.sh<span class="w"> </span>-e<span class="w"> </span><span class="nv">$ENV_FILE_PATH</span><span class="w"> </span>-p
+</pre></div>
+</div>
+</li>
+<li><p>Connectez-vous au Hub pour vérifier que les images ont bien été poussées.</p></li>
+</ol>
+</section>
+<section id="etape-de-run">
+<h5>Etape de run<a class="headerlink" href="#etape-de-run" title="Link to this heading"></a></h5>
+<ol class="arabic">
+<li><p>Connectez-vous sur la VM devant héberger le service avec le compte souhaité pour le déploiement des conteneurs.</p></li>
+<li><p>Récupérez le fichier <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/docker-compose.yaml">dsn_processing/pipeline/airflow/docker-compose.yaml</a> et le fichier d’environnement tel que défini à l’étape 1 du build. Copiez les sur la machine.</p></li>
+<li><p>Mettez en service les conteneurs avec la commande suivante (avec <code class="docutils literal notranslate"><span class="pre">ENV_FILE_PATH</span></code> le chemin vers votre fichier de variables d’environnement) :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">ENV_FILE_PATH</span><span class="o">=</span>...<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<span class="nb">export</span><span class="w"> </span><span class="k">$(</span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^#&quot;</span><span class="w"> </span><span class="si">${</span><span class="nv">ENV_FILE_PATH</span><span class="si">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="k">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span><span class="nv">$ENV_FILE_PATH</span><span class="w"> </span>stop<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span><span class="nv">$ENV_FILE_PATH</span><span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span><span class="nv">$ENV_FILE_PATH</span><span class="w"> </span>up<span class="w"> </span>--detach<span class="w"> </span>--pull<span class="w"> </span>always
+</pre></div>
+</div>
+</li>
+<li><p>Vérifiez que le statut des containers est “up” avec la commande <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">ps</span></code>.</p></li>
+</ol>
+</section>
+<section id="dans-l-environnement-champollion">
+<h5>Dans l’environnement Champollion<a class="headerlink" href="#dans-l-environnement-champollion" title="Link to this heading"></a></h5>
+<p>Le Hub de stockage des images est le <a class="reference external" href="https://10.252.1.10/#browse/browse:Champollion">Nexus</a>, on effectue l’étape de build sur la VM LAB et on déploie l’Airflow sur la VM WORKFLOW avec le compte <code class="docutils literal notranslate"><span class="pre">svc.champollion</span></code>. A noter qu’on peut aussi déployer l’Airflow sur la VM LAB en test et on pourra alors l’utiliser de manière <a class="reference internal" href="#en-dynamique-ou-en-statique">dynamique</a>.</p>
+</section>
+</section>
+<section id="acces-a-l-interface-d-airflow">
+<h4>Accès à l’interface d’Airflow<a class="headerlink" href="#acces-a-l-interface-d-airflow" title="Link to this heading"></a></h4>
+<p>Pour accéder à l’interface d’Airflow, il suffit de se connecter sur la VM où le service est déployé puis de forward le port sur lequel il est exposé (variable <code class="docutils literal notranslate"><span class="pre">AIRFLOW_PORT</span></code>, par défaut 8080).</p>
+<p>Le login et le mot de passe sont définis par les valeurs des variables d’environnement <code class="docutils literal notranslate"><span class="pre">AIRFLOW_WWW_USER_USERNAME</span></code> et <code class="docutils literal notranslate"><span class="pre">AIRFLOW_WWW_USER_PASSWORD</span></code> lors du déploiement.</p>
+</section>
+<section id="les-dags-airflow">
+<h4>Les dags Airflow<a class="headerlink" href="#les-dags-airflow" title="Link to this heading"></a></h4>
+<p>Les dags Airflow sont définis par les fichiers python du dossier <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/tree/dev/pipeline/airflow/dags"><code class="docutils literal notranslate"><span class="pre">dsn_processing/pipeline/airflow/dags</span></code></a>. La plupart des ces fichiers font appel à la fonction <code class="docutils literal notranslate"><span class="pre">register_tasks</span></code> du fichier <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/dags/utils.py#L54"><code class="docutils literal notranslate"><span class="pre">dsn_processing/pipeline/airflow/dags/utils.py</span></code></a> qui écrit les dags automatiquement à partir des scripts listés dans les <a class="reference internal" href="#les-dags-bash">dags Bash</a>.</p>
+<p>Pour en savoir plus sur l’utilisation d’Airflow, se rendre sur la <a class="reference external" href="https://airflow.apache.org/docs/">documentation</a> de l’outil. En substance :</p>
+<ul class="simple">
+<li><p>La page d’accueil est la liste des dags.</p></li>
+<li><p>Les dags peuvent être lancés à l’aide du triangle bleu (<em>Trigger DAG</em>) de la colonne Actions. Si le dag requiert un paramétrage, un menu intermédiaire permet de fixer la valeur des paramètres. En particulier, cela permet de choisir la base de données (au sein du serveur indiqué lors du déploiement).</p></li>
+</ul>
+<p>A noter qu’il n’existe pas de dag <code class="docutils literal notranslate"><span class="pre">historical_integration</span></code>, cette procédure est orchestrée par un script bash qui lance des dags <code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code> successifs dans Airflow. Pour plus d’informations, voir la section <a class="reference internal" href="#procedure-de-reprise-historique">Procédure de reprise historique</a>.</p>
+</section>
+<section id="automatisation-de-l-integration-mensuelle">
+<h4>Automatisation de l’intégration mensuelle<a class="headerlink" href="#automatisation-de-l-integration-mensuelle" title="Link to this heading"></a></h4>
+<p>En l’absence d’automatisation de l’import des données source, l’automatisation des intégrations dans Airflow a été désactivée. Pour configurer une orchestration automatique, il faut paraméter le DAG dans le fichier python avec le paramètre <a class="reference external" href="https://airflow.apache.org/docs/apache-airflow/1.10.1/scheduler.html"><code class="docutils literal notranslate"><span class="pre">schedule_interval</span></code></a> tel que :</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
+    <span class="o">...</span>
+    <span class="n">schedule_interval</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;0 8 10 * *&quot;</span><span class="p">,</span>  <span class="c1"># si on souhaite intégrer le 10 de chaque mois à 8h par exemple</span>
+    <span class="o">...</span>   
+<span class="p">)</span>    
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="dags">
+<h2>Dags<a class="headerlink" href="#dags" title="Link to this heading"></a></h2>
+<p>La liste des DAGs disponibles est la suivante :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Périodicité</p></th>
+<th class="head"><p>Bash</p></th>
+<th class="head"><p>Airflow</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>check_database_connection</p></td>
+<td><p>Test de la connexion à la base de données.</p></td>
+<td><p>NA</p></td>
+<td><p></p></td>
+<td><p><a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/dags/check_database_connection.py">x</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>init_database</p></td>
+<td><p>Initialisation de la base de données.</p></td>
+<td><p>NA</p></td>
+<td><p><a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/bash/dags/init_database.sh">x</a></p></td>
+<td><p><a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/dags/init_database.py">x</a></p></td>
+</tr>
+<tr class="row-even"><td><p>monthly_integration</p></td>
+<td><p>Intégration mensuelle de données.</p></td>
+<td><p>Le 10 de chaque mois après <a class="reference internal" href="import_et_acces_donnees_source.html#planning-des-imports"><span class="std std-ref">réception des données source</span></a>.</p></td>
+<td><p><a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/bash/dags/monthly_integration.sh">x</a></p></td>
+<td><p><a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/dags/monthly_integration.py">x</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>update_static_files</p></td>
+<td><p>Mise à jour des fichiers de contexte, dits fichiers statiques.</p></td>
+<td><p>Une fois par an.</p></td>
+<td><p><a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/bash/dags/update_static_files.sh">x</a></p></td>
+<td><p><a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/dags/update_static_files.py">x</a></p></td>
+</tr>
+<tr class="row-even"><td><p>update_database</p></td>
+<td><p>Mise à jour des tables contextuelles, dites statiques.</p></td>
+<td><p>Une fois par an.</p></td>
+<td><p><a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/bash/dags/update_database.sh">x</a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>historical_integration</p></td>
+<td><p>Intégration successive de plusieurs mois de données.</p></td>
+<td><p>NA</p></td>
+<td><p><a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/bash/dags/historical_integration.sh">x</a></p></td>
+<td><p><a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/dags/historical_integration.sh">x</a> (via un fichier bash)</p></td>
+</tr>
+<tr class="row-even"><td><p>test_integration</p></td>
+<td><p>Intégration de test.</p></td>
+<td><p>NA</p></td>
+<td><p><a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/bash/dags/test_integration.sh">x</a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>mock_integration</p></td>
+<td><p>Intégration des données mockées.</p></td>
+<td><p>NA</p></td>
+<td><p><a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/bash/dags/mock_integration.sh">x</a></p></td>
+<td><p><a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/dags/mock_integration.py">x</a></p></td>
+</tr>
+<tr class="row-even"><td><p>anonymous_integration</p></td>
+<td><p>Création d’un schéma de données anonymisées.</p></td>
+<td><p>NA</p></td>
+<td><p><a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/bash/dags/anonymous_integration.sh">x</a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p>Dans la suite de cette section, on décrit les spécificités de chaque DAG.</p>
+<section id="check-database-connection">
+<h3><code class="docutils literal notranslate"><span class="pre">check_database_connection</span></code><a class="headerlink" href="#check-database-connection" title="Link to this heading"></a></h3>
+<p>Les logs du DAG permettent de consulter les informations de connexion afin de vérifier qu’il s’agit de la bonne base de données.</p>
+</section>
+<section id="init-database">
+<h3><code class="docutils literal notranslate"><span class="pre">init_database</span></code><a class="headerlink" href="#init-database" title="Link to this heading"></a></h3>
+<p>Le DAG <code class="docutils literal notranslate"><span class="pre">init_database</span></code> fait appel au DAG <code class="docutils literal notranslate"><span class="pre">update_database</span></code> afin de compléter les tables statiques dès l’initialisation de la base.</p>
+</section>
+<section id="monthly-integration">
+<h3><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code><a class="headerlink" href="#monthly-integration" title="Link to this heading"></a></h3>
+<p>Le DAG commence par une étape d’extraction des données source. Pour ce faire, on fait appel au script <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/common/extract_archives.sh"><code class="docutils literal notranslate"><span class="pre">dsn_processing/pipeline/common/extract_archive.sh</span></code></a>.  A la fin de l’exécution, on supprime les données désarchivées grâce au script <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/common/remove_extracted.sh"><code class="docutils literal notranslate"><span class="pre">dsn_processing/pipeline/common/remove_extracted.sh</span></code></a>. Que le DAG ait fini en erreur ou non, cette suppression est systématique via l’orchestrateur Bash. Ce n’est pas le cas dans Airflow.</p>
+<section id="specificites-dans-airflow">
+<h4>Spécificités dans Airflow<a class="headerlink" href="#specificites-dans-airflow" title="Link to this heading"></a></h4>
+<p>Le DAG dans Airflow commence par une tâche <code class="docutils literal notranslate"><span class="pre">get_start_task</span></code> qui vérifie que le statut de la base (champ <code class="docutils literal notranslate"><span class="pre">sys.current_status.status</span></code>) est en statut <code class="docutils literal notranslate"><span class="pre">SUCCESS</span></code>, ce qui indique que la précédente intégration s’est finie correctement. Dans le cas inverse (statut <code class="docutils literal notranslate"><span class="pre">ONGOING</span></code>), le DAG est interrompu en erreur. Si le résultat est positif, il change le statut de la base à <code class="docutils literal notranslate"><span class="pre">ONGOING</span></code> pour signifier le fait que l’intégration commence.</p>
+<p>Le DAG exécute ensuite une salve de vérifications sur les données d’entrée :</p>
+<ul class="simple">
+<li><p>est-ce que le dossier de données source existe ?</p></li>
+<li><p>est-ce que les fichiers de données source existent ?</p></li>
+<li><p>est-ce que les fichiers ont une taille cohérente ?</p></li>
+<li><p>est-ce que les fichiers comportent le bon délimiteur de colonnes ?</p></li>
+<li><p>est-ce que les fichiers ont les bonnes colonnes dans le bon ordre ?</p></li>
+</ul>
+<p>Les fonctions implémentées pour ces vérifications sont celles du fichier <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/core/python/raw_files_management/check_conformity_raw_files.py"><code class="docutils literal notranslate"><span class="pre">dsn_processing/core/python/raw_files_management/check_conformity_raw_files.py</span></code></a> qui s’appuie sur le fichier de configuration <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/core/python/raw_files_management/raw_files_config.json"><code class="docutils literal notranslate"><span class="pre">dsn_processing/core/python/raw_files_management/raw_files_config.json</span></code></a>.</p>
+<p>Si le paramètre <code class="docutils literal notranslate"><span class="pre">do_backup</span></code> a été fixé à <code class="docutils literal notranslate"><span class="pre">True</span></code>, un backup de la base est réalisé à l’issue de l’intégration des données. Le script utilisé à cette fin est <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/common/database_backup.sh"><code class="docutils literal notranslate"><span class="pre">dsn_processing/pipeline/common/database_backup.sh</span></code></a>. Pour plus d’informations, voir la <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/champolib/blob/dev/documentation/data/1_infrastructure_data.md#sauvegarde-des-donn%C3%A9es">documentation dédiée</a>.</p>
+<p>Si toutes les étapes du DAG ont été un succès, la tâche finale <code class="docutils literal notranslate"><span class="pre">get_successful_end_task</span></code> passe le statut de la base d’<code class="docutils literal notranslate"><span class="pre">ONGOING</span></code> à <code class="docutils literal notranslate"><span class="pre">SUCCESS</span></code>.</p>
+</section>
+<section id="performances-sur-les-donnees-reelles">
+<h4>Performances sur les données réelles<a class="headerlink" href="#performances-sur-les-donnees-reelles" title="Link to this heading"></a></h4>
+<p>La durée d’exécution du DAG <code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code> augmente avec la taille de la base. Si pour le premier mois intégré, elle est d’1h30 environ, elle monte progressivement jusqu’à 8h pour le 60e mois intégré en suivant une évolution linéraire de coefficient 6-7. Ce temps d’intégration devrait se stabiliser lorsque la suppression des données à l’aide du script <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/core/sql/monthly_integration/remove_old_data.sql"><code class="docutils literal notranslate"><span class="pre">dsn_processing/core/sql/monthly_integration/remove_old_data.sql</span></code></a> débutera au bout de 72 mois d’historique.</p>
+</section>
+</section>
+<section id="update-static-files">
+<h3><code class="docutils literal notranslate"><span class="pre">update_static_files</span></code><a class="headerlink" href="#update-static-files" title="Link to this heading"></a></h3>
+<p>/!\ Ce DAG nécessite une connexion internet. Ce dernier ne peut donc pas fonctionner sur toutes les machines. De plus, les variables de proxy, <code class="docutils literal notranslate"><span class="pre">HTTP_PROXY</span></code> et <code class="docutils literal notranslate"><span class="pre">HTTPS_PROXY</span></code> doivent être définies.</p>
+<p>Le DAG fait appel aux fonctions Python des fichiers <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/core/python/raw_files_management/generate_static_table_files.py"><code class="docutils literal notranslate"><span class="pre">dsn_processing/core/python/raw_files_management/generate_static_table_files.py</span></code></a> et <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/core/python/raw_files_management/generate_holiday_calendar.py"><code class="docutils literal notranslate"><span class="pre">dsn_processing/core/python/raw_files_management/generate_holiday_calendar.py</span></code></a> du dossier <code class="docutils literal notranslate"><span class="pre">dsn_processing/core/python/raw_files_management</span></code>. Ces fonctions accèdent aux données source sur internet et la bonne exécution du DAG requiert donc une connexion internet.</p>
+<p>Les fichiers sont envoyés vers le dossier défini par la variable <code class="docutils literal notranslate"><span class="pre">WORKFLOW_SOURCES_DATA_PATH</span></code>.</p>
+</section>
+<section id="update-database">
+<h3><code class="docutils literal notranslate"><span class="pre">update_database</span></code><a class="headerlink" href="#update-database" title="Link to this heading"></a></h3>
+<p>Aucune spécificité.</p>
+</section>
+<section id="historical-integration">
+<h3><code class="docutils literal notranslate"><span class="pre">historical_integration</span></code><a class="headerlink" href="#historical-integration" title="Link to this heading"></a></h3>
+<p>La documentation des intégrations historiques fait l’objet d’une section dédiée, <a class="reference internal" href="#procedure-de-reprise-historique">ici</a>.</p>
+</section>
+<section id="test-integration">
+<h3><code class="docutils literal notranslate"><span class="pre">test_integration</span></code><a class="headerlink" href="#test-integration" title="Link to this heading"></a></h3>
+<p>Le DAG <code class="docutils literal notranslate"><span class="pre">test_integration</span></code> encode plusieurs étapes :</p>
+<ul class="simple">
+<li><p>la création d’échantillons de fichiers bruts (facultatif) ;</p></li>
+<li><p>la création des fichiers de comparaison ;</p></li>
+<li><p>l’intégration de ces échantillons via les scripts d’intégration (i.e <em>ce qui est obtenu</em> par l’intégration);</p></li>
+<li><p>l’intégration des tables de référence qui correspondent à <em>ce qui est attendu</em> comme données de sortie ;</p></li>
+<li><p>la comparaison de <em>ce qui est obtenu</em> avec <em>ce qui est attendu</em>.</p></li>
+</ul>
+<p>Pour plus d’informations sur la base de test et la nature des données <em>attendues</em> vs <em>obtenues</em>, se référer au <a class="reference internal" href="../../database/guide_technique_bases_de_donnees.html#une-base-de-test-avec-des-donnees-reelles"><span class="std std-ref">guide technique</span></a>.</p>
+<section id="fichier-de-reference-pour-la-construction-de-la-base-de-test">
+<h4>Fichier de référence pour la construction de la base de test<a class="headerlink" href="#fichier-de-reference-pour-la-construction-de-la-base-de-test" title="Link to this heading"></a></h4>
+<p>Le fichier à l’origine de la construction de la base de test est <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/resources/source_file_test_data.xlsx"><code class="docutils literal notranslate"><span class="pre">dsn_processing/resources/source_file_test_data.xlsx</span></code></a> :</p>
+<ul class="simple">
+<li><p>l’onglet <em>Sujets</em> détaille les différents cas de figure pour lesquelles les scripts d’intégration doivent être testés ;</p></li>
+<li><p>l’onglet <em>Input</em> liste les <code class="docutils literal notranslate"><span class="pre">IdContrat</span></code> et <code class="docutils literal notranslate"><span class="pre">DateChargement</span></code> des lignes qui doivent être incorporées dans les échantillons des fichiers bruts des contrats ;</p></li>
+<li><p>les onglets <em>Output …</em> répertorient les données attendues dans les différentes tables en sortie des scripts d’intégration.</p></li>
+</ul>
+<p>Ces onglets sont remplis à la main par l’équipe de développement. A noter que la moindre modification de l’onglet <em>Input</em> nécessite donc une répercusion à la main sur les onglets <em>Output</em>. Les données des onglets <em>Output</em> sont des données réelles, il convient néanmoins de ne pas y inclure de données personnelles. On cherche seulement à tester les mécaniques des scripts d’intégration.</p>
+</section>
+<section id="creation-des-echantillons-de-fichiers-bruts">
+<h4>Création des échantillons de fichiers bruts<a class="headerlink" href="#creation-des-echantillons-de-fichiers-bruts" title="Link to this heading"></a></h4>
+<p>A partir du fichier de référence  <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/resources/source_file_test_data.xlsx"><code class="docutils literal notranslate"><span class="pre">dsn_processing/resources/source_file_test_data.xlsx</span></code></a>, on génère les échantillons de fichiers bruts DSN.</p>
+<p>Cette opération est effectuée par la fonction <code class="docutils literal notranslate"><span class="pre">generate_input_data_files</span></code> du fichier <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/core/python/raw_files_management/generate_test_data_files.py"><code class="docutils literal notranslate"><span class="pre">dsn_processing/core/python/raw_files_management/generate_test_data_files.py</span></code></a>. L’opération est assez lourde puisqu’elle nécessite de :</p>
+<ul class="simple">
+<li><p>décompresser les archives de données brutes,</p></li>
+<li><p>et sélectionner toutes les données liées directement ou indirectement aux <code class="docutils literal notranslate"><span class="pre">IdContrat</span></code> renseignés dans l’onglet <em>Input</em>.</p></li>
+</ul>
+<p>Cette étape n’est nécessaire qu’en cas de modification de l’onglet <em>Input</em> du fichier de référence. Elle est exécutée lors de l’appel du fichier <code class="docutils literal notranslate"><span class="pre">dsn_processing/core/python/raw_files_management/generate_test_data_files.py</span></code> si une balise <code class="docutils literal notranslate"><span class="pre">-i</span></code> a été ajoutée.</p>
+<p>Les fichiers ainsi générés sont stockés dans le dossier correspondant à la variable d’environnement <code class="docutils literal notranslate"><span class="pre">WORKFLOW_TEST_DATA_PATH</span></code>.</p>
+</section>
+<section id="creation-des-fichiers-de-comparaison">
+<h4>Création des fichiers de comparaison<a class="headerlink" href="#creation-des-fichiers-de-comparaison" title="Link to this heading"></a></h4>
+<p>A partir du document de référence <code class="docutils literal notranslate"><span class="pre">dsn_processing/resources/source_file_test_data.xlsx</span></code>, on génère également les fichiers <code class="docutils literal notranslate"><span class="pre">csv</span></code> correspondant aux tables <em>expected</em>.</p>
+<p>Cette étape est implémentée par la fonction <code class="docutils literal notranslate"><span class="pre">generate_expected_data_files</span></code> du fichier <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/core/python/raw_files_management/generate_test_data_files.py"><code class="docutils literal notranslate"><span class="pre">dsn_processing/core/python/raw_files_management/generate_test_data_files.py</span></code></a>.</p>
+<p>Les fichiers ainsi générés sont stockés dans le dossier correspondant à la variable d’environnement <code class="docutils literal notranslate"><span class="pre">WORKFLOW_SOURCES_DATA_PATH</span></code>.</p>
+</section>
+<section id="integration-des-donnees-de-test-via-les-scripts-d-integration">
+<h4>Intégration des données de test via les scripts d’intégration<a class="headerlink" href="#integration-des-donnees-de-test-via-les-scripts-d-integration" title="Link to this heading"></a></h4>
+<p>Au lancement du DAG, la variable <code class="docutils literal notranslate"><span class="pre">POSTGRES_DB</span></code> est automatiquement basculée sur la valeur <code class="docutils literal notranslate"><span class="pre">test</span></code> pour intégrer les données en base de test. Le DAG <code class="docutils literal notranslate"><span class="pre">init_database</span></code> est appelé pour initialiser la base de test. Par la suite, le DAG <code class="docutils literal notranslate"><span class="pre">historical_integration</span></code> est exécuté avec les paramètres suivants renseignés en dur dans le fichier <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/bash/dags/test_integration.sh"><code class="docutils literal notranslate"><span class="pre">dsn_processing/pipeline/bash/dags/test_integration.sh</span></code></a> :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">start_date</span></code> = 2022-01-01 → correspond à la date la plus ancienne des données de test (la commande <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">$WORKFLOW_TEST_DATA_PATH</span></code> peut être utilisée pour déterminer cette borne inférieure) ;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">end_date</span></code> = 2022-09-01 → correspond à la date la plus récente des données de test (la commande <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">$WORKFLOW_TEST_DATA_PATH</span></code> peut être utilisée pour déterminer cette borne supérieure) ;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">folder_type</span></code> = <code class="docutils literal notranslate"><span class="pre">test</span></code> → permet d’aller chercher les données de test, c’est-à-dire les données du dossier <code class="docutils literal notranslate"><span class="pre">WORKFLOW_TEST_DATA_PATH</span></code>.</p></li>
+</ul>
+</section>
+<section id="integration-des-donnees-attendues">
+<h4>Intégration des données <em>attendues</em><a class="headerlink" href="#integration-des-donnees-attendues" title="Link to this heading"></a></h4>
+<p>Les scripts du dossier <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/tree/dev/core/sql/test_integration"><code class="docutils literal notranslate"><span class="pre">dsn_processing/core/sql/test_integration</span></code></a> sont ensuite appelés pour intégrer les tables de référence que contiendra le schéma <code class="docutils literal notranslate"><span class="pre">test</span></code>.</p>
+</section>
+<section id="verification-de-la-mise-en-qualite-des-donnees-tests-unitaires">
+<h4>Vérification de la mise en qualité des données (tests unitaires)<a class="headerlink" href="#verification-de-la-mise-en-qualite-des-donnees-tests-unitaires" title="Link to this heading"></a></h4>
+<p>Le fichier <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/tests/tests.py"><code class="docutils literal notranslate"><span class="pre">dsn_processing/tests/tests.py</span></code></a> implémente les fonctions de comparaison entre les données <em>obtenues</em> via les scripts d’intégration et les données <em>attendues</em> des tables homonymes.</p>
+<p>La comparaison comprend plusieurs axes :</p>
+<ul class="simple">
+<li><p>les ensembles de tuples identifiants des tables <em>obtenues</em> et <em>attendues</em> sont identiques ;</p></li>
+<li><p>pour chaque tuple identifiant, les données renseignées dans la table <em>attendue</em> (non nulles) sont identiques à celles de la table <em>obtenue</em>.</p></li>
+</ul>
+<p>Les comparaisons effectuées sur les champs <code class="docutils literal notranslate"><span class="pre">date_fin_effective</span></code> et <code class="docutils literal notranslate"><span class="pre">statut_fin</span></code> de la table <code class="docutils literal notranslate"><span class="pre">contrats</span></code> font figures d’exception. La table <code class="docutils literal notranslate"><span class="pre">expected_contrats_comparisons</span></code> sert à connaître le type de comparaison à effectuer pour ces deux champs. Si <code class="docutils literal notranslate"><span class="pre">expected_contrats_comparison.date_fin_effective_comparison</span></code> est égal à:</p>
+<ul class="simple">
+<li><p>1, la date de fin effective <em>obtenue</em> doit être strictement égale à celle <em>attendue</em> (idem pour le statut);</p></li>
+<li><p>2, elle doit être supérieure ou égal à celle <em>attendue</em> (idem pour le statut);</p></li>
+<li><p>ni 1 ni 2, on ne peut pas faire de comparaison (idem pour le statut).</p></li>
+</ul>
+<p>Des tests ad-hoc a posteriori peuvent aussi être effectués, à l’image de ceux de la <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/tests/tests.py#L223">fonction <code class="docutils literal notranslate"><span class="pre">test_data_augmentation_keys_changes</span></code></a> par exemple.</p>
+<p>Au sein du DAG, les tests sont lancés à l’aide de la commande suivante :</p>
+<p><code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">${DSN_PROCESSING_REPOSITORY_PATH}/tests/tests.py</span></code></p>
+<p>On pourra également les lancer avec cette même commande en dehors du DAG <code class="docutils literal notranslate"><span class="pre">test_integration</span></code> si on le souhaite.</p>
+</section>
+</section>
+<section id="mock-integration">
+<h3><code class="docutils literal notranslate"><span class="pre">mock_integration</span></code><a class="headerlink" href="#mock-integration" title="Link to this heading"></a></h3>
+<p>Le fichier à l’origine de la construction de la base mockée est <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/resources/source_file_mock_data.xlsx"><code class="docutils literal notranslate"><span class="pre">dsn_processing/resources/source_file_mock_data.xlsx</span></code></a>.</p>
+<p>Il comprend un onglet par table dynamique de la base. Le DAG <code class="docutils literal notranslate"><span class="pre">mock_integration</span></code> vient donc :</p>
+<ul class="simple">
+<li><p>exporter la variable d’environnement <code class="docutils literal notranslate"><span class="pre">POSTGRES_DB</span></code> à la valeur <code class="docutils literal notranslate"><span class="pre">mock</span></code> ;</p></li>
+<li><p>convertir les données de cet excel en fichiers <code class="docutils literal notranslate"><span class="pre">csv</span></code> stockés dans <code class="docutils literal notranslate"><span class="pre">WORKFLOW_SOURCES_DATA_PATH</span></code> à l’aide de la fonction <code class="docutils literal notranslate"><span class="pre">generate_mock_data_files</span></code> du fichier <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/core/python/raw_files_management/generate_mock_table_files.py"><code class="docutils literal notranslate"><span class="pre">dsn_processing/core/python/raw_files_management/generate_mock_table_files.py</span></code></a> ;</p></li>
+<li><p>initialiser la base de données <code class="docutils literal notranslate"><span class="pre">mock</span></code> à l’aide du DAG <code class="docutils literal notranslate"><span class="pre">init_database</span></code> ;</p></li>
+<li><p>intégrer les fausses données à l’aide des scripts du dossier <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/tree/dev/core/sql/mock_integration"><code class="docutils literal notranslate"><span class="pre">dsn_processing/core/sql/mock_integration</span></code></a>.</p></li>
+</ul>
+</section>
+<section id="anonymous-integration">
+<h3><code class="docutils literal notranslate"><span class="pre">anonymous_integration</span></code><a class="headerlink" href="#anonymous-integration" title="Link to this heading"></a></h3>
+<p>Pour les détails techniques sur la méthode d’anonymisation, se référer au <a class="reference internal" href="../../database/guide_technique_bases_de_donnees.html#un-schema-de-donnees-semi-anonymisees-au-sein-de-la-base-champollion"><span class="std std-ref">guide technique</span></a>.</p>
+<p>Sur l’espace Teams, un <a class="reference external" href="https://msociauxfr.sharepoint.com/:x:/r/teams/EIG71/Documents%20partages/General/Commun/D%C3%A9veloppement/P%C3%A9rim%C3%A8tre%20de%20la%20base%20anonymis%C3%A9e%20pour%20les%20devs.xlsx?d=w652861c744a74cd3b11f0cf5431847a4&amp;amp;csf=1&amp;amp;web=1&amp;amp;e=fPbJn8">excel</a> permet de répertorier les SIRET présents dans le schéma anonymisé. La procédure pour étendre le périmètre de données est la suivante :</p>
+<ol class="arabic">
+<li><p>Le développeur, qui souhaite ajouter le SIRET x au schéma anonymisé, l’ajoute à l’excel avec un commentaire indiquant la raison de sa demande.</p></li>
+<li><p>Un membre de l’équipe ayant accès au schéma ``public<code class="docutils literal notranslate"> <span class="pre">ouvre</span> <span class="pre">une</span> <span class="pre">merge</span> <span class="pre">request</span> <span class="pre">qui</span> <span class="pre">permet</span> <span class="pre">l'ajout</span> <span class="pre">de</span> <span class="pre">ce</span> <span class="pre">SIRET</span> <span class="pre">dans</span> <span class="pre">le</span> <span class="pre">fichier</span> <span class="pre">[</span></code>dsn_processing/resources/anonymous_database_selection.csv<code class="docutils literal notranslate"><span class="pre">](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/resources/anonymous_database_selection.csv)</span> <span class="pre">délimitant</span> <span class="pre">le</span> <span class="pre">périmètre</span> <span class="pre">des</span> <span class="pre">données</span> <span class="pre">anonymisées.</span> <span class="pre">Il</span> <span class="pre">relance</span> <span class="pre">ensuite</span> <span class="pre">la</span> <span class="pre">création</span> <span class="pre">du</span> <span class="pre">schéma</span> </code>anonymous<code class="docutils literal notranslate"> <span class="pre">sur</span> <span class="pre">la</span> <span class="pre">base</span> <span class="pre">de</span> <span class="pre">son</span> <span class="pre">choix,</span> <span class="pre">à</span> <span class="pre">l'aide</span> <span class="pre">du</span> <span class="pre">dag</span> <span class="pre">[</span></code>dsn_processing/pipeline/bash/dags/anonymous_integration.sh<code class="docutils literal notranslate"><span class="pre">](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/bash/dags/anonymous_integration.sh).</span> <span class="pre">Attention,</span> <span class="pre">le</span> <span class="pre">fichier</span> </code>dsn_processing/resources/anonymous_database_selection.csv<code class="docutils literal notranslate"><span class="pre">doit</span> <span class="pre">être</span> <span class="pre">stocké</span> <span class="pre">dans</span> <span class="pre">le</span> <span class="pre">dossier</span></code>WORKFLOW_SOURCES_DATA_PATH<code class="docutils literal notranslate"><span class="pre">donc</span> <span class="pre">si</span></code>WORKFLOW_SOURCES_DATA_PATH<code class="docutils literal notranslate"><span class="pre">ne</span> <span class="pre">pointe</span> <span class="pre">pas</span> <span class="pre">vers</span> <span class="pre">le</span> <span class="pre">dossier</span></code>dsn_processing/resources`, il faut copier le fichier dans le dossier renseigné.</p></li>
+<li><p>Il faut ensuite mettre à jour l’excel de l’espace Teams avec les données issues de la requête SQL suivante :</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span>
+<span class="w">    </span><span class="n">TO_CHAR</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">etablissement_key</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;fm00000000000000&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="ss">&quot;vrais_siret&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">    </span><span class="n">TO_CHAR</span><span class="p">(</span><span class="n">F</span><span class="p">.</span><span class="n">etablissement_key</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;fm00000000000000&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="ss">&quot;siret_anonymises&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">CASE</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="n">R</span><span class="p">.</span><span class="n">code_naf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;7820Z&#39;</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">&#39;ETT&#39;</span><span class="w"> </span><span class="k">ELSE</span><span class="w"> </span><span class="s1">&#39;ETU&#39;</span><span class="w"> </span><span class="k">END</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="ss">&quot;etu_ett&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">CASE</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="n">S</span><span class="p">.</span><span class="n">etablissement_key</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">&#39;Oui&#39;</span><span class="w"> </span><span class="k">ELSE</span><span class="w"> </span><span class="s1">&#39;Non&#39;</span><span class="w"> </span><span class="k">END</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="ss">&quot;ajout_direct&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">CASE</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="n">S</span><span class="p">.</span><span class="k">comment</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">S</span><span class="p">.</span><span class="k">comment</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s1">&#39;ETT référencé&#39;</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="n">S</span><span class="p">.</span><span class="k">comment</span><span class="w"> </span><span class="k">ELSE</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="k">END</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="ss">&quot;commentaire&quot;</span>
+
+<span class="k">FROM</span><span class="w"> </span><span class="n">anonymous</span><span class="p">.</span><span class="n">etablissements</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">F</span>
+<span class="k">INNER</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">etablissements</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">R</span><span class="w"> </span>
+<span class="w">    </span><span class="k">ON</span><span class="w"> </span><span class="n">F</span><span class="p">.</span><span class="n">etablissement_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">R</span><span class="p">.</span><span class="n">etablissement_id</span>
+<span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">anonymous</span><span class="p">.</span><span class="n">selection_etablissements</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">S</span>
+<span class="w">    </span><span class="k">ON</span><span class="w"> </span><span class="n">S</span><span class="p">.</span><span class="n">etablissement_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">R</span><span class="p">.</span><span class="n">etablissement_key</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">R</span><span class="p">.</span><span class="n">etablissement_key</span>
+</pre></div>
+</div>
+</li>
+<li><p>Le développeur peut alors retourner sur l’excel afin de connaître la version anonymisée du SIRET qu’il souhaitait consulter.</p></li>
+</ol>
+</section>
+</section>
+<section id="procedure-de-reprise-historique">
+<h2>Procédure de reprise historique<a class="headerlink" href="#procedure-de-reprise-historique" title="Link to this heading"></a></h2>
+<p>Lorsqu’on souhaite intégrer plusieurs mois d’affilée, on parle de procédure de reprise historique. <strong>Avant de lancer une procédure de reprise historique avec les données réelles, veuillez consulter la section <a class="reference internal" href="#lancer-une-procedure-de-reprise-historique-avec-les-donnees-reelles-via-airflow">Lancer une procédure de reprise historique avec les données réelles via Airflow</a></strong>.</p>
+<section id="dags-historical-integration">
+<h3>DAGs <code class="docutils literal notranslate"><span class="pre">historical_integration</span></code><a class="headerlink" href="#dags-historical-integration" title="Link to this heading"></a></h3>
+<p>Les DAGs <code class="docutils literal notranslate"><span class="pre">historical_integration</span></code> font des appels sucessifs au DAG <code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code>.</p>
+<section id="desactivation-des-taches-auxiliaires">
+<h4>Désactivation des tâches auxiliaires<a class="headerlink" href="#desactivation-des-taches-auxiliaires" title="Link to this heading"></a></h4>
+<p>Si on souhaite accélérer la procédure de reprise historique, on peut désactiver certaines tâches de <code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code> qui pourront n’être exécutées qu’en fin de reprise historique. Il peut s’agir par exemple des tâches <a class="reference internal" href="../core/integration_contenu_scripts.html#remove-ctt"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">remove_ctt</span></code></span></a>, <a class="reference internal" href="../core/integration_contenu_scripts.html#remove-stt"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">remove_stt</span></code></span></a>, <a class="reference internal" href="../core/integration_contenu_scripts.html#allocate-ctt"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">allocate_ctt</span></code></span></a>, <a class="reference internal" href="../core/integration_contenu_scripts.html#allocate-stt"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">allocate_stt</span></code></span></a>, <a class="reference internal" href="../core/integration_contenu_scripts.html#remove-old-data"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">remove_old_data</span></code></span></a>, <a class="reference internal" href="../core/integration_contenu_scripts.html#reindex-tables"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">reindex_tables</span></code></span></a>.</p>
+<p>Attention, il faut veiller à les réactiver pour le dernier mois d’intégration ou à les exécuter a posteriori.</p>
+</section>
+<section id="parametres-du-dag">
+<h4>Paramètres du DAG<a class="headerlink" href="#parametres-du-dag" title="Link to this heading"></a></h4>
+<p>Les paramètres du DAG <code class="docutils literal notranslate"><span class="pre">historical_integration</span></code> sont les suivants :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Paramètre</p></th>
+<th class="head"><p>Bash</p></th>
+<th class="head"><p>Airflow</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Premier mois à intégrer</p></td>
+<td><p>Premier paramètre <code class="docutils literal notranslate"><span class="pre">start_date</span></code></p></td>
+<td><p>Paramètre <code class="docutils literal notranslate"><span class="pre">start</span></code> à faire précéder de la balise <code class="docutils literal notranslate"><span class="pre">--start</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Dernier mois à intégrer</p></td>
+<td><p>Deuxième paramètre <code class="docutils literal notranslate"><span class="pre">end_date</span></code></p></td>
+<td><p>Paramètre <code class="docutils literal notranslate"><span class="pre">end</span></code> à faire précéder de la balise <code class="docutils literal notranslate"><span class="pre">--end</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Base de donnée</p></td>
+<td><p>Déterminé par la variable d’environnement <code class="docutils literal notranslate"><span class="pre">POSTGRES_DB</span></code></p></td>
+<td><p>Paramètre <code class="docutils literal notranslate"><span class="pre">database</span></code> à faire précéder de la balise <code class="docutils literal notranslate"><span class="pre">--database</span></code> (valeur par défaut : <code class="docutils literal notranslate"><span class="pre">champollion</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Type de fichiers</p></td>
+<td><p>Troisième paramètre <code class="docutils literal notranslate"><span class="pre">folder_type</span></code></p></td>
+<td><p>Paramètre <code class="docutils literal notranslate"><span class="pre">filetype</span></code> à faire précéder de la balise <code class="docutils literal notranslate"><span class="pre">--filetype</span></code> (valeur par défaut : <code class="docutils literal notranslate"><span class="pre">raw</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p>Backup</p></td>
+<td><p>Non implémenté (orchestrateur de développement)</p></td>
+<td><p>Balise <code class="docutils literal notranslate"><span class="pre">--do_backup</span></code> à ajouter</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verbosité / logs</p></td>
+<td><p>Verbosité déterminée par la variable d’environnement <code class="docutils literal notranslate"><span class="pre">BASH_ORCHESTRATOR_VERBOSE</span></code></p></td>
+<td><p>Paramètre <code class="docutils literal notranslate"><span class="pre">log</span></code> à faire précéder de la balise <code class="docutils literal notranslate"><span class="pre">--log</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>Tous les mois de données entre le premier et le dernier mois indiqués sont intégrés successivement à l’aide du DAG <code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code>.</p>
+</section>
+<section id="historical-integration-via-pur-bash">
+<h4><code class="docutils literal notranslate"><span class="pre">historical_integration</span></code> via pur Bash<a class="headerlink" href="#historical-integration-via-pur-bash" title="Link to this heading"></a></h4>
+<p>Le DAG Bash s’utilise de la manière suivante :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash<span class="w"> </span>pipeline/bash/dags/historical_integration.sh<span class="w"> </span>&lt;start_year&gt;<span class="w"> </span>&lt;end_date&gt;<span class="w"> </span>&lt;folder_type&gt;
+<span class="c1"># example</span>
+bash<span class="w"> </span>pipeline/bash/dags/historical_integration.sh<span class="w"> </span><span class="m">2022</span>-01-01<span class="w"> </span><span class="m">2022</span>-09-01<span class="w"> </span><span class="nb">test</span>
+</pre></div>
+</div>
+</section>
+<section id="historical-integration-via-airflow">
+<h4><code class="docutils literal notranslate"><span class="pre">historical_integration</span></code> via Airflow<a class="headerlink" href="#historical-integration-via-airflow" title="Link to this heading"></a></h4>
+<p>Le DAG <code class="docutils literal notranslate"><span class="pre">historical_integration</span></code> fait figure d’exception côté Airflow, il s’agit d’un <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/dags/historical_integration.sh">fichier Bash</a> qui lance l’exécution successive du DAG <code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code> Airflow. Pour comprendre comment l’utiliser correctement pour intégrer des données, la section <a class="reference internal" href="#lancer-une-procedure-de-reprise-historique-avec-les-donnees-reelles-via-airflow">Lancer une procédure de reprise historique avec les données réelles via Airflow</a> doit être consultée.</p>
+<p>Il est exécutable tel que :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Syntax:<span class="w"> </span>bash<span class="w"> </span>historical_integration.sh<span class="w"> </span><span class="o">[</span>--help<span class="p">|</span>--start<span class="p">|</span>--end<span class="p">|</span>--database<span class="p">|</span>--filetype<span class="p">|</span>--log<span class="o">]</span>
+options:
+--help<span class="w">          </span>display<span class="w"> </span>this<span class="w"> </span><span class="nb">help</span><span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
+--start<span class="w">         </span>first<span class="w"> </span>month<span class="w"> </span>to<span class="w"> </span>integrate<span class="w"> </span><span class="o">(</span>required<span class="o">)</span>
+--end<span class="w">           </span>last<span class="w"> </span>month<span class="w"> </span>to<span class="w"> </span>integrate<span class="w"> </span><span class="o">(</span>included<span class="o">)</span><span class="w"> </span><span class="o">(</span>required<span class="o">)</span>
+--database<span class="w">      </span>optional,<span class="w"> </span>data<span class="w"> </span>base<span class="w"> </span>connexion:<span class="w"> </span><span class="s1">&#39;champollion&#39;</span><span class="w"> </span><span class="o">(</span>default<span class="o">)</span>,<span class="w"> </span><span class="s1">&#39;test&#39;</span><span class="w"> </span>or<span class="w"> </span><span class="s1">&#39;mock&#39;</span>
+--filetype<span class="w">      </span>optional,<span class="w"> </span>data<span class="w"> </span>path<span class="w"> </span>of<span class="w"> </span>DSN<span class="w"> </span>files:<span class="w"> </span><span class="s1">&#39;raw&#39;</span><span class="w"> </span><span class="o">(</span>default<span class="o">)</span><span class="w"> </span>or<span class="w"> </span><span class="s1">&#39;test&#39;</span>
+--do_backup<span class="w">     </span>optional,<span class="w"> </span><span class="k">if</span><span class="w"> </span>added,<span class="w"> </span>backups<span class="w"> </span>are<span class="w"> </span>performed
+--log<span class="w">           </span>optional,<span class="w"> </span>path<span class="w"> </span>directory<span class="w"> </span>to<span class="w"> </span><span class="nb">export</span><span class="w"> </span>log<span class="w"> </span>file
+
+<span class="c1"># example</span>
+bash<span class="w"> </span>pipeline/airflow/dags/historical_integration.sh<span class="w"> </span>--start<span class="w"> </span><span class="m">2022</span>-01-01<span class="w"> </span>--end<span class="w"> </span><span class="m">2022</span>-09-01<span class="w"> </span>--database<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--filetype<span class="w"> </span><span class="nb">test</span>
+</pre></div>
+</div>
+<p>Si la variable d’environnement <code class="docutils literal notranslate"><span class="pre">COMPOSE_PROJECT_NAME</span></code> n’a pas été exportée, il est nécessaire de la ré-exporter avant de lancer le DAG Airflow via la commande <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">COMPOSE_PROJECT_NAME=...</span></code> avec la valeur renseignée dans le fichier d’environnement utilisé lors du déploiement d’Airflow.</p>
+</section>
+</section>
+<section id="interactions-pipeline-airflow-dags-historical-integration-sh-airflow">
+<h3>Interactions <code class="docutils literal notranslate"><span class="pre">pipeline/airflow/dags/historical_integration.sh</span></code> - Airflow<a class="headerlink" href="#interactions-pipeline-airflow-dags-historical-integration-sh-airflow" title="Link to this heading"></a></h3>
+<p>Le script <code class="docutils literal notranslate"><span class="pre">dsn_processing/pipeline/airflow/dags/historical_integration.sh</span></code> lance l’appel à tous les DAGs Airflow <code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code> pour les différents mois à intégrer. Il n’attend donc pas l’exécution du DAG <code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code> du mois M-1 pour lancer celui du mois M. Néanmoins, étant donné que le DAG Airflow <code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code> a un paramètre <code class="docutils literal notranslate"><span class="pre">max_active_runs=1</span></code>, les DAGs s’exécute successivement. Dès lors, lorsque le script <code class="docutils literal notranslate"><span class="pre">historical_integration.sh</span></code> a fini de s’exécuter (en quelques dizaines de secondes), tous les DAGs <code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code> à exécuter sont recensés dans l’Airflow, le premier est en exécution (cercle vert) et les autres en attente (cercles gris).</p>
+<p>Si jamais un DAG tombe en erreur, les suivants sont interrompus dès leur première tâche <code class="docutils literal notranslate"><span class="pre">get_start_task</span></code> étant donné qu’il a laissé la base en statut <code class="docutils literal notranslate"><span class="pre">ONGOING</span></code>. La procédure de reprise d’erreur se fait alors à l’aide d’un backup complet de la base pour la restorer dans son état précédant le début de ce DAG ayant échoué. Pour plus d’informations, voir la section <a class="reference internal" href="#lancer-une-procedure-de-reprise-historique-avec-les-donnees-reelles-via-airflow">Lancer une procédure de reprise historique avec les données réelles via Airflow</a>.</p>
+</section>
+<section id="lancer-une-procedure-de-reprise-historique-avec-les-donnees-reelles-via-airflow">
+<h3>Lancer une procédure de reprise historique avec les données réelles via Airflow<a class="headerlink" href="#lancer-une-procedure-de-reprise-historique-avec-les-donnees-reelles-via-airflow" title="Link to this heading"></a></h3>
+<p>On liste la démarche à suivre ci-dessous. A noter que ces procédures n’ont pas été automatisées car la reprise historique avec données réelles est un processus coûteux en temps de calcul qui ne doit être exécuté qu’à la suite de changements majeurs dans les scripts.</p>
+<ol class="arabic">
+<li><p>[Optionel] Désactiver les <a class="reference internal" href="#desactivation-des-taches-auxiliaires">tâches auxiliaires</a> dans le DAG <code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code>.</p></li>
+<li><p>Déployer Airflow sur la VM WORKFLOW avec la bonne version du code et les variables d’environnement correspondant au serveur de base choisi (pour plus d’informations, voir <a class="reference internal" href="#deploiement">la section relative au déploiement d’Airflow</a>).</p></li>
+<li><p>Initialiser la base de données à l’aide du DAG <code class="docutils literal notranslate"><span class="pre">init_database</span></code>.</p></li>
+<li><p>S’assurer que le champ <code class="docutils literal notranslate"><span class="pre">sys.current_status.status</span></code> a la valeur <code class="docutils literal notranslate"><span class="pre">SUCCESS</span></code>.</p></li>
+<li><p>Désactiver les logs transactionnels (sinon le serveur hébergeant les logs va saturer) :</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">SYSTEM</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">archive_command</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;/bin/true&#39;</span><span class="p">;</span><span class="w"> </span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">pg_reload_conf</span><span class="p">();</span>
+<span class="k">SHOW</span><span class="w"> </span><span class="n">archive_command</span><span class="p">;</span><span class="w"> </span><span class="c1">-- doit être égal à /bin/true</span>
+</pre></div>
+</div>
+</li>
+<li><p>Récupérer le fichier <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/dags/historical_integration.sh"><code class="docutils literal notranslate"><span class="pre">dsn_processing/pipeline/airflow/dags/historical_integration.sh</span></code></a> dans le code et le copier sur la VM WORKFLOW.</p></li>
+<li><p>Exporter la variable d’environnement <code class="docutils literal notranslate"><span class="pre">COMPOSE_PROJECT_NAME</span></code> à l’aide de la commande <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">COMPOSE_PROJECT_NAME=...</span></code> avec la valeur renseignée dans le fichier d’environnement utilisé lors du déploiement d’Airflow.</p></li>
+<li><p>Lancer le DAG <code class="docutils literal notranslate"><span class="pre">historical_integration</span></code> à l’aide du fichier <code class="docutils literal notranslate"><span class="pre">dsn_processing/pipeline/airflow/dags/historical_integration.sh</span></code> (pour plus d’informations, voir la section <a class="reference internal" href="#dags-historical-integration">DAGs <code class="docutils literal notranslate"><span class="pre">historical_integration</span></code></a>).</p></li>
+<li><p><strong>En cas d’interruption</strong> :</p>
+<ol class="arabic simple">
+<li><p>Via l’interface Airflow, trouver le premier DAG <code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code> (c.a.d mois) qui a fini en erreur (les suivants finissent en erreur dès la première tâche <code class="docutils literal notranslate"><span class="pre">get_start_task</span></code>, voir <a class="reference internal" href="#interactions-pipeline-airflow-dags-historical-integration-sh-airflow">la documentation</a>).</p></li>
+<li><p>Corriger le bug dans les scripts et re-déployer l’Airflow avec la nouvelle version du code.</p></li>
+<li><p>Remettre la base dans son état précédant ce DAG ayant fini en erreur. Pour ce faire, utiliser le backup réalisé à l’aide de la tâche <code class="docutils literal notranslate"><span class="pre">database_backup</span></code> lors du dernier DAG fructueux. Pour connaître les commandes à exécuter, voir la <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/champolib/blob/dev/documentation/data/1_infrastructure_data.md#restoration-dun-dump">documentation</a> de l’infrastructure data.</p></li>
+<li><p>Repasser le statut de la base à <code class="docutils literal notranslate"><span class="pre">ONGOING</span></code> grâce à la commande : <code class="docutils literal notranslate"><span class="pre">UPDATE</span> <span class="pre">sys.current_status</span> <span class="pre">SET</span> <span class="pre">status</span> <span class="pre">=</span> <span class="pre">'SUCCESS'</span></code>.</p></li>
+<li><p>Reprendre à l’étape 3 avec, comme premier mois à intégrer, le mois du DAG ayant échoué.</p></li>
+</ol>
+</li>
+<li><p>Si l’étape 1 a été effectuée, exécuter les <a class="reference internal" href="#desactivation-des-taches-auxiliaires">tâches auxiliaires</a> précédemment désactivées.</p></li>
+<li><p>Une fois la reprise historique terminée, réactiver les logs transactionnels :</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">SYSTEM</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">archive_command</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;/logiciel/pgsql-15/archive_xlog.sh &quot;&lt;IP Data de la DB&gt;&quot; %p&#39;</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">pg_reload_conf</span><span class="p">();</span>
+<span class="k">SHOW</span><span class="w"> </span><span class="n">archive_command</span><span class="p">;</span><span class="w"> </span><span class="c1">-- doit être égal à /logiciel/pgsql-15/archive_xlog.sh &quot;&lt;IP Data de la DB&gt;&quot; %p</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="import_et_acces_donnees_source.html" class="btn btn-neutral float-left" title="Import et accès aux données source" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Margot COSSON.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

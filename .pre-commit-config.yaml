@@ -32,3 +32,9 @@ repos:
         verbose: true
         files: '^(core|pipeline|tests)/'
         pass_filenames: false
+      - id: gen-doc
+        name: regenerate build files for docs
+        entry: bash -c 'cd docs/ && make html'
+        language: system
+        verbose: true
+        always_run: true
