@@ -45,6 +45,14 @@
 # Feel free to modify this file to suit your needs.
 ---
 version: '3.8'
+
+networks:
+  default:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.146.0/24
+
 x-airflow-common:
   &airflow-common
   image: ${NEXUS_CHAMPOLLION_URL}/airflow/common:${AIRFLOW_COMMON_IMAGE_TAG}
