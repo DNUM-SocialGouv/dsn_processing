@@ -123,7 +123,7 @@ chore(all) : CHAM-506 move data processing code to an independent repo
 
 ## Documentation
 
-La documentation est déployée sur l'URL suivante : TO DO.
+### Fichiers source
 
 Le dossier `dsn_processing/code` contient les fichiers de documentation. On génère un site statique à partir de ces derniers grâce à [Sphinx](https://www.sphinx-doc.org/en/master/index.html). Pour ce faire :
 
@@ -142,9 +142,15 @@ cd dsn_processing/docs
 make html
 ```
 
-3. Visualiser le site statique sur le port XXXX
+3. Visualiser le site statique en local sur le port XXXX
 
 ```bash
 cd dsn_processing/docs/_build/html
 python -m http.server XXXX
 ```
+
+### Déploiement
+
+La documentation est déployée sur l'URL suivante : https://dnum-socialgouv.github.io/dsn_processing/build/html/index.html à l'aide de [Github pages](https://pages.github.com/).
+
+Le repo Github [dsn_processing](https://github.com/DNUM-SocialGouv/dsn_processing) a été configuré pour re-déployer le site dès lors que la branche `dev` subit une modification.
