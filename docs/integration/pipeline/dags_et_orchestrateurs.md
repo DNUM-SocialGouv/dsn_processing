@@ -353,7 +353,15 @@ Lorsqu'on souhaite intégrer plusieurs mois d'affilée, on parle de procédure d
 
 ### DAGs `historical_integration`
 
-*Le DAG `historical_integration` fait figure d'exception côté Airflow, il s'agit d'un fichier Bash qui lance l'exécution successive de DAG `monthly_integration` Airflow. Pour comprendre comment l'utiliser correctement pour intégrer des données, la section [Lancer une procédure de reprise historique avec les données réelles via Airflow](#lancer-une-procédure-de-reprise-historique-avec-les-données-réelles-via-airflow) doit être consultée.*
+Les DAGs `historical_integration` font des appels sucessifs au DAG `monthly_integration`. 
+
+#### Désactivation des tâches auxiliaires
+
+Si on souhaite accélérer la procédure de reprise historique, on peut désactiver certaines tâches de `monthly_integration` qui pourront n'être exécutées qu'en fin de reprise historique. Il peut s'agir par exemple des tâches [`remove_ctt`](../core/integration_contenu_scripts.md#remove_ctt), [`remove_stt`](../core/integration_contenu_scripts.md#remove_stt), [`allocate_ctt`](../core/integration_contenu_scripts.md#allocate_ctt), [`allocate_stt`](../core/integration_contenu_scripts.md#allocate_stt), [`remove_old_data`](../core/integration_contenu_scripts.md#remove_old_data), [`reindex_tables`](../core/integration_contenu_scripts.md#reindex_tables).
+
+Attention, il faut veiller à les réactiver pour le dernier mois d'intégration ou à les exécuter a posteriori.
+
+#### Paramètres du DAG
 
 Les paramètres du DAG `historical_integration` sont les suivants :
 
@@ -368,7 +376,9 @@ Les paramètres du DAG `historical_integration` sont les suivants :
 
 Tous les mois de données entre le premier et le dernier mois indiqués sont intégrés successivement à l'aide du DAG `monthly_integration`.
 
-Le DAG Bash s'utilise donc de la manière suivante :
+#### `historical_integration` via pur Bash
+
+Le DAG Bash s'utilise de la manière suivante :
 
 ```bash
 bash pipeline/bash/dags/historical_integration.sh <start_year> <end_date> <folder_type>
@@ -376,7 +386,11 @@ bash pipeline/bash/dags/historical_integration.sh <start_year> <end_date> <folde
 bash pipeline/bash/dags/historical_integration.sh 2022-01-01 2022-09-01 test
 ```
 
-Quant à celui Airflow, il est exécutable tel que :
+#### `historical_integration` via Airflow
+
+Le DAG `historical_integration` fait figure d'exception côté Airflow, il s'agit d'un [fichier Bash](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/dags/historical_integration.sh) qui lance l'exécution successive du DAG `monthly_integration` Airflow. Pour comprendre comment l'utiliser correctement pour intégrer des données, la section [Lancer une procédure de reprise historique avec les données réelles via Airflow](#lancer-une-procédure-de-reprise-historique-avec-les-données-réelles-via-airflow) doit être consultée.
+
+Il est exécutable tel que :
 
 ```bash
 Syntax: bash historical_integration.sh [--help|--start|--end|--database|--filetype|--log]
@@ -405,13 +419,15 @@ Si jamais un DAG tombe en erreur, les suivants sont interrompus dès leur premi�
 
 On liste la démarche à suivre ci-dessous. A noter que ces procédures n'ont pas été automatisées car la reprise historique avec données réelles est un processus coûteux en temps de calcul qui ne doit être exécuté qu'à la suite de changements majeurs dans les scripts.
 
-1. Déployer Airflow sur la VM WORKFLOW avec la bonne version du code et les variables d'environnement correspondant au serveur de base choisi (pour plus d'informations, voir [la section relative au déploiement d'Airflow](#déploiement)).
+1. [Optionel] Désactiver les [tâches auxiliaires](#désactivation-des-tâches-auxiliaires) dans le DAG `monthly_integration`.
 
-2. Initialiser la base de données à l'aide du DAG `init_database`.
+2. Déployer Airflow sur la VM WORKFLOW avec la bonne version du code et les variables d'environnement correspondant au serveur de base choisi (pour plus d'informations, voir [la section relative au déploiement d'Airflow](#déploiement)).
 
-3. S'assurer que le champ `sys.current_status.status` a la valeur `SUCCESS`.
+3. Initialiser la base de données à l'aide du DAG `init_database`.
 
-4. Désactiver les logs transactionnels (sinon le serveur hébergeant les logs va saturer) :
+4. S'assurer que le champ `sys.current_status.status` a la valeur `SUCCESS`.
+
+5. Désactiver les logs transactionnels (sinon le serveur hébergeant les logs va saturer) :
 
     ```sql
     ALTER SYSTEM SET archive_command TO '/bin/true'; 
@@ -419,20 +435,22 @@ On liste la démarche à suivre ci-dessous. A noter que ces procédures n'ont pa
     SHOW archive_command; -- doit être égal à /bin/true
     ```
 
-5. Récupérer le fichier [`dsn_processing/pipeline/airflow/dags/historical_integration.sh`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/dags/historical_integration.sh) dans le code et le copier sur la VM WORKFLOW.
+6. Récupérer le fichier [`dsn_processing/pipeline/airflow/dags/historical_integration.sh`](https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/pipeline/airflow/dags/historical_integration.sh) dans le code et le copier sur la VM WORKFLOW.
 
-6. Exporter la variable d'environnement `COMPOSE_PROJECT_NAME` à l'aide de la commande `export COMPOSE_PROJECT_NAME=...` avec la valeur renseignée dans le fichier d'environnement utilisé lors du déploiement d'Airflow.
+7. Exporter la variable d'environnement `COMPOSE_PROJECT_NAME` à l'aide de la commande `export COMPOSE_PROJECT_NAME=...` avec la valeur renseignée dans le fichier d'environnement utilisé lors du déploiement d'Airflow.
 
-7. Lancer le DAG `historical_integration` à l'aide du fichier `dsn_processing/pipeline/airflow/dags/historical_integration.sh` (pour plus d'informations, voir la section [DAGs `historical_integration`](#dags-historical_integration)).
+8. Lancer le DAG `historical_integration` à l'aide du fichier `dsn_processing/pipeline/airflow/dags/historical_integration.sh` (pour plus d'informations, voir la section [DAGs `historical_integration`](#dags-historical_integration)).
 
-8. **En cas d'interruption** :
+9. **En cas d'interruption** :
     1. Via l'interface Airflow, trouver le premier DAG `monthly_integration` (c.a.d mois) qui a fini en erreur (les suivants finissent en erreur dès la première tâche `get_start_task`, voir [la documentation](#interactions-pipelineairflowdagshistorical_integrationsh---airflow)).
     2. Corriger le bug dans les scripts et re-déployer l'Airflow avec la nouvelle version du code.
     3. Remettre la base dans son état précédant ce DAG ayant fini en erreur. Pour ce faire, utiliser le backup réalisé à l'aide de la tâche `database_backup` lors du dernier DAG fructueux. Pour connaître les commandes à exécuter, voir la [documentation](https://gitlab.intranet.social.gouv.fr/champollion/champolib/blob/dev/documentation/data/1_infrastructure_data.md#restoration-dun-dump) de l'infrastructure data.
     4. Repasser le statut de la base à `ONGOING` grâce à la commande : `UPDATE sys.current_status SET status = 'SUCCESS'`.
     5. Reprendre à l'étape 3 avec, comme premier mois à intégrer, le mois du DAG ayant échoué.
     
-9. Une fois la reprise historique terminée, réactiver les logs transactionnels :
+10. Si l'étape 1 a été effectuée, exécuter les [tâches auxiliaires](#désactivation-des-tâches-auxiliaires) précédemment désactivées.
+
+11. Une fois la reprise historique terminée, réactiver les logs transactionnels :
 
     ```sql
     ALTER SYSTEM SET archive_command TO '/logiciel/pgsql-15/archive_xlog.sh "<IP Data de la DB>" %p';
