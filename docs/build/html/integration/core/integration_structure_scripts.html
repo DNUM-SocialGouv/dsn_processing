@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Structure des scripts d’intégration &mdash; DSN processing  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/avoid_rolling_tab.css?v=9d8e3617" />
+      <link rel="stylesheet" type="text/css" href="../../_static/increase_width.css?v=a0fc712e" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Contenu des scripts d’intégration" href="integration_contenu_scripts.html" />
+    <link rel="prev" title="Les données source : les déclarations sociales nominatives" href="nature_donnees_source.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            DSN processing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Sommaire :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../database/index.html">Base(s) de données</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Intégration des données</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Contenu des scripts d’intégration</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="nature_donnees_source.html">Les données source : les déclarations sociales nominatives</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Structure des scripts d’intégration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#organisation">Organisation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generation">Génération</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="integration_contenu_scripts.html">Contenu des scripts d’intégration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline/index.html">Mise en oeuvre de l’intégration</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DSN processing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Intégration des données</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Contenu des scripts d’intégration</a></li>
+      <li class="breadcrumb-item active">Structure des scripts d’intégration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/integration/core/integration_structure_scripts.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="structure-des-scripts-d-integration">
+<h1>Structure des scripts d’intégration<a class="headerlink" href="#structure-des-scripts-d-integration" title="Link to this heading"></a></h1>
+<section id="organisation">
+<h2>Organisation<a class="headerlink" href="#organisation" title="Link to this heading"></a></h2>
+<section id="natures-des-tables-d-integration">
+<h3>Natures des tables d’intégration<a class="headerlink" href="#natures-des-tables-d-integration" title="Link to this heading"></a></h3>
+<p>La base Champollion comporte des tables permanentes qu’elles soient de natures statiques (tables contextuelles) ou dynamiques (tables mises à jour chaque mois). Pour plus de détails, voir le <a class="reference internal" href="../../database/guide_technique_bases_de_donnees.html"><span class="std std-doc">cahier technique</span></a> de la base Champollion. En complément de ces tables, des tables temporaires sont nécessaires afin d’intégrer de nouvelles données. On distingue quatre types de tables temporaires :</p>
+<ul class="simple">
+<li><p>les <strong>tables raw</strong> permettent l’import en base de données brutes à partir de fichiers csv ;</p></li>
+<li><p>les <strong>tables source</strong> sont créées à partir des tables <em>raw</em> et permettent le formattage des données brutes ;</p></li>
+<li><p>les <strong>tables link</strong> sont nécessaires afin d’enregistrer le mapping entre les id dans la base brute des lignes brutes et l’id en base Champollion de ligne mise à jour ou créée en conséquence ;</p></li>
+<li><p>les <strong>tables map</strong> permettent le recensement des lignes à fusionner lors des opérations de prise en compte des changements de clefs identifiantes.</p></li>
+</ul>
+<p>Dans la base de données, les tables <em>raw</em> font l’objet d’un schéma <strong>raw</strong> et les tables <em>source</em>, <em>link</em> et <em>map</em> sont regroupées dans un schéma <strong>source</strong>.</p>
+<p>Ainsi, l’import de données suit le schéma suivant :</p>
+<p><img alt="etlm" src="../../_images/etlm.png" /></p>
+<p><a class="reference external" href="https://excalidraw.com/#json=6bUVDQbLfSIEkWDwk3_5p,bwHisIrHAzz_nVuuUvKS9Q">Lien éditable</a></p>
+</section>
+<section id="tables-de-log">
+<h3>Tables de log<a class="headerlink" href="#tables-de-log" title="Link to this heading"></a></h3>
+<p>Les opérations effectuées sur la base sont logguées à trois niveaux :</p>
+<ul class="simple">
+<li><p>dans la table <code class="docutils literal notranslate"><span class="pre">log.integrations_logs</span></code>, chaque intégration fait l’objet de deux lignes (une <code class="docutils literal notranslate"><span class="pre">BEGIN</span></code> et une <code class="docutils literal notranslate"><span class="pre">END</span></code>) enregistrant l’heure de début et de fin de l’intégration ainsi que le mois de déclaration concerné ;</p></li>
+<li><p>dans la table <code class="docutils literal notranslate"><span class="pre">log.scripts_logs</span></code>, chaque exécution de script SQL est recensée dans deux lignes (une <code class="docutils literal notranslate"><span class="pre">BEGIN</span></code> et une <code class="docutils literal notranslate"><span class="pre">END</span></code>) enregistrant l’heure et le nombre de lignes de la table principalement impactée au début et à la fin de l’exécution du script ;</p></li>
+<li><p>dans la table <code class="docutils literal notranslate"><span class="pre">log.processes_logs</span></code>, sur chaque table, chaque procédure (fonctions <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, <code class="docutils literal notranslate"><span class="pre">DELETE</span></code>, <code class="docutils literal notranslate"><span class="pre">TRUNCATE</span></code>) est répertoriée par deux lignes (une <code class="docutils literal notranslate"><span class="pre">BEGIN</span></code> et une <code class="docutils literal notranslate"><span class="pre">END</span></code>) contenant l’heure et le nombre de lignes de la table au début et à la fin de la procédure.</p></li>
+</ul>
+<p>La correspondance entre chaque script SQL et sa table principale est issue de la table statique <code class="docutils literal notranslate"><span class="pre">sys.metadata_scripts</span></code>, elle-même alimentée à partir du fichier <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/resources/metadata_scripts.csv"><code class="docutils literal notranslate"><span class="pre">dsn_processing/resources/metadata_scripts.csv</span></code></a>. Attention, le fichier doit être stocké dans le dossier <code class="docutils literal notranslate"><span class="pre">WORKFLOW_SOURCES_DATA_PATH</span></code> donc si <code class="docutils literal notranslate"><span class="pre">WORKFLOW_SOURCES_DATA_PATH</span></code> ne pointe pas vers le dossier <code class="docutils literal notranslate"><span class="pre">dsn_processing/resources</span></code>, il faut copier le fichier dans le dossier renseigné.</p>
+</section>
+<section id="classification-des-scripts">
+<h3>Classification des scripts<a class="headerlink" href="#classification-des-scripts" title="Link to this heading"></a></h3>
+<section id="axes-de-classification">
+<h4>Axes de classification<a class="headerlink" href="#axes-de-classification" title="Link to this heading"></a></h4>
+<p>Les scripts SQL composant l’ETLM (Extract-Transform-Load-Modify) de la base Champollion peuvent être classifiés selon trois dimensions :</p>
+<ul class="simple">
+<li><p>la famille (aussi appelée dag) qui correspond à la procédure dans lequel il s’inscrit ;</p></li>
+<li><p>le type qui correspond à l’opération effectuée ;</p></li>
+<li><p>et la nature qui correspond à la tâche effectuée.</p></li>
+</ul>
+<p>On distingue trois familles principales (dags) de scripts :</p>
+<ul class="simple">
+<li><p>les <strong>scripts <code class="docutils literal notranslate"><span class="pre">init_database</span></code></strong> relatifs à l’initialisation de la base ;</p></li>
+<li><p>les <strong>scripts <code class="docutils literal notranslate"><span class="pre">update_database</span></code></strong> relatifs à la mise à jour périodique (annuelle ou sur demande) des informations statiques de la base ;</p></li>
+<li><p>les <strong>scripts <code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></strong> qui encodent toutes les opérations nécessaires pour importer mensuellement des données.</p></li>
+</ul>
+<p>Chaque famille de script fait l’objet d’un dossier spécifique dans <code class="docutils literal notranslate"><span class="pre">dsn_processing/core/sql/</span></code>.</p>
+<p>De plus, il existe deux types de scripts :</p>
+<ul class="simple">
+<li><p>les <strong>processing (P) scripts</strong> : ils encodent une action effectuée sur la base sans import de données.</p></li>
+<li><p>les <strong>importing (I) scripts</strong> : ils encodent un import de données dans la base et doivent donc être appelés avec un csv.</p></li>
+</ul>
+<p>Pour finir, la plupart des scripts peuvent être classifiés selon la nomenclature Extract-Transform-Load-Modify. On distingue :</p>
+<ul class="simple">
+<li><p>les <strong>create (C) scripts</strong> : ils crééent les schémas, tables, fonctions de la base ;</p></li>
+<li><p>les <strong>extract (E) scripts</strong> : ils importent les données brutes dans les tables <em>raw</em> ;</p></li>
+<li><p>les <strong>transform (T) scripts</strong> : ils traitent les données brutes des tables <em>raw</em> et les importent dans les tables <em>source</em> ;</p></li>
+<li><p>les <strong>load (L) scripts</strong> : ils importent les données des tables <em>source</em> vers les tables permanentes de la base ;</p></li>
+<li><p>les <strong>modify (M) scripts</strong> : ils modifient les données des tables permanentes de la base.</p></li>
+</ul>
+</section>
+<section id="liste">
+<h4>Liste<a class="headerlink" href="#liste" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Dag</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Nature</p></th>
+<th class="head"><p>Nom du script</p></th>
+<th class="head"><p>Rang d’exécution au sein de sa famille</p></th>
+<th class="head"><p>Fonction</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">init_database</span></code></p></td>
+<td><p>P</p></td>
+<td><p>C</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">create_permanent_tables</span></code></p></td>
+<td><p>10</p></td>
+<td><p>Création de l’ensemble des schémas de la base et des tables permanentes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">init_database</span></code></p></td>
+<td><p>P</p></td>
+<td><p>C</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">create_integration_tables</span></code></p></td>
+<td><p>20</p></td>
+<td><p>Création des tables nécessaire pour l’intégration (raw, source, link, map).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">init_database</span></code></p></td>
+<td><p>P</p></td>
+<td><p>C</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">create_trigger_logs</span></code></p></td>
+<td><p>30</p></td>
+<td><p>Création des trigger functions de logging.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">init_database</span></code></p></td>
+<td><p>P</p></td>
+<td><p>C</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">create_dag_status_functions</span></code></p></td>
+<td><p>40</p></td>
+<td><p>Création des fonctions internes pour gestion du statut de la base.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">update_database</span></code></p></td>
+<td><p>P</p></td>
+<td><p>EL</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">extract_and_load_metadata</span></code></p></td>
+<td><p>10</p></td>
+<td><p>Peuplement de la table <code class="docutils literal notranslate"><span class="pre">sys.metadata_scripts</span></code> qui recense les correspondances entre scripts, tables et dags.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">update_database</span></code></p></td>
+<td><p>I</p></td>
+<td><p>EL</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">update_naf</span></code></p></td>
+<td><p>20</p></td>
+<td><p>Insertion des données manquantes dans la table statique qui recense les codes NAF.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">update_database</span></code></p></td>
+<td><p>I</p></td>
+<td><p>EL</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">update_conventions_collectives</span></code></p></td>
+<td><p>30</p></td>
+<td><p>Insertion des données manquantes dans la table statique qui recense les codes de convention collective.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">update_database</span></code></p></td>
+<td><p>I</p></td>
+<td><p>EL</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">update_categories_juridiques_insee</span></code></p></td>
+<td><p>40</p></td>
+<td><p>Insertion des données manquantes dans la table statique qui recense les codes de catégories juridiques de l’INSEE.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">update_database</span></code></p></td>
+<td><p>I</p></td>
+<td><p>EL</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">update_motifs_recours</span></code></p></td>
+<td><p>50</p></td>
+<td><p>Insertion des données manquantes dans la table statique qui recense les codes relatifs aux motifs de recours.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">update_database</span></code></p></td>
+<td><p>I</p></td>
+<td><p>EL</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">update_natures_contrats</span></code></p></td>
+<td><p>60</p></td>
+<td><p>Insertion des données manquantes dans la table statique qui recense les codes relatifs aux natures de contrat.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">update_database</span></code></p></td>
+<td><p>P</p></td>
+<td><p>L</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">update_calendar</span></code></p></td>
+<td><p>70</p></td>
+<td><p>Insertion des données calendaires manquantes dans la table calendrier (via une fonction Postgres).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">update_database</span></code></p></td>
+<td><p>I</p></td>
+<td><p>EL</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">update_holidays</span></code></p></td>
+<td><p>80</p></td>
+<td><p>Mise à jour du champ <code class="docutils literal notranslate"><span class="pre">public_holiday</span></code> de la table calendrier.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">update_database</span></code></p></td>
+<td><p>I</p></td>
+<td><p>EL</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">update_zonage</span></code></p></td>
+<td><p>90</p></td>
+<td><p>Mise à jour de la table statique qui recense les appariemments (SIRET, unité de contrôle).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>L</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">integration_log_begin</span></code></p></td>
+<td><p>10</p></td>
+<td><p>Déclaration du début de l’intégration dans la table de logs des intégrations.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>M</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">remove_ctt</span></code></p></td>
+<td><p>20</p></td>
+<td><p>Suppression de toutes les lignes, créées lors d’un précédent allocate_ctt, qui correspondent aux contrats d’intérim redistribués des entreprises de travail temporaires (ETT) vers les entreprises utilisatrices (ETU).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>M</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">remove_stt</span></code></p></td>
+<td><p>30</p></td>
+<td><p>Suppression de toutes les lignes, créées lors d’un précédent allocate_stt, qui correspondent aux salariés intérimaires redistribués des ETT vers les ETU.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>M</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">reindex_tables</span></code></p></td>
+<td><p>40</p></td>
+<td><p>Ré-indexation des tables salariés et contrats.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>M</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">set_dernier_mois_de_declaration_integre</span></code></p></td>
+<td><p>50</p></td>
+<td><p>Renseignement du mois de déclaration qui est intégré dans la table public.chargement_donnees.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>I</p></td>
+<td><p>E</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">extract_etablissements</span></code></p></td>
+<td><p>60</p></td>
+<td><p>Insertion des données brutes dans la table raw.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>T</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">transform_entreprises</span></code></p></td>
+<td><p>70</p></td>
+<td><p>Peuplement de la table source.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>L</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">load_entreprises</span></code></p></td>
+<td><p>80</p></td>
+<td><p>Import des données mensuelles de la table source dans la table permanente.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>T</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">transform_etablissements</span></code></p></td>
+<td><p>90</p></td>
+<td><p>Peuplement de la table source.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>L</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">load_etablissements</span></code></p></td>
+<td><p>100</p></td>
+<td><p>Import des données mensuelles de la table source dans la table permanente.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>M</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">modify_ouverture_etablissements</span></code></p></td>
+<td><p>110</p></td>
+<td><p>Inférence du statut ouvert / fermé d’un établissement sur l’ancienneté de sa dernière déclaration.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>I</p></td>
+<td><p>E</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">extract_salaries</span></code></p></td>
+<td><p>120</p></td>
+<td><p>Insertion des données brutes dans la table raw.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>T</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">transform_salaries</span></code></p></td>
+<td><p>130</p></td>
+<td><p>Peuplement de la table source.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>L</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">load_salaries</span></code></p></td>
+<td><p>140</p></td>
+<td><p>Import des données mensuelles de la table source dans la table permanente.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>I</p></td>
+<td><p>E</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">extract_contrats</span></code></p></td>
+<td><p>150</p></td>
+<td><p>Insertion des données brutes dans la table raw.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>L</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">load_postes</span></code></p></td>
+<td><p>160</p></td>
+<td><p>Import des nouveaux libellés de poste.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>T</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">transform_contrats</span></code></p></td>
+<td><p>170</p></td>
+<td><p>Peuplement de la table source.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>L</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">load_contrats</span></code></p></td>
+<td><p>180</p></td>
+<td><p>Import des données mensuelles de la table source dans la table permanente.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>I</p></td>
+<td><p>E</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">extract_changements_salaries</span></code></p></td>
+<td><p>190</p></td>
+<td><p>Insertion des données brutes dans la table raw.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>T</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">transform_changements_salaries</span></code></p></td>
+<td><p>200</p></td>
+<td><p>Peuplement de la table source.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>M</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">modify_changements_salaries</span></code></p></td>
+<td><p>210</p></td>
+<td><p>Modification des données des tables salariés et contrats au regard des changements relatifs aux salariés recensés.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>I</p></td>
+<td><p>E</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">extract_changements_contrats</span></code></p></td>
+<td><p>220</p></td>
+<td><p>Insertion des données brutes dans la table raw.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>T</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">transform_changements_contrats</span></code></p></td>
+<td><p>230</p></td>
+<td><p>Peuplement de la table source.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>M</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">modify_changements_contrats</span></code></p></td>
+<td><p>240</p></td>
+<td><p>Modification des données de la table contrats au regard des changements relatifs aux contrats recensés.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>I</p></td>
+<td><p>E</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">extract_fins_contrats</span></code></p></td>
+<td><p>250</p></td>
+<td><p>Insertion des données brutes dans la table raw.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>T</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">transform_fins_contrats</span></code></p></td>
+<td><p>260</p></td>
+<td><p>Peuplement de la table source.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>M</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">modify_fins_contrats</span></code></p></td>
+<td><p>270</p></td>
+<td><p>Modification des valeurs de date de fin dans la table contrats.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>M</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">modify_debuts_contrats</span></code></p></td>
+<td><p>280</p></td>
+<td><p>Modification des valeurs de date de début dans la table contrats.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>I</p></td>
+<td><p>E</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">extract_versements</span></code></p></td>
+<td><p>290</p></td>
+<td><p>Insertion des données brutes dans la table raw.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>I</p></td>
+<td><p>E</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">extract_remunerations</span></code></p></td>
+<td><p>300</p></td>
+<td><p>Insertion des données brutes dans la table raw.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>I</p></td>
+<td><p>E</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">extract_activites</span></code></p></td>
+<td><p>310</p></td>
+<td><p>Insertion des données brutes dans la table raw.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>T</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">transform_activites</span></code></p></td>
+<td><p>320</p></td>
+<td><p>Peuplement de la table source.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>L</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">load_activites</span></code></p></td>
+<td><p>330</p></td>
+<td><p>Import des données mensuelles de la table source dans la table permanente.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>M</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">remove_old_data</span></code></p></td>
+<td><p>340</p></td>
+<td><p>Suppression des données ayant dépassée la durée maximale de conservation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>M</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">allocate_stt</span></code></p></td>
+<td><p>350</p></td>
+<td><p>Redistribution des salariés de travail temporaire des ETT vers les ETU.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>M</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">allocate_ctt</span></code></p></td>
+<td><p>360</p></td>
+<td><p>Redistribution des contrats de travail temporaire des ETT vers les ETU.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">monthly_sanity_checks</span></code></p></td>
+<td><p>370</p></td>
+<td><p>Vérification de tests de cohérence sur la base.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">clean_database</span></code></p></td>
+<td><p>380</p></td>
+<td><p>Suppression des données des tables des schémas <code class="docutils literal notranslate"><span class="pre">raw</span></code> et <code class="docutils literal notranslate"><span class="pre">source</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></p></td>
+<td><p>P</p></td>
+<td><p>L</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">integration_log_end</span></code></p></td>
+<td><p>390</p></td>
+<td><p>Déclaration de la fin de l’intégration dans la table de logs des intégrations.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="generation">
+<h2>Génération<a class="headerlink" href="#generation" title="Link to this heading"></a></h2>
+<section id="fichier-python-de-generation-des-scripts-sql">
+<h3>Fichier python de génération des scripts SQL<a class="headerlink" href="#fichier-python-de-generation-des-scripts-sql" title="Link to this heading"></a></h3>
+<p>Les scripts SQL sont générés via Python car cela permet l’utilisation de fonctions génériques.</p>
+<p><strong>Dès lors, les scripts SQL ne doivent être générés et modifiés que via le fichier <code class="docutils literal notranslate"><span class="pre">dsn_processing/core/sql/generate_sql.py</span></code>.</strong></p>
+<section id="utilisation-du-fichier-de-generation">
+<h4>Utilisation du fichier de génération<a class="headerlink" href="#utilisation-du-fichier-de-generation" title="Link to this heading"></a></h4>
+<p>Le <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/core/sql/generate_sql.py">fichier <code class="docutils literal notranslate"><span class="pre">dsn_processing/core/sql/generate_sql.py</span></code></a> s’utilise de la façon suivante.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>usage:<span class="w"> </span>generate_sql.py<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-f<span class="w"> </span>FILE<span class="o">]</span><span class="w"> </span><span class="o">[</span>-d<span class="w"> </span>DAG<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span>
+Script<span class="w"> </span>to<span class="w"> </span>generate<span class="w"> </span>a<span class="w"> </span>SQL<span class="w"> </span>task<span class="w"> </span>script.
+options:
+<span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">            </span>show<span class="w"> </span>this<span class="w"> </span><span class="nb">help</span><span class="w"> </span>message<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
+<span class="w">  </span>-f<span class="w"> </span>FILE,<span class="w"> </span>--file<span class="w"> </span>FILE<span class="w">  </span>SQL<span class="w"> </span>file<span class="w"> </span>name<span class="w"> </span>to<span class="w"> </span>generate<span class="w"> </span><span class="o">(</span>without<span class="w"> </span>extension<span class="o">)</span>,<span class="w"> </span>generate<span class="w"> </span>all<span class="w"> </span>files<span class="w"> </span><span class="k">if</span><span class="w"> </span>None.
+<span class="w">  </span>-d<span class="w"> </span>DAG,<span class="w"> </span>--dag<span class="w"> </span>DAG<span class="w">     </span>Dag<span class="w"> </span>ID<span class="w"> </span>to<span class="w"> </span>store<span class="w"> </span>the<span class="w"> </span>SQL<span class="w"> </span>script,<span class="w"> </span><span class="k">if</span><span class="w"> </span>not<span class="w"> </span>specified<span class="w"> </span><span class="nb">set</span><span class="w"> </span>the<span class="w"> </span>default<span class="w"> </span>value<span class="w"> </span><span class="k">for</span><span class="w"> </span>each<span class="w"> </span>task.
+<span class="w">  </span>-v,<span class="w"> </span>--verbose<span class="w">         </span>print<span class="w"> </span>logs
+</pre></div>
+</div>
+<p>Si on veut re-générer l’ensemble des scripts, on exécutera :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>core/sql/generate_sql.py
+</pre></div>
+</div>
+</section>
+<section id="modification-et-ajout-de-script">
+<h4>Modification et ajout de script<a class="headerlink" href="#modification-et-ajout-de-script" title="Link to this heading"></a></h4>
+<p>Au sein du fichier <code class="docutils literal notranslate"><span class="pre">dsn_processing/core/sql/generate_sql.py</span></code>, le code qui permet l’écriture d’un script en particulier est sous la forme :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">generate_all</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">file</span> <span class="o">==</span> <span class="o">&lt;</span><span class="n">script_name</span><span class="o">&gt;</span><span class="p">:</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="o">...</span>
+    <span class="n">write_sql_file</span><span class="p">(</span><span class="o">&lt;</span><span class="n">default_dag</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">script_name</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">to_log</span><span class="o">=&lt;</span><span class="kc">True</span><span class="o">/</span><span class="kc">False</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Le paramètre <code class="docutils literal notranslate"><span class="pre">to_log</span></code> de la fonction <code class="docutils literal notranslate"><span class="pre">write_sql_file</span></code> permet, s’il est renseigné à <code class="docutils literal notranslate"><span class="pre">True</span></code>, d’ajouter les appels aux fonctions de log au début et à la fin du script.</p>
+<p>Les … font référence soit à une chaîne de caractère encodant une requête SQL soit à une fonction Python qui renvoie une chaîne de caractère encodant une requête SQL. Lorsqu’il s’agit d’une fonction, sauf exception, cette dernière doit être stockée dans le fichier <code class="docutils literal notranslate"><span class="pre">dsn_processing/core/sql/utils.py</span></code>. Voir les deux exemples ci-dessous.</p>
+<p><em>Génération d’un script via une chaîne de caractère.</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">generate_all</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">file</span> <span class="o">==</span> <span class="s2">&quot;create_test&quot;</span><span class="p">:</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;CREATE TABLE test (id INTEGER PRIMARY KEY, field TEXT);&quot;&quot;&quot;</span>
+    <span class="n">write_sql_file</span><span class="p">(</span><span class="s2">&quot;create_dag&quot;</span><span class="p">,</span> <span class="s2">&quot;create_test&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">to_log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><em>Génération d’un script par appel d’une fonction Python.</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">generate_all</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">file</span> <span class="o">==</span> <span class="s2">&quot;create_test&quot;</span><span class="p">:</span>
+    <span class="n">create_table</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">)</span>
+    <span class="n">write_sql_file</span><span class="p">(</span><span class="s2">&quot;create_dag&quot;</span><span class="p">,</span> <span class="s2">&quot;create_test&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">to_log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># dans le fichier dsn_processing/core/sql/utils.py </span>
+<span class="k">def</span> <span class="nf">create_table</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="k">return</span>  <span class="sa">f</span><span class="s2">&quot;&quot;&quot;CREATE TABLE </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> (id INTEGER PRIMARY KEY, field TEXT);&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>Une fois les modifications du fichier <code class="docutils literal notranslate"><span class="pre">dsn_processing/core/sql/generate_sql.py</span></code> effectuées, il faut re-générer l’ensemble des scripts impactés ou tout re-générer.</p>
+</section>
+</section>
+<section id="standards-sql-linter">
+<h3>Standards SQL - linter<a class="headerlink" href="#standards-sql-linter" title="Link to this heading"></a></h3>
+<section id="interet-d-un-linter">
+<h4>Intérêt d’un linter<a class="headerlink" href="#interet-d-un-linter" title="Link to this heading"></a></h4>
+<p>On utilise un linter SQL pour assurer la lisibilité et l’homogénéité des scripts. Cela permet aussi de détecter en amont les erreurs les plus évidentes. <em>Pour plus d’informations sur les linter en général, voir ce <a class="reference external" href="https://en.wikipedia.org/wiki/Lint_(software)">lien</a>.</em></p>
+<p>On utilise le linter <a class="reference external" href="https://github.com/sqlfluff/sqlfluff">sqlfluff</a>. Il peut être installé avec pip. Un fichier de configurations <code class="docutils literal notranslate"><span class="pre">.sqlfluff</span></code> est présent à la racine du dossier, il définit les particularités du linter pour le projet Champollion.</p>
+</section>
+<section id="comment-linter-un-fichier-sql">
+<h4>Comment <em>linter</em> un fichier <name>.sql ?<a class="headerlink" href="#comment-linter-un-fichier-sql" title="Link to this heading"></a></h4>
+<ol class="arabic simple">
+<li><p>S’assurer que sqlfluff est bien installé avec <code class="docutils literal notranslate"><span class="pre">sqlfluff</span> <span class="pre">-h</span></code>.</p></li>
+<li><p>Lancez la ligne de commande suivante :</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sqlfluff<span class="w"> </span>lint<span class="w"> </span>&lt;name&gt;.sql
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Si des erreurs s’affichent :</p>
+<ul class="simple">
+<li><p>Soit le fichier est généré par Python et on corrige les erreurs dans le fichier Python directement. Puis on regénère le fichier SQL.</p></li>
+<li><p>Soit le fichier SQL n’est pas généré par un autre fichier et on corrige directement le fichier SQL.</p></li>
+</ul>
+</li>
+<li><p>On relance et on corrige les erreurs tant que :</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sqlfluff<span class="w"> </span>lint<span class="w"> </span>&lt;name&gt;.sql
+</pre></div>
+</div>
+<p>n’affiche pas</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>All<span class="w"> </span>Finished<span class="w"> </span>📜<span class="w"> </span>🎉!<span class="w"> </span>
+</pre></div>
+</div>
+<p>Si on souhaite faire passer les tests à l’ensemble des scripts SQL, on éxécutera :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sqlfluff<span class="w"> </span>lint<span class="w"> </span>core/sql/*/*.sql
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="nature_donnees_source.html" class="btn btn-neutral float-left" title="Les données source : les déclarations sociales nominatives" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="integration_contenu_scripts.html" class="btn btn-neutral float-right" title="Contenu des scripts d’intégration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Margot COSSON.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

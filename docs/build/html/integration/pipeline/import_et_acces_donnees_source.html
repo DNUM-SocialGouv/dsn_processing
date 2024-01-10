@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Import et accès aux données source &mdash; DSN processing  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/avoid_rolling_tab.css?v=9d8e3617" />
+      <link rel="stylesheet" type="text/css" href="../../_static/increase_width.css?v=a0fc712e" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Exécution des scripts d’intégration : dags et orchestrateurs" href="dags_et_orchestrateurs.html" />
+    <link rel="prev" title="Mise en oeuvre de l’intégration" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            DSN processing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Sommaire :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../database/index.html">Base(s) de données</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Intégration des données</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../core/index.html">Contenu des scripts d’intégration</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Mise en oeuvre de l’intégration</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Import et accès aux données source</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fichiers-des-donnees-brutes-de-la-dsn">Fichiers des données brutes de la DSN</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#acces-aux-donnees-source">Accès aux données source</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="dags_et_orchestrateurs.html">Exécution des scripts d’intégration : dags et orchestrateurs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DSN processing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Intégration des données</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Mise en oeuvre de l’intégration</a></li>
+      <li class="breadcrumb-item active">Import et accès aux données source</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/integration/pipeline/import_et_acces_donnees_source.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="import-et-acces-aux-donnees-source">
+<h1>Import et accès aux données source<a class="headerlink" href="#import-et-acces-aux-donnees-source" title="Link to this heading"></a></h1>
+<section id="fichiers-des-donnees-brutes-de-la-dsn">
+<h2>Fichiers des données brutes de la DSN<a class="headerlink" href="#fichiers-des-donnees-brutes-de-la-dsn" title="Link to this heading"></a></h2>
+<p>Les fichiers bruts sont issus de la base DSNP3.</p>
+<section id="modalites">
+<h3>Modalités<a class="headerlink" href="#modalites" title="Link to this heading"></a></h3>
+<p>La DSNP3 est une base SQLServer de données DSN.</p>
+<p>L’import des données DSNP3 vers Champollion a été implémenté par <a class="reference external" href="https://msociauxfr.sharepoint.com/:x:/r/teams/EIG71/Documents%20partages/General/Commun/Documentation/contacts.xlsx?d=w86d385866e8f4768b018b6e069018b5e&amp;amp;csf=1&amp;amp;web=1&amp;amp;e=lKg5GS">VDDAL</a>. L’import mensuel vers la VM de stockage de Champollion n’est pas automatisé, cela nécessite des opérations manuelles chaque mois. Cette dernière est détaillée dans le fichier <a class="reference external" href="https://msociauxfr.sharepoint.com/:w:/r/teams/EIG71/Documents%20partages/General/Base%20Champollion/Donn%C3%A9es/Alimentation%20donn%C3%A9es%20DSN/procedure_import_DSN.docx?d=wfdb90b3855024a20b736be1b090637a1&amp;amp;csf=1&amp;amp;web=1&amp;amp;e=PCMdyt">Base Champollion/Données/Alimentation données DSN/procedure_import_DSN.docx</a> de l’espace Teams Champollion.</p>
+<p>Le logiciel utilisé pour l’import est SSIS. Les caractérisques décrites dans la suite de cette documentation sont donc configurées dans la solution SSIS.</p>
+<p>Le compte utilisé pour transférer les fichiers sur la VM de stockage de Champollion est le compte de service <code class="docutils literal notranslate"><span class="pre">svc.filer</span></code>. La connexion à ce compte s’effectue par clef SSH qu’il faut demander à l’infogérant (en l’occurrence <a class="reference external" href="https://msociauxfr.sharepoint.com/:x:/r/teams/EIG71/Documents%20partages/General/Commun/Documentation/contacts.xlsx?d=w86d385866e8f4768b018b6e069018b5e&amp;amp;csf=1&amp;amp;web=1&amp;amp;e=lKg5GS">OBSQN</a>).</p>
+</section>
+<section id="scripts-de-selection-des-donnees">
+<h3>Scripts de sélection des données<a class="headerlink" href="#scripts-de-selection-des-donnees" title="Link to this heading"></a></h3>
+<p>Pour chaque table souhaitée de la DSNP3, un script SQL permet la récupération des données chargées en base sur la <a class="reference internal" href="#planning-des-imports">période qui nous intéresse</a>. Chaque script est formatté de la sorte :</p>
+<div class="highlight-SQL notranslate"><div class="highlight"><pre><span></span><span class="n">USE</span><span class="w"> </span><span class="p">[</span><span class="n">DSNP3</span><span class="p">]</span>
+<span class="k">GO</span>
+
+<span class="k">SELECT</span><span class="w"> </span>
+<span class="w">       </span><span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">NomTable</span><span class="p">].[</span><span class="n">PremiereColonneSouhaitee</span><span class="p">]</span>
+
+<span class="w">      </span><span class="p">,</span><span class="w"> </span><span class="p">...</span>
+
+<span class="w">      </span><span class="p">,[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">NomTable</span><span class="p">].[</span><span class="n">DerniereColonneSouhaitee</span><span class="p">]</span>
+<span class="w">      </span><span class="p">,[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Declaration</span><span class="p">].[</span><span class="n">IdDeclaration</span><span class="p">]</span>
+<span class="w">      </span><span class="p">,[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Declaration</span><span class="p">].[</span><span class="n">DateDeclaration</span><span class="p">]</span>
+<span class="w">  </span><span class="k">FROM</span><span class="w"> </span><span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">NomTable</span><span class="p">]</span>
+<span class="w">  </span><span class="k">INNER</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">TableParent</span><span class="p">]</span>
+<span class="w">	</span><span class="k">ON</span><span class="w"> </span><span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">NomTable</span><span class="p">].</span><span class="n">IdParentColonne</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">TableParent</span><span class="p">].</span><span class="n">IdColonne</span>
+
+<span class="w">  </span><span class="p">...</span><span class="w"> </span><span class="p">(</span><span class="n">autres</span><span class="w"> </span><span class="n">jointures</span><span class="w"> </span><span class="n">si</span><span class="w"> </span><span class="n">nécessaires</span><span class="p">)</span><span class="w"> </span><span class="p">...</span>
+
+<span class="w">  </span><span class="k">INNER</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Declaration</span><span class="p">]</span>
+<span class="w">	</span><span class="k">ON</span><span class="w"> </span><span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">TableParent</span><span class="p">].</span><span class="n">IdDeclaration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Declaration</span><span class="p">].</span><span class="n">IdDeclaration</span>
+<span class="w">  </span><span class="k">WHERE</span><span class="w"> </span><span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Declaration</span><span class="p">].[</span><span class="n">IdDateChargement</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">AAAAMMJJ1</span>
+<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Declaration</span><span class="p">].[</span><span class="n">IdDateChargement</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">AAAAMMJJ2</span>
+
+<span class="k">GO</span>
+</pre></div>
+</div>
+<p>Pour la clause de sélection temporelle, on utilise la date de chargement (sous format id) de la table la plus <em>haute</em>, c’est-à-dire la table <code class="docutils literal notranslate"><span class="pre">Declaration</span></code>, afin de minimiser le risque de dates de chargement erronées (faille issue de la procédure d’intégration des données en DSNP3).</p>
+<p>Les scripts sont stockés dans <code class="docutils literal notranslate"><span class="pre">dsn_processing/core/python/raw_files_management/raw_DSN_selection_scripts/</span></code>.</p>
+</section>
+<section id="format-des-fichiers-de-donnees">
+<h3>Format des fichiers de données<a class="headerlink" href="#format-des-fichiers-de-donnees" title="Link to this heading"></a></h3>
+<p>Pour être traités par la pipeline, les fichiers bruts de la DSNP3 (un par table) doivent :</p>
+<ul class="simple">
+<li><p>être contenus dans une archive compressée au format <code class="docutils literal notranslate"><span class="pre">7z</span></code> sécurisée par un mot de passe (<code class="docutils literal notranslate"><span class="pre">${WORKFLOW_ARCHIVES_PASSWORD}</span></code>) et intitulée <code class="docutils literal notranslate"><span class="pre">champollion_YYYYMM01.7z</span></code> avec <code class="docutils literal notranslate"><span class="pre">YYYYMM01</span></code> le mois de déclaration ;</p></li>
+<li><p>être intitulés <code class="docutils literal notranslate"><span class="pre">champollion_&lt;nom</span> <span class="pre">de</span> <span class="pre">la</span> <span class="pre">table&gt;_YYYY-MM-01.csv</span></code> ;</p></li>
+<li><p>être au format <code class="docutils literal notranslate"><span class="pre">CSV</span></code>, avec une première ligne correspondant aux noms des colonnes et un encodage <code class="docutils literal notranslate"><span class="pre">WIN1252</span></code> (aussi appelé <code class="docutils literal notranslate"><span class="pre">cp1252</span></code>) ;</p></li>
+<li><p>avoir le symbole <code class="docutils literal notranslate"><span class="pre">|</span></code> comme délimiteur de texte et le symbole <code class="docutils literal notranslate"><span class="pre">;</span></code> comme séparateur ;</p></li>
+<li><p>respecter l’ordre des colonnes tel que défini ci-après.</p></li>
+</ul>
+<p>Les fichiers contenus dans l’archive sont les suivants :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>champollion_YYYYMM01.7z  
+└─── champollion_activite_YYYY-MM-01.csv 
+└─── champollion_anciennete_YYYY-MM-01.csv
+└─── champollion_arretdetravail_YYYY-MM-01.csv
+└─── champollion_autresuspensionexecutioncontrat_YYYY-MM-01.csv
+└─── champollion_contrat_YYYY-MM-01.csv
+└─── champollion_contratchangement_YYYY-MM-01.csv
+└─── champollion_contratfin_YYYY-MM-01.csv
+└─── champollion_declaration_YYYY-MM-01.csv
+└─── champollion_etablissement_YYYY-MM-01.csv
+└─── champollion_individu_YYYY-MM-01.csv
+└─── champollion_individuchangement_YYYY-MM-01.csv
+└─── champollion_lieutravail_YYYY-MM-01.csv
+└─── champollion_penebilite_YYYY-MM-01.csv
+└─── champollion_remuneration_YYYY-MM-01.csv
+└─── champollion_tempspartieltherapeutique_YYYY-MM-01.csv
+└─── champollion_versement_YYYY-MM-01.csv
+</pre></div>
+</div>
+<section id="ordre-des-colonnes">
+<h4>Ordre des colonnes<a class="headerlink" href="#ordre-des-colonnes" title="Link to this heading"></a></h4>
+<details>
+  <summary>Afficher la liste</summary>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;champollion_activite&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;IdActivite&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdRemuneration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;TypeActivite&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Mesure&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;UniteMesure&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDeclaration&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;champollion_anciennete&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;IdAnciennete&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdIndividu&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;TypeAnciennete&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;UniteMesure&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Valeur&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NumeroContrat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDeclaration&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;champollion_arretdetravail&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;IdArretDeTravail&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdContrat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;MotifArret&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDernierJourTravaille&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateFinPrevisionelle&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateReprise&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;MotifReprise&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Subrogation&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDebutSubrogation&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateFinSubrogation&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDeclaration&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;champollion_autresuspensionexecutioncontrat&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;IdAutreSuspensionExecutionContrat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdContrat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;MotifSuspension&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDebutSuspension&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateFinSuspension&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;PositionDetachement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NombreJourOSuspenFractio&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDeclaration&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;champollion_contrat&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;IdContrat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdIndividu&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDebut&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeStatutConv&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeStatutCatRetraiteCompl&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodePcsEse&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeCompltPcsEse&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;LibelleEmploi&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeNature&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeDispPolitiquePublique&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Numero&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateFinPrev&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeUniteQuotite&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;QuotiteTravailCategorie&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;QuotiteTravailContrat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ModaliteExerciceTempsTravail&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ComplementBaseRegimeObligatoire&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeCCN&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeRegimeMaladie&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;LieuTravail&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeRegimeRisqueVieillesse&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeMotifRecours&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeCaisseCP&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;TravailleurAEtrangerSS&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeMotifExclusion&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeStatutEmploi&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeDelegataireRisqueMaladie&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeEmploiMultiple&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeEmployeurMultiple&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeMetier&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeRegimeRisqueAT&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeRisqueAccidentTravail&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;PositionConventionCollective&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeStatutCatAPECITA&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;SalarieTpsPartielCotisTpsPlein&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;RemunerationPourboire&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;SIRETEtabUtilisateur&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPCodeComplPcsEse&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPNaturePoste&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPQuotiteTravailTempsComplet&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;TauxTravailTempsPartiel&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeCatService&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPIndiceBrut&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPIndiceMajore&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPNBI&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPIndiceBrutOrigine&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPIndiceBrutCotiEmploiS&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPAncEmployPublic&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPMaintienTraitContractuelT&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPTypeDetachement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;TauxServiceActif&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NiveauRemuneration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Echelon&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CoefficientHierarchique&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;StatutBOETH&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CompltDispositifPublic&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;MiseDispoExterneIndividu&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CatClassementfinale&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CollegeCNIEG&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;AmenagTpsTravActivParti&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;TauxDeductForfFraisPro&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NumeroInterneEPublic&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;TypeGestionAC&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateAdhesion&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeAffAssChomage&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;StatutOrgSpectacle&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;GenreNavigation&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Grade&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPIndiceCTI&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FINESSGeographique&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDeclaration&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;champollion_contratchangement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;IdContratChangement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdContrat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateModification&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeStatutConv&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeStatutCatRetraiteCompl&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeNature&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeDispPolitiquePublique&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeUniteQuotite&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;QuotiteTravailContrat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ModaliteExercieTempsTravail&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ComplementBaseRegimeObligatoire&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeCCN&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;SiretEtab&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;LieuTravail&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Numero&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeMotifRecours&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;TravailleurAEtrangerSS&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodePcsEse&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeCompltPcsEse&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDebut&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;QuotiteTravailCategorie&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeCaisseCP&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeRisque&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeStatutCatAPECITA&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;SalarieTpsPartielCotisTpsPlein&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ProfondeurRecalculPaie&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPCodeComplPcsEse&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPNaturePoste&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPQuotiteTravailTempsComplet&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;TauxTravailTempsPartiel&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeCatService&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPIndiceBrut&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPIndiceMajore&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPNBI&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPIndiceBrutOrigine&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPIndiceBrutCotiEmploiS&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPAncEmployPublic&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPMaintienTraitContractuelT&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;TauxServiceActif&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NiveauRemuneration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Echelon&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CoefficientHierarchique&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;StatutBOETH&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CompltDispositifPublic&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;MiseDispoExterneIndividu&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CatClassementfinale&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CollegeCNIEG&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;AmenagTpsTravActivParti&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPTypeDetachement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;TauxDeductForfFraisPro&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeRegimeMaladie&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeRegimeRisqueVieillesse&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;PositionConventionCollective&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeRisqueAccidentTravail&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeStatutEmploi&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeEmploiMultiple&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeEmployeurMultiple&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Grade&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FPIndiceCTI&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FINESSGeographique&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDeclaration&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;champollion_contratfin&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;IdContratFin&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdContrat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateFin&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeMotifRupture&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DernierJourTrav&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DeclarationFinContratUsage&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;SoldeCongesAcqNonPris&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDeclaration&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;champollion_declaration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;IdDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdEnvoi&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NatureDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;TypeDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NumeroFraction&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NumeroOrdreDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateFichier&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ChampDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdentifiantMetier&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DeviseDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;SiretEtab&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDateChargement&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;champollion_etablissement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;IdEtablissement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Siren&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NICEntre&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeAPEN&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;VoieEntre&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CPEntre&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;LocaliteEntre&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CompltDistributionEntre&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CompltVoieEntre&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;EffectifMoyenEntrepriseFinPeriode&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodePaysEntr&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ImplantationEntreprise&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDebPerRef&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateFinPerRef&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;RaisonSocialeEntr&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NIC&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeAPET&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;VoieEtab&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CP&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Localite&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CompltDistributionEtab&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CompltVoieEtab&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;EffectifFinPeriode&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Codepays&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NatureJuridiqueEmployeur&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateClotureExerciceComptable&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateAdhesionTESECEA&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateSortieTESECEA&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeINSEECommune&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateEcheanceApplique&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CategorieJuridique&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;EnseigneEtablissement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeConvCollectiveApplic&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeConvCollectivePrinci&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;OprateurCompetences&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDeclaration&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;champollion_individu&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;IdIndividu&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdEtablissement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NIRDeclare&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NomFamille&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NomUsage&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Prenoms&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeSexe&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateNaissance&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;LieuNaissance&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Voie&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CP&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Localite&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodePays&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Distribution&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeUE&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeDepartNaissance&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodePaysNaissance&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CompltLocalisation&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CompltVoie&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Mel&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Matricule&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NTT&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NombreEnfantcharge&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;StatutEtrangerFiscal&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Embauche&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NiveauFormation&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NIR&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateSNGI&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NomFamilleSNGI&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;PrenomsSNGI&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NomMaritalSNGI&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeResultSNGI&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IndicCertifSNGI&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;ComNaissSNGI&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeDeptNaissSNGI&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;PaysNaissSNGI&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateNIRSNGI&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDecesSNGI&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;EstCodifie&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NiveauDiplome&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDeclaration&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;champollion_individuchangement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;IdIndividuChangement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdIndividu&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateModification&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;AncienNIR&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NomFamille&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Prenoms&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateNaissance&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;EstCodifie&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDeclaration&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;champollion_lieutravail&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;IdLieuTravail&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Siret&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeAPET&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Voie&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CP&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Localite&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodePays&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Distribution&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CompltConstruction&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CompltVoie&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeNatureJur&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;CodeINSEECommune&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;EnseigneEtab&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDeclaration&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;champollion_penebilite&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;IdPenebilite&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdIndividu&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;FacteurExposition&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NumeroContrat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;AnneeRattachement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDeclaration&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;champollion_remuneration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;IdRemuneration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdVersement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDebutPeriodePaie&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateFinPeriodePaie&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NumeroContrat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;TypeRemuneration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NombreHeure&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Montant&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;TauxRemunPositStatutaire&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;TauxMajorResidentielle&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;TauxRemuCotisee&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;TauxMajorationExAExE&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDeclaration&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;champollion_tempspartieltherapeutique&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;IdTempsPartielTherapeutique&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdArretDeTravail&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDebut&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateFin&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Montant&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDeclaration&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;champollion_versement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;IdVersement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdIndividu&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateVersement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;RemunarationNetteFiscale&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;NumeroVersement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;MontantNetVerse&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;TauxPrelevSource&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;TypeTauxPrelevSource&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdenTauxPrelevSource&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;MontantPrelevSource&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;MontantPartNonImpRevenu&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;MontantAbattBaseFiscale&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;MontantDiffAssPASEtRNF&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDateChargement&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdDeclaration&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;DateDeclaration&quot;</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</details>
+</section>
+</section>
+<section id="planning-des-imports">
+<h3>Planning des imports<a class="headerlink" href="#planning-des-imports" title="Link to this heading"></a></h3>
+<pre>
+         mois N              mois N+1           mois N+2
+-- || --------------- || --------------- || --------------- || -->
+                              <span style="text-decoration: underline;">└──┘</span>              ↑
+                         Autour du 20 du      Le 9 du mois N+2,
+                         mois N+1, la         la quasi-totalité
+                         majorité des         des déclarations
+                         déclarations du      du mois N sont
+                         mois N sont          chargées et on
+                         chargées en DSN.     récupère donc à
+                                              ce moment-là les
+                                              déclarations chargées
+                                              entre le 9 (inclu) 
+                                              du mois N+1 et le 9 
+                                              (exclu) du mois N+2
+                                              ce qui correspond
+                                              quasi-exclusivement
+                                              aux déclarations du
+                                              mois N.
+</pre>
+<p>L’intérêt de venir <em>chercher</em> les déclarations du mois N le 9 du mois N+2, et non le 25 du mois N+1 par exemple, est qu’on récupère le maximum de déclarations du mois N <em>en retard</em> par rapport au pic de chargement du 20 du mois N+1.</p>
+<p>Ainsi, dans la requête SQL ci-dessus, pour récupérer les données du mois MM de l’année AAAA, la clause <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> est :</p>
+<div class="highlight-SQL notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="k">WHERE</span><span class="w"> </span><span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">NomTable</span><span class="p">].[</span><span class="n">IdDateChargement</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">AAAA</span><span class="p">(</span><span class="n">MM</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="mi">09</span>
+<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">NomTable</span><span class="p">].[</span><span class="n">IdDateChargement</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">AAAA</span><span class="p">(</span><span class="n">MM</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="mi">09</span>
+</pre></div>
+</div>
+<p>Si besoin, les clauses temporelles peuvent être récupérées dans le tableur <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/core/python/raw_files_management/raw_DSN_selection_scripts/WHERE_time_clauses.xlsx"><code class="docutils literal notranslate"><span class="pre">dsn_processing/core/python/raw_files_management/raw_DSN_selection_scripts/WHERE_time_clauses.xlsx</span></code></a>.</p>
+<p>L’import n’étant pas automatique, <strong>le 9 de chaque mois, il faut envoyer un message à VDDAL pour qu’il lance l’import de données</strong>. Une fois cela réalisé, il faut lancer l’intégration mensuelle. L’automatisation est un enjeu majeur des futurs travaux à mener.</p>
+</section>
+</section>
+<section id="acces-aux-donnees-source">
+<h2>Accès aux données source<a class="headerlink" href="#acces-aux-donnees-source" title="Link to this heading"></a></h2>
+<p>Pour plus d’informations sur l’hébergement des données dans l’infrastructure Champollion, se référer à la <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/champolib/blob/dev/documentation/data/1_infrastructure_data.md#h%C3%A9bergement-des-donn%C3%A9es-source">documentation dédiée</a>.</p>
+<p>Les chemins d’accès aux données sont déterminés :</p>
+<ol class="arabic simple">
+<li><p>d’une part à l’aide des variables d’environnement suivantes :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">WORKFLOW_ARCHIVES_DATA_PATH</span></code> : dossier hébergeant les archives compressées de fichiers DSN ;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WORKFLOW_RAW_DATA_PATH</span></code> : dossier hébergeant les fichiers DSN après décompression ;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WORKFLOW_TEST_DATA_PATH</span></code> : dossier hébergeant les fichiers DSN de test ;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WORKFLOW_SOURCES_DATA_PATH</span></code> : dossier hébergeant les autres fichiers de données non DSN.</p></li>
+</ul>
+</li>
+<li><p>d’autre part via les paramètres passés aux <a class="reference internal" href="dags_et_orchestrateurs.html#orchestrateurs-de-scripts"><span class="std std-ref">orchestrateurs</span></a> sous <a class="reference external" href="https://airflow.apache.org/docs/apache-airflow/stable/templates-ref.html">format jinja</a>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">params.filepath</span> <span class="pre">}}</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">params.filetype</span> <span class="pre">}}</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">params.foldername</span> <span class="pre">}}</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">params.filedate</span> <span class="pre">}}</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">params.filename</span> <span class="pre">}}</span></code></p></li>
+</ul>
+</li>
+</ol>
+<p>afin d’accèder à un fichier <code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">params.filepath</span> <span class="pre">}}/{{</span> <span class="pre">params.filetype</span> <span class="pre">}}/{{</span> <span class="pre">params.foldername</span> <span class="pre">}}_{{</span> <span class="pre">params.filedate</span> <span class="pre">}}/{{</span> <span class="pre">params.filename</span> <span class="pre">}}_{{</span> <span class="pre">params.filedate</span> <span class="pre">}}.csv</span></code> ou <code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">params.filepath</span> <span class="pre">}}/{{</span> <span class="pre">params.filename</span> <span class="pre">}}.csv</span></code> par exemple.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Mise en oeuvre de l’intégration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dags_et_orchestrateurs.html" class="btn btn-neutral float-right" title="Exécution des scripts d’intégration : dags et orchestrateurs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Margot COSSON.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

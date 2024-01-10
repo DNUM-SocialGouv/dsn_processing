@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mise en oeuvre de l’intégration &mdash; DSN processing  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/avoid_rolling_tab.css?v=9d8e3617" />
+      <link rel="stylesheet" type="text/css" href="../../_static/increase_width.css?v=a0fc712e" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Import et accès aux données source" href="import_et_acces_donnees_source.html" />
+    <link rel="prev" title="Contenu des scripts d’intégration" href="../core/integration_contenu_scripts.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            DSN processing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Sommaire :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../database/index.html">Base(s) de données</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Intégration des données</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../core/index.html">Contenu des scripts d’intégration</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Mise en oeuvre de l’intégration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="import_et_acces_donnees_source.html">Import et accès aux données source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dags_et_orchestrateurs.html">Exécution des scripts d’intégration : dags et orchestrateurs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DSN processing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Intégration des données</a></li>
+      <li class="breadcrumb-item active">Mise en oeuvre de l’intégration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/integration/pipeline/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="mise-en-oeuvre-de-l-integration">
+<h1>Mise en oeuvre de l’intégration<a class="headerlink" href="#mise-en-oeuvre-de-l-integration" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="import_et_acces_donnees_source.html">Import et accès aux données source</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="import_et_acces_donnees_source.html#fichiers-des-donnees-brutes-de-la-dsn">Fichiers des données brutes de la DSN</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="import_et_acces_donnees_source.html#modalites">Modalités</a></li>
+<li class="toctree-l3"><a class="reference internal" href="import_et_acces_donnees_source.html#scripts-de-selection-des-donnees">Scripts de sélection des données</a></li>
+<li class="toctree-l3"><a class="reference internal" href="import_et_acces_donnees_source.html#format-des-fichiers-de-donnees">Format des fichiers de données</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="import_et_acces_donnees_source.html#ordre-des-colonnes">Ordre des colonnes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="import_et_acces_donnees_source.html#planning-des-imports">Planning des imports</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="import_et_acces_donnees_source.html#acces-aux-donnees-source">Accès aux données source</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dags_et_orchestrateurs.html">Exécution des scripts d’intégration : dags et orchestrateurs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dags_et_orchestrateurs.html#orchestrateurs-de-scripts">Orchestrateurs de scripts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="dags_et_orchestrateurs.html#orchestrateur-bash">Orchestrateur Bash</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dags_et_orchestrateurs.html#le-coeur-orchestrator-py">Le coeur : <code class="docutils literal notranslate"><span class="pre">orchestrator.py</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dags_et_orchestrateurs.html#les-dags-bash">Les dags Bash</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="dags_et_orchestrateurs.html#orchestrateur-airflow">Orchestrateur Airflow</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dags_et_orchestrateurs.html#deploiement">Déploiement</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="dags_et_orchestrateurs.html#pre-requis">Pré-requis</a></li>
+<li class="toctree-l5"><a class="reference internal" href="dags_et_orchestrateurs.html#en-dynamique-ou-en-statique">En dynamique ou en statique</a></li>
+<li class="toctree-l5"><a class="reference internal" href="dags_et_orchestrateurs.html#etape-de-build">Etape de build</a></li>
+<li class="toctree-l5"><a class="reference internal" href="dags_et_orchestrateurs.html#etape-de-run">Etape de run</a></li>
+<li class="toctree-l5"><a class="reference internal" href="dags_et_orchestrateurs.html#dans-l-environnement-champollion">Dans l’environnement Champollion</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="dags_et_orchestrateurs.html#acces-a-l-interface-d-airflow">Accès à l’interface d’Airflow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dags_et_orchestrateurs.html#les-dags-airflow">Les dags Airflow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dags_et_orchestrateurs.html#automatisation-de-l-integration-mensuelle">Automatisation de l’intégration mensuelle</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dags_et_orchestrateurs.html#dags">Dags</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="dags_et_orchestrateurs.html#check-database-connection"><code class="docutils literal notranslate"><span class="pre">check_database_connection</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dags_et_orchestrateurs.html#init-database"><code class="docutils literal notranslate"><span class="pre">init_database</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dags_et_orchestrateurs.html#monthly-integration"><code class="docutils literal notranslate"><span class="pre">monthly_integration</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dags_et_orchestrateurs.html#specificites-dans-airflow">Spécificités dans Airflow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dags_et_orchestrateurs.html#performances-sur-les-donnees-reelles">Performances sur les données réelles</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="dags_et_orchestrateurs.html#update-static-files"><code class="docutils literal notranslate"><span class="pre">update_static_files</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dags_et_orchestrateurs.html#update-database"><code class="docutils literal notranslate"><span class="pre">update_database</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dags_et_orchestrateurs.html#historical-integration"><code class="docutils literal notranslate"><span class="pre">historical_integration</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dags_et_orchestrateurs.html#test-integration"><code class="docutils literal notranslate"><span class="pre">test_integration</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dags_et_orchestrateurs.html#fichier-de-reference-pour-la-construction-de-la-base-de-test">Fichier de référence pour la construction de la base de test</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dags_et_orchestrateurs.html#creation-des-echantillons-de-fichiers-bruts">Création des échantillons de fichiers bruts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dags_et_orchestrateurs.html#creation-des-fichiers-de-comparaison">Création des fichiers de comparaison</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dags_et_orchestrateurs.html#integration-des-donnees-de-test-via-les-scripts-d-integration">Intégration des données de test via les scripts d’intégration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dags_et_orchestrateurs.html#integration-des-donnees-attendues">Intégration des données <em>attendues</em></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dags_et_orchestrateurs.html#verification-de-la-mise-en-qualite-des-donnees-tests-unitaires">Vérification de la mise en qualité des données (tests unitaires)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="dags_et_orchestrateurs.html#mock-integration"><code class="docutils literal notranslate"><span class="pre">mock_integration</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dags_et_orchestrateurs.html#anonymous-integration"><code class="docutils literal notranslate"><span class="pre">anonymous_integration</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dags_et_orchestrateurs.html#procedure-de-reprise-historique">Procédure de reprise historique</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="dags_et_orchestrateurs.html#dags-historical-integration">DAGs <code class="docutils literal notranslate"><span class="pre">historical_integration</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dags_et_orchestrateurs.html#desactivation-des-taches-auxiliaires">Désactivation des tâches auxiliaires</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dags_et_orchestrateurs.html#parametres-du-dag">Paramètres du DAG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dags_et_orchestrateurs.html#historical-integration-via-pur-bash"><code class="docutils literal notranslate"><span class="pre">historical_integration</span></code> via pur Bash</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dags_et_orchestrateurs.html#historical-integration-via-airflow"><code class="docutils literal notranslate"><span class="pre">historical_integration</span></code> via Airflow</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="dags_et_orchestrateurs.html#interactions-pipeline-airflow-dags-historical-integration-sh-airflow">Interactions <code class="docutils literal notranslate"><span class="pre">pipeline/airflow/dags/historical_integration.sh</span></code> - Airflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dags_et_orchestrateurs.html#lancer-une-procedure-de-reprise-historique-avec-les-donnees-reelles-via-airflow">Lancer une procédure de reprise historique avec les données réelles via Airflow</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../core/integration_contenu_scripts.html" class="btn btn-neutral float-left" title="Contenu des scripts d’intégration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="import_et_acces_donnees_source.html" class="btn btn-neutral float-right" title="Import et accès aux données source" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Margot COSSON.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guide technique des bases de données &mdash; DSN processing  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/avoid_rolling_tab.css?v=9d8e3617" />
+      <link rel="stylesheet" type="text/css" href="../_static/increase_width.css?v=a0fc712e" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Catalogue des données de la base Champollion" href="catalogue_donnees_base_champollion.html" />
+    <link rel="prev" title="Base(s) de données" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            DSN processing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Sommaire :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Base(s) de données</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Guide technique des bases de données</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#initialisation">Initialisation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#creation-des-bases">Création des bases</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#definition-des-schemas">Définition des schémas</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#structure-commune">Structure commune</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#conventions">Conventions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#types-des-tables-dynamiques-et-statiques">Types des tables : dynamiques et statiques</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liste-des-tables-permanentes">Liste des tables permanentes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liens-entre-les-tables-clefs-etrangeres">Liens entre les tables : clefs étrangères</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#index">Index</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#nature-des-donnees">Nature des données</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#trois-bases-pour-quatre-cas-d-usage">Trois bases pour quatre cas d’usage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#un-schema-de-donnees-semi-anonymisees-au-sein-de-la-base-champollion">Un schéma de données semi-anonymisées au sein de la base <code class="docutils literal notranslate"><span class="pre">champollion</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#une-base-de-test-avec-des-donnees-reelles">Une base de <code class="docutils literal notranslate"><span class="pre">test</span></code> avec des données réelles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#une-base-de-fausses-donnees-pour-le-site-vitrine">Une base de fausses données pour le site vitrine</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="catalogue_donnees_base_champollion.html">Catalogue des données de la base Champollion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diagrammes_schemas.html">Diagrammes des différents schémas au sein des bases de données</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../integration/index.html">Intégration des données</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DSN processing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Base(s) de données</a></li>
+      <li class="breadcrumb-item active">Guide technique des bases de données</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/database/guide_technique_bases_de_donnees.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="guide-technique-des-bases-de-donnees">
+<h1>Guide technique des bases de données<a class="headerlink" href="#guide-technique-des-bases-de-donnees" title="Link to this heading"></a></h1>
+<p>Qu’il s’agisse de serveurs de base conteneurisés pour les besoins du développement ou de serveurs de base de production, on instancie trois bases de données pour les usages suivants :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">champollion</span></code> : la base principale, qui contient les données réelles et complètes ;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mock</span></code> : une base de fausses données ;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test</span></code> : une base de test qui contient des données réelles de test.</p></li>
+</ul>
+<p>Pour plus d’informations sur l’infrastructure retenue pour les bases, se référer à la <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/champolib/blob/dev/documentation/data/1_infrastructure_data.md">documentation</a> sur l’infrastructure data du projet.</p>
+<section id="initialisation">
+<h2>Initialisation<a class="headerlink" href="#initialisation" title="Link to this heading"></a></h2>
+<section id="creation-des-bases">
+<h3>Création des bases<a class="headerlink" href="#creation-des-bases" title="Link to this heading"></a></h3>
+<p><em>A noter que, pour les serveurs de base conteneurisés, la création de ces bases est automatique lors du déploiment du serveur.</em></p>
+<p>Pour créer ces trois bases, on se connecte à la base <code class="docutils literal notranslate"><span class="pre">postgres</span></code> (il est nécessaire de ne pas être connecté via une version pré-existante de l’une des trois bases) et on exécute la commande suivante :</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">champollion</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="k">FORCE</span><span class="p">);</span>
+<span class="k">DROP</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">mock</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="k">FORCE</span><span class="p">);</span>
+<span class="k">DROP</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">test</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="k">FORCE</span><span class="p">);</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">champollion</span>
+<span class="w">    </span><span class="k">WITH</span>
+<span class="w">    </span><span class="k">OWNER</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">champollion</span>
+<span class="w">    </span><span class="k">ENCODING</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;UTF8&#39;</span>
+<span class="w">    </span><span class="n">LC_COLLATE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;fr_FR.UTF-8&#39;</span>
+<span class="w">    </span><span class="n">LC_CTYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;fr_FR.UTF-8&#39;</span>
+<span class="w">    </span><span class="n">TABLESPACE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pg_default</span>
+<span class="w">    </span><span class="k">CONNECTION</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span>
+<span class="w">    </span><span class="k">TEMPLATE</span><span class="o">=</span><span class="n">template0</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">mock</span>
+<span class="w">    </span><span class="k">WITH</span>
+<span class="w">    </span><span class="k">OWNER</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">champollion</span>
+<span class="w">    </span><span class="k">ENCODING</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;UTF8&#39;</span>
+<span class="w">    </span><span class="n">LC_COLLATE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;fr_FR.UTF-8&#39;</span>
+<span class="w">    </span><span class="n">LC_CTYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;fr_FR.UTF-8&#39;</span>
+<span class="w">    </span><span class="n">TABLESPACE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pg_default</span>
+<span class="w">    </span><span class="k">CONNECTION</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span>
+<span class="w">    </span><span class="k">TEMPLATE</span><span class="o">=</span><span class="n">template0</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">test</span>
+<span class="w">    </span><span class="k">WITH</span>
+<span class="w">    </span><span class="k">OWNER</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">champollion</span>
+<span class="w">    </span><span class="k">ENCODING</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;UTF8&#39;</span>
+<span class="w">    </span><span class="n">LC_COLLATE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;fr_FR.UTF-8&#39;</span>
+<span class="w">    </span><span class="n">LC_CTYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;fr_FR.UTF-8&#39;</span>
+<span class="w">    </span><span class="n">TABLESPACE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pg_default</span>
+<span class="w">    </span><span class="k">CONNECTION</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span>
+<span class="w">    </span><span class="k">TEMPLATE</span><span class="o">=</span><span class="n">template0</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="definition-des-schemas">
+<h3>Définition des schémas<a class="headerlink" href="#definition-des-schemas" title="Link to this heading"></a></h3>
+<p>Les schémas au sein de chaque base sont gérés par la <a class="reference internal" href="../integration/core/integration_contenu_scripts.html#create-permanent-tables"><span class="std std-ref">pipeline de traitement de données</span></a>. Dans la base <code class="docutils literal notranslate"><span class="pre">champollion</span></code>, on retrouve notamment un schéma <code class="docutils literal notranslate"><span class="pre">public</span></code> contenant les données réelles et un schéma <code class="docutils literal notranslate"><span class="pre">anonymous</span></code> contenant des données anonymisées.</p>
+</section>
+</section>
+<section id="structure-commune">
+<h2>Structure commune<a class="headerlink" href="#structure-commune" title="Link to this heading"></a></h2>
+<section id="conventions">
+<h3>Conventions<a class="headerlink" href="#conventions" title="Link to this heading"></a></h3>
+<p>Les conventions suivantes sont respectées :</p>
+<ol class="arabic simple">
+<li><p>Les noms de tables sont en minuscule, au pluriel, en français, sans articles (du, de, le …) et sans accents.</p></li>
+<li><p>Les noms de colonnes sont en minuscule, au singulier, en français, sans articles et sans accents.</p></li>
+<li><p>Les préfixes ou suffixes techniques sur les noms des colonnes sont en minuscule et en anglais.</p></li>
+</ol>
+</section>
+<section id="types-des-tables-dynamiques-et-statiques">
+<h3>Types des tables : dynamiques et statiques<a class="headerlink" href="#types-des-tables-dynamiques-et-statiques" title="Link to this heading"></a></h3>
+<p>La base de données comporte deux types de tables permanentes :</p>
+<ul class="simple">
+<li><p>les <strong>tables dynamiques</strong> qui sont enrichies et mises à jour mensuellement par le flux DSN ;</p></li>
+<li><p>les <strong>tables statiques</strong> qui comportent des informations contextuelles.</p></li>
+</ul>
+<section id="tables-dynamiques">
+<h4>Tables dynamiques<a class="headerlink" href="#tables-dynamiques" title="Link to this heading"></a></h4>
+<p>Les tables dynamiques suivent toutes la même structure (à deux exceptions près) :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Nomenclature</p></th>
+<th class="head"><p>Fonction</p></th>
+<th class="head"><p>Type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;nom&gt;_id</span></code></p></td>
+<td><p>Id dans la table</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">BIGSERIAL</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;nom_parent&gt;_id</span></code></p></td>
+<td><p>Id de l’entité parente dans la table parent</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">BIGINT</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>…</p></td>
+<td><p>(potentiels autres parents)</p></td>
+<td><p>…</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;nom&gt;_key</span></code></p></td>
+<td><p>Clef identifiante de l’entité considérée</p></td>
+<td><p>(sans type fixe)</p></td>
+</tr>
+<tr class="row-even"><td><p>(sans nomenclature)</p></td>
+<td><p>Autres données</p></td>
+<td><p>(sans type fixe)</p></td>
+</tr>
+<tr class="row-odd"><td><p>…</p></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">date_derniere_declaration</span></code></p></td>
+<td><p>Date de la dernière déclaration faisant mention de cette entité</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DATE</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>De plus, elles font état des contraintes suivantes :</p>
+<ul class="simple">
+<li><p>une contrainte d’unicité (<code class="docutils literal notranslate"><span class="pre">PRIMARY</span> <span class="pre">KEY</span></code>) sur le champ <code class="docutils literal notranslate"><span class="pre">&lt;nom&gt;_id</span></code> ;</p></li>
+<li><p>une contrainte d’unicité (<code class="docutils literal notranslate"><span class="pre">UNIQUE</span></code>) sur le tuple composé de la donnée identifiante <code class="docutils literal notranslate"><span class="pre">&lt;nom&gt;_key</span></code> et du ou des id  <code class="docutils literal notranslate"><span class="pre">&lt;nom_parent&gt;_id</span></code> de son ou ses parent(s) ;</p></li>
+<li><p>et une potentielle contrainte de validité (<code class="docutils literal notranslate"><span class="pre">CHECK</span></code>) sur la donnée identiante <code class="docutils literal notranslate"><span class="pre">&lt;nom&gt;_key</span></code> par rapport aux autres informations contenues dans la table (en effet, le champ <code class="docutils literal notranslate"><span class="pre">&lt;nom&gt;_key</span></code> est souvent constitué de la concaténation conditionnelle de plusieurs autres colonnes de la table).</p></li>
+</ul>
+<p>Pour plus d’informations sur les clefs identifiantes, consulter la <a class="reference internal" href="../integration/core/integration_contenu_scripts.html#tuples-identifiants"><span class="std std-ref">documentation</span></a> sur l’intégration des données.</p>
+</section>
+<section id="tables-statiques">
+<h4>Tables statiques<a class="headerlink" href="#tables-statiques" title="Link to this heading"></a></h4>
+<p>Les tables statiques suivent toutes la même structure (à deux exceptions près) :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Nomenclature</p></th>
+<th class="head"><p>Fonction</p></th>
+<th class="head"><p>Type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">code_&lt;nom&gt;</span></code></p></td>
+<td><p>Code à x chiffres</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CHAR(x)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">libelle</span></code></p></td>
+<td><p>Libellé correspondant au code</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VARCHAR</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="liste-des-tables-permanentes">
+<h3>Liste des tables permanentes<a class="headerlink" href="#liste-des-tables-permanentes" title="Link to this heading"></a></h3>
+<p>Les tables permanentes de la base Champollion sont :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Table</p></th>
+<th class="head"><p>Type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>chargement_donnees</p></td>
+<td><p>dynamique</p></td>
+</tr>
+<tr class="row-odd"><td><p>entreprises</p></td>
+<td><p>dynamique</p></td>
+</tr>
+<tr class="row-even"><td><p>etablissements</p></td>
+<td><p>dynamique</p></td>
+</tr>
+<tr class="row-odd"><td><p>salaries</p></td>
+<td><p>dynamique</p></td>
+</tr>
+<tr class="row-even"><td><p>contrats</p></td>
+<td><p>dynamique</p></td>
+</tr>
+<tr class="row-odd"><td><p>postes</p></td>
+<td><p>dynamique</p></td>
+</tr>
+<tr class="row-even"><td><p>activites</p></td>
+<td><p>dynamique</p></td>
+</tr>
+<tr class="row-odd"><td><p>categories_juridiques_insee</p></td>
+<td><p>statique</p></td>
+</tr>
+<tr class="row-even"><td><p>conventions_collectives</p></td>
+<td><p>statique</p></td>
+</tr>
+<tr class="row-odd"><td><p>motifs_recours</p></td>
+<td><p>statique</p></td>
+</tr>
+<tr class="row-even"><td><p>naf</p></td>
+<td><p>statique</p></td>
+</tr>
+<tr class="row-odd"><td><p>natures_contrats</p></td>
+<td><p>statique</p></td>
+</tr>
+<tr class="row-even"><td><p>zonage</p></td>
+<td><p>statique</p></td>
+</tr>
+<tr class="row-odd"><td><p>daily_calendar</p></td>
+<td><p>statique</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="liens-entre-les-tables-clefs-etrangeres">
+<h3>Liens entre les tables : clefs étrangères<a class="headerlink" href="#liens-entre-les-tables-clefs-etrangeres" title="Link to this heading"></a></h3>
+<p>Les tables de la base sont inter-dépendantes. Pour assurer l’intégrité des données, des clefs étrangères sont utilisées.</p>
+<p><ins>Propriété</ins> : Toute colonne <code class="docutils literal notranslate"><span class="pre">X.Y_id</span></code> d’une table <code class="docutils literal notranslate"><span class="pre">X</span></code> faisant référence à la colonne <code class="docutils literal notranslate"><span class="pre">id</span></code> d’une autre table <code class="docutils literal notranslate"><span class="pre">Y</span></code> est déclarée comme clef étrangère avec :</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">X</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">Y_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">Y</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Cela implique que si une ligne de <code class="docutils literal notranslate"><span class="pre">X</span></code> fait référence à un id spécifique dans sa colonne <code class="docutils literal notranslate"><span class="pre">X.Y_id</span></code>, ce dernier doit exister dans <code class="docutils literal notranslate"><span class="pre">Y</span></code>. On appelle <code class="docutils literal notranslate"><span class="pre">X.Y_id</span></code> la colonne source de la clef étrangère et <code class="docutils literal notranslate"><span class="pre">Y.id</span></code> la colonne cible.</p>
+<p>Listes des clefs étrangères en base Champollion :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Colonne source</p></th>
+<th class="head"><p>Colonne cible</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>etablissements.entreprise_id</p></td>
+<td><p>entreprises.entreprise_id</p></td>
+</tr>
+<tr class="row-odd"><td><p>salaries.etablissement_id</p></td>
+<td><p>etablissements.etablissement_id</p></td>
+</tr>
+<tr class="row-even"><td><p>contrats.salarie_id</p></td>
+<td><p>salaries.salarie_id</p></td>
+</tr>
+<tr class="row-odd"><td><p>contrats.etablissement_id</p></td>
+<td><p>etablissements.etablissement_id</p></td>
+</tr>
+<tr class="row-even"><td><p>contrats.poste_id</p></td>
+<td><p>postes.poste_id</p></td>
+</tr>
+<tr class="row-odd"><td><p>activites.contrat_id</p></td>
+<td><p>contrats.contrat_id</p></td>
+</tr>
+<tr class="row-even"><td><p>contrats.code_motif_recours</p></td>
+<td><p>motifs_recours.code_motif_recours</p></td>
+</tr>
+<tr class="row-odd"><td><p>contrats.code_convention_collective</p></td>
+<td><p>conventions_collectives.code_convention_collective</p></td>
+</tr>
+<tr class="row-even"><td><p>contrats.code_nature_contrat</p></td>
+<td><p>natures_contrats.code_nature_contrat</p></td>
+</tr>
+<tr class="row-odd"><td><p>etablissements.code_categorie_juridique_insee</p></td>
+<td><p>categories_juridiques_insee.code_categorie_juridique_insee</p></td>
+</tr>
+<tr class="row-even"><td><p>etablissements.code_naf</p></td>
+<td><p>naf.code_naf</p></td>
+</tr>
+<tr class="row-odd"><td><p>etablissements.code_convention_collective</p></td>
+<td><p>conventions_collectives.code_convention_collective</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="index">
+<h3>Index<a class="headerlink" href="#index" title="Link to this heading"></a></h3>
+<p>La présence de clefs étrangères dans la base peut engendrer des problèmes de performance. Pour remédier à cela, il est nécessaire d’<a class="reference external" href="https://docs.postgresql.fr/10/sql-createindex.html">indexer</a> la base.</p>
+<p><ins>Propriété</ins> Toute contrainte d’unicité (<code class="docutils literal notranslate"><span class="pre">UNIQUE</span></code>) déclarée sur une ou plusieurs colonnes implique la création d’un index sur cette ou ces colonne(s).</p>
+<p>Malgré, cette propriété on peut rencontrer des problèmes de performance. Par exemple, si on souhaite supprimer des lignes d’une table qui possède une colonne cible d’une clef étrangère alors il est nécessaire d’indexer la colonne source. Pour ce faire, on utilise un <code class="docutils literal notranslate"><span class="pre">PLAIN</span></code> index. A noter qu’un index sur un tuple contenant cette colonne ne sera pas suffisant. Voir <a class="reference external" href="https://dba.stackexchange.com/questions/37034/very-slow-delete-in-postgresql-workaround">référence</a>.</p>
+<p>Liste des index en base Champollion :</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Table</p></th>
+<th class="head"><p>Colonne(s) indexée(s)</p></th>
+<th class="head"><p>Type de l’index</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>entreprises</p></td>
+<td><p>entreprise_id</p></td>
+<td><p>UNIQUE</p></td>
+</tr>
+<tr class="row-odd"><td><p>entreprises</p></td>
+<td><p>entreprise_key</p></td>
+<td><p>UNIQUE</p></td>
+</tr>
+<tr class="row-even"><td><p>etablissements</p></td>
+<td><p>etablissement_id</p></td>
+<td><p>UNIQUE</p></td>
+</tr>
+<tr class="row-odd"><td><p>etablissements</p></td>
+<td><p>etablissement_key</p></td>
+<td><p>UNIQUE</p></td>
+</tr>
+<tr class="row-even"><td><p>salaries</p></td>
+<td><p>salarie_id</p></td>
+<td><p>UNIQUE</p></td>
+</tr>
+<tr class="row-odd"><td><p>salaries</p></td>
+<td><p>etablissement_id, salarie_key</p></td>
+<td><p>UNIQUE</p></td>
+</tr>
+<tr class="row-even"><td><p>contrats</p></td>
+<td><p>contrat_id</p></td>
+<td><p>UNIQUE</p></td>
+</tr>
+<tr class="row-odd"><td><p>contrats</p></td>
+<td><p>etablissement_id, salarie_id, contrat_key</p></td>
+<td><p>UNIQUE</p></td>
+</tr>
+<tr class="row-even"><td><p>contrats</p></td>
+<td><p>salarie_id</p></td>
+<td><p>PLAIN</p></td>
+</tr>
+<tr class="row-odd"><td><p>categories_juridiques_insee</p></td>
+<td><p>code_categorie_juridique_insee</p></td>
+<td><p>UNIQUE</p></td>
+</tr>
+<tr class="row-even"><td><p>conventions_collectives</p></td>
+<td><p>code_convention_collective</p></td>
+<td><p>UNIQUE</p></td>
+</tr>
+<tr class="row-odd"><td><p>motifs_recours</p></td>
+<td><p>code_motif_recours</p></td>
+<td><p>UNIQUE</p></td>
+</tr>
+<tr class="row-even"><td><p>naf</p></td>
+<td><p>code_naf</p></td>
+<td><p>UNIQUE</p></td>
+</tr>
+<tr class="row-odd"><td><p>natures_contrats</p></td>
+<td><p>code_nature_contrat</p></td>
+<td><p>UNIQUE</p></td>
+</tr>
+<tr class="row-even"><td><p>activites</p></td>
+<td><p>activite_id</p></td>
+<td><p>UNIQUE</p></td>
+</tr>
+<tr class="row-odd"><td><p>activites</p></td>
+<td><p>contrat_id, mois</p></td>
+<td><p>UNIQUE</p></td>
+</tr>
+<tr class="row-even"><td><p>postes</p></td>
+<td><p>poste_id</p></td>
+<td><p>UNIQUE</p></td>
+</tr>
+<tr class="row-odd"><td><p>postes</p></td>
+<td><p>libelle</p></td>
+<td><p>UNIQUE</p></td>
+</tr>
+</tbody>
+</table>
+<p>/!\ L’indexation de colonne peut également avoir des effets négatifs sur les performances. Dès lors, les colonnes ont été indexées seulement lorsque cela était nécessaire pour la bonne exécution des scripts. Si des problèmes de performance venaient à être relevés avec l’ajout de nouveaux sripts, d’autres colonnes pourraient alors être indexées.</p>
+</section>
+</section>
+<section id="nature-des-donnees">
+<h2>Nature des données<a class="headerlink" href="#nature-des-donnees" title="Link to this heading"></a></h2>
+<p>Les informations relatives à la nature des données sont répertoriées dans le <a class="reference internal" href="catalogue_donnees_base_champollion.html"><span class="std std-doc">catalogue de la base Champollion</span></a>.</p>
+</section>
+<section id="trois-bases-pour-quatre-cas-d-usage">
+<h2>Trois bases pour quatre cas d’usage<a class="headerlink" href="#trois-bases-pour-quatre-cas-d-usage" title="Link to this heading"></a></h2>
+<p>La base <code class="docutils literal notranslate"><span class="pre">champollion</span></code> dans son schéma <code class="docutils literal notranslate"><span class="pre">public</span></code> contient les données réelles et complètes. On décrit dans la suite l’utilité et les caractéristiques des bases <code class="docutils literal notranslate"><span class="pre">mock</span></code> et <code class="docutils literal notranslate"><span class="pre">test</span></code> ainsi que du schéma <code class="docutils literal notranslate"><span class="pre">anonymous</span></code> de la base <code class="docutils literal notranslate"><span class="pre">champollion</span></code>.</p>
+<section id="un-schema-de-donnees-semi-anonymisees-au-sein-de-la-base-champollion">
+<h3>Un schéma de données semi-anonymisées au sein de la base <code class="docutils literal notranslate"><span class="pre">champollion</span></code><a class="headerlink" href="#un-schema-de-donnees-semi-anonymisees-au-sein-de-la-base-champollion" title="Link to this heading"></a></h3>
+<p>Pour les besoins du développement, un schéma de données semi-anonymisées peut être mis en place automatiquement dans la base <code class="docutils literal notranslate"><span class="pre">champollion</span></code>. Les champs concernés sont les suivants :</p>
+<ul class="simple">
+<li><p>SIREN de l’entreprise</p></li>
+<li><p>Raison sociale de l’entreprise</p></li>
+<li><p>SIRET de l’établissement</p></li>
+<li><p>Enseigne de l’établissement</p></li>
+<li><p>Adresse et complément d’adresse de l’établissement</p></li>
+<li><p>Nom du salarié</p></li>
+<li><p>Nom d’usage du salarié</p></li>
+<li><p>Prénoms du salarié</p></li>
+<li><p>Date de naissance du salarié</p></li>
+<li><p>Lieu de naissance du salarié</p></li>
+</ul>
+<p>A noter que le NIR n’est pas concerné puisque le champ originel est déjà le résultat d’une randomisation.</p>
+<section id="methode-de-semi-anonymisation">
+<h4>Méthode de semi-anonymisation<a class="headerlink" href="#methode-de-semi-anonymisation" title="Link to this heading"></a></h4>
+<p>La méthode de semi-anonymisation retenue est une anonymisation par glissement :</p>
+<blockquote>
+<div><p>Soit une table <span class="math notranslate nohighlight">\(T\)</span> avec une colonne d’id uniques (<span class="math notranslate nohighlight">\(c_{id}\)</span>) et une colonne de données identifiantes (<span class="math notranslate nohighlight">\(c_x\)</span>) à anonymiser. Soit <span class="math notranslate nohighlight">\(R\)</span> l’ensemble des lignes de <span class="math notranslate nohighlight">\(T\)</span>. On note <span class="math notranslate nohighlight">\(I = \max(\{c_{id}(r)\}_{r \in R})\)</span>, l’id maximal de la table. La transformation de semi-anonymisation appliquée est : <span class="math notranslate nohighlight">\(\forall r \in R, c_x(r) = c_x(I-r+1)\)</span>.</p>
+</div></blockquote>
+<p>Autrement dit, les données identifiantes d’une ligne sont remplacées par les données identifiantes d’une autre ligne déterminée de manière unique.</p>
+<p>A noter que :</p>
+<ul class="simple">
+<li><p>Cette transformation est un automorphisme de <span class="math notranslate nohighlight">\([\![1;I]\!]\)</span> dans <span class="math notranslate nohighlight">\([\![1;I]\!]\)</span> mais pas forcément de <span class="math notranslate nohighlight">\(\{c_{id}(r)\}_{r \in R}\)</span> dans <span class="math notranslate nohighlight">\(\{c_{id}(r)\}_{r \in R}\)</span>. Dès lors, si la ligne d’id <span class="math notranslate nohighlight">\(I-r+1\)</span> n’existe pas (en base, les id ne sont pas forcément continus), on l’élimine.</p></li>
+<li><p>Cette méthode de semi-anonymisation n’est pertinente que si l’on ne sélectionne qu’une partie des lignes de la table originelle. Dans le cas contraire, il serait très facile de dé-anonymiser la base.</p></li>
+<li><p>Si la table <span class="math notranslate nohighlight">\(T\)</span> contient plusieurs colonnes identifiantes, le tuple de remplacement correspondra au tuple identifiant d’une seule et même ligne.</p></li>
+</ul>
+</section>
+<section id="schema-anonymous">
+<h4>Schéma <code class="docutils literal notranslate"><span class="pre">anonymous</span></code><a class="headerlink" href="#schema-anonymous" title="Link to this heading"></a></h4>
+<p>Par souci de simplicité, on ne créé pas une base de données anonymisée mais un schéma <code class="docutils literal notranslate"><span class="pre">anonymous</span></code> dans la base <code class="docutils literal notranslate"><span class="pre">champollion</span></code> existante. Ce dernier est créé à partir du schéma <code class="docutils literal notranslate"><span class="pre">public</span></code> en :</p>
+<ul class="simple">
+<li><p>sélectionnant les lignes correspondant à une liste établie de SIRET ;</p></li>
+<li><p>semi-anonymisant les champs identifiants précédemment cités table par table.</p></li>
+</ul>
+<p>La liste de SIRET sélectionnés est déclarée dans le fichier <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/resources/anonymous_database_selection.csv"><code class="docutils literal notranslate"><span class="pre">dsn_processing/resources/anonymous_database_selection.csv</span></code></a>. A noter que toute entreprise de travail temporaire (ETT) ayant au moins un contrat de travail temporaire avec l’un des établissements listés est ajoutée par défaut.</p>
+<p>La méthode d’anonymisation utilisée ne permet pas de garantir la cohérence des champs anonymisés avec ceux non anonymisés de la même table ainsi que ceux anonymisés d’une table parente. En particulier, on peut avoir :</p>
+<ul class="simple">
+<li><p>une date de naissance dans la table <code class="docutils literal notranslate"><span class="pre">salaries</span></code> postérieure à la date de début d’un contrat dans la table <code class="docutils literal notranslate"><span class="pre">contrats</span></code> ;</p></li>
+<li><p>le genre du NIR contradictoire avec le genre présumé à l’aide du prénom ;</p></li>
+<li><p>un même individu avec deux noms, prénoms, dates et lieux de naissances différents entre ETT et ETU ;</p></li>
+<li><p>un établissement dont l’entreprise parente a un SIREN différent des 9 premiers chiffres de son SIRET.</p></li>
+</ul>
+<p>Le dernier point ne pose pas de problème à date car le SIREN n’est pas exploité par les <em>clients</em> de la base.</p>
+</section>
+<section id="comment-etendre-le-perimetre-de-donnees">
+<h4>Comment étendre le périmètre de données ?<a class="headerlink" href="#comment-etendre-le-perimetre-de-donnees" title="Link to this heading"></a></h4>
+<p>La documentation se trouve <a class="reference internal" href="../integration/pipeline/dags_et_orchestrateurs.html#anonymous-integration"><span class="std std-ref">ici</span></a>.</p>
+</section>
+</section>
+<section id="une-base-de-test-avec-des-donnees-reelles">
+<h3>Une base de <code class="docutils literal notranslate"><span class="pre">test</span></code> avec des données réelles<a class="headerlink" href="#une-base-de-test-avec-des-donnees-reelles" title="Link to this heading"></a></h3>
+<p>La base de test a un objectif double :</p>
+<ul class="simple">
+<li><p>pouvoir tester ses développements sur une faible volumétrie de données ;</p></li>
+<li><p>vérifier le comportement des fonctions d’intégration (tests unitaires des fonctions d’intégration).</p></li>
+</ul>
+<p>Pour ce faire, elle suit la structure commune des bases Champollion mais possède un schéma <code class="docutils literal notranslate"><span class="pre">test</span></code> supplémentaire. Il répertorie les tables contenant les données <em>attendues</em>, c’est-à-dire les tables telles qu’elles doivent être si l’intégration des données a un comportement normal. Ces tables sont nomenclaturées avec le préfixe <code class="docutils literal notranslate"><span class="pre">expected</span></code> :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>.
+├── public
+    ├── activites
+    ├── contrats
+    ├── entreprises
+    ├── etablissements
+    ├── postes
+    ├── salaries
+    └── ...
+└── test
+    ├── expected_activites
+    ├── expected_contrats
+    ├── expected_contrats_comparisons
+    ├── expected_entreprises
+    ├── expected_etablissements
+    ├── expected_postes
+    └── expected_salaries
+</pre></div>
+</div>
+<p>Les données intégrées dans cette base sont des données réelles qui ont été sélectionnées afin de tester les scripts d’intégration sur des cas particuliers. Le fichier rassemblant toutes les informations nécessaires à la construction de cette base de test est <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/resources/source_file_test_data.xlsx"><code class="docutils literal notranslate"><span class="pre">dsn_processing/resources/source_file_test_data.xlsx</span></code></a>. Pour plus d’informations sur la création de cette base <code class="docutils literal notranslate"><span class="pre">test</span></code>, voir la <a class="reference internal" href="../integration/pipeline/dags_et_orchestrateurs.html#test-integration"><span class="std std-ref">documentation</span></a> à ce sujet.</p>
+<p>La table <code class="docutils literal notranslate"><span class="pre">expected_contrats_comparisons</span></code> sert à connaître le type de comparaison à effectuer en ce qui concerne les champs <code class="docutils literal notranslate"><span class="pre">contrats.date_fin_effective</span></code> et <code class="docutils literal notranslate"><span class="pre">contrats.statut_fin</span></code>. Si <code class="docutils literal notranslate"><span class="pre">expected_contrats_comparison.date_fin_effective_comparison</span></code> est égal à :</p>
+<ul class="simple">
+<li><p>1, la date de fin effective <em>obtenue</em> doit être strictement égale à celle <em>attendue</em> (idem pour le statut) ;</p></li>
+<li><p>2, elle doit être supérieure ou égal à celle <em>attendue</em> (idem pour le statut) ;</p></li>
+<li><p>ni 1 ni 2, on ne peut pas faire de comparaison (idem pour le statut).</p></li>
+</ul>
+</section>
+<section id="une-base-de-fausses-donnees-pour-le-site-vitrine">
+<h3>Une base de fausses données pour le site vitrine<a class="headerlink" href="#une-base-de-fausses-donnees-pour-le-site-vitrine" title="Link to this heading"></a></h3>
+<p>Une base de fausses données remplie à la main a été mise en place. Le fichier permettant la construction de cette dernière est <a class="reference external" href="https://gitlab.intranet.social.gouv.fr/champollion/dsn_processing/blob/dev/resources/source_file_mock_data.xlsx"><code class="docutils literal notranslate"><span class="pre">dsn_processing/resources/source_file_mock_data.xlsx</span></code></a>. Il comporte un onglet par table. Les colonnes <code class="docutils literal notranslate"><span class="pre">Id</span></code> doivent être cohérentes entre les tables afin d’assurer la construction d’une base pertinente. Ce fichier de référence peut être enrichi par n’importe quel membre de l’équipe projet. A date, aucune fausse donnée n’a été générée pour la table <code class="docutils literal notranslate"><span class="pre">activites</span></code>.</p>
+<p>Pour plus d’informations sur la création de cette base <code class="docutils literal notranslate"><span class="pre">mock</span></code>, voir la <a class="reference internal" href="../integration/pipeline/dags_et_orchestrateurs.html#mock-integration"><span class="std std-ref">documentation</span></a> à ce sujet.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Base(s) de données" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="catalogue_donnees_base_champollion.html" class="btn btn-neutral float-right" title="Catalogue des données de la base Champollion" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Margot COSSON.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contenu des scripts d’intégration &mdash; DSN processing  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/avoid_rolling_tab.css?v=9d8e3617" />
+      <link rel="stylesheet" type="text/css" href="../../_static/increase_width.css?v=a0fc712e" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Les données source : les déclarations sociales nominatives" href="nature_donnees_source.html" />
+    <link rel="prev" title="Intégration des données" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            DSN processing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Sommaire :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../database/index.html">Base(s) de données</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Intégration des données</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Contenu des scripts d’intégration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nature_donnees_source.html">Les données source : les déclarations sociales nominatives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_structure_scripts.html">Structure des scripts d’intégration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_contenu_scripts.html">Contenu des scripts d’intégration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline/index.html">Mise en oeuvre de l’intégration</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DSN processing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Intégration des données</a></li>
+      <li class="breadcrumb-item active">Contenu des scripts d’intégration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/integration/core/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="contenu-des-scripts-d-integration">
+<h1>Contenu des scripts d’intégration<a class="headerlink" href="#contenu-des-scripts-d-integration" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nature_donnees_source.html">Les données source : les déclarations sociales nominatives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nature_donnees_source.html#dsn-brute-vs-dsn-mise-en-qualite">DSN <em>brute</em> vs DSN <em>mise en qualité</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="nature_donnees_source.html#specificites-de-la-norme-neodes">Spécificités de la norme Neodes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nature_donnees_source.html#choix-des-donnees-identifiantes">Choix des données identifiantes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nature_donnees_source.html#declaration-des-changements-d-informations">Déclaration des changements d’informations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="nature_donnees_source.html#cas-particulier-absence-de-declarations-des-changements">Cas particulier : absence de déclarations des changements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nature_donnees_source.html#cas-particulier-changements-de-montants">Cas particulier : changements de montants</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="nature_donnees_source.html#declaration-de-fin-de-contrat">Déclaration de fin de contrat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nature_donnees_source.html#declaration-des-heures-travaillees">Déclaration des heures travaillées</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nature_donnees_source.html#declaration-des-lieux-de-travail">Déclaration des lieux de travail</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="nature_donnees_source.html#cas-particulier-salaries-interimaires-et-contrats-d-interim">Cas particulier : salariés intérimaires et contrats d’intérim</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nature_donnees_source.html#cas-particulier-cdi-interimaire">Cas particulier : CDI intérimaire</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="nature_donnees_source.html#autres">Autres</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="nature_donnees_source.html#declarations-en-fractions">Déclarations en fractions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nature_donnees_source.html#gestion-des-declarations-de-type-annule-et-remplace">Gestion des déclarations de type <em>annule et remplace</em></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nature_donnees_source.html#informations-satellite">Informations satellite</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nature_donnees_source.html#donnees-de-reference-de-la-norme-neodes">Données de référence de la norme Neodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nature_donnees_source.html#donnees-de-zonage">Données de zonage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="integration_structure_scripts.html">Structure des scripts d’intégration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="integration_structure_scripts.html#organisation">Organisation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="integration_structure_scripts.html#natures-des-tables-d-integration">Natures des tables d’intégration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_structure_scripts.html#tables-de-log">Tables de log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_structure_scripts.html#classification-des-scripts">Classification des scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="integration_structure_scripts.html#axes-de-classification">Axes de classification</a></li>
+<li class="toctree-l4"><a class="reference internal" href="integration_structure_scripts.html#liste">Liste</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="integration_structure_scripts.html#generation">Génération</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="integration_structure_scripts.html#fichier-python-de-generation-des-scripts-sql">Fichier python de génération des scripts SQL</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="integration_structure_scripts.html#utilisation-du-fichier-de-generation">Utilisation du fichier de génération</a></li>
+<li class="toctree-l4"><a class="reference internal" href="integration_structure_scripts.html#modification-et-ajout-de-script">Modification et ajout de script</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="integration_structure_scripts.html#standards-sql-linter">Standards SQL - linter</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="integration_structure_scripts.html#interet-d-un-linter">Intérêt d’un linter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="integration_structure_scripts.html#comment-linter-un-fichier-sql">Comment <em>linter</em> un fichier <name>.sql ?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="integration_contenu_scripts.html">Contenu des scripts d’intégration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="integration_contenu_scripts.html#tuples-identifiants">Tuples identifiants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="integration_contenu_scripts.html#scripts-create">Scripts <em>create</em></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="integration_contenu_scripts.html#create-permanent-tables"><code class="docutils literal notranslate"><span class="pre">create_permanent_tables</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_contenu_scripts.html#create-integration-tables"><code class="docutils literal notranslate"><span class="pre">create_integration_tables</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_contenu_scripts.html#create-trigger-logs"><code class="docutils literal notranslate"><span class="pre">create_trigger_logs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_contenu_scripts.html#create-dag-status-functions"><code class="docutils literal notranslate"><span class="pre">create_dag_status_functions</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="integration_contenu_scripts.html#script-d-insertion-des-donnees-statiques">Script d’insertion des données statiques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="integration_contenu_scripts.html#scripts-extract">Scripts <em>extract</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="integration_contenu_scripts.html#scripts-transform">Scripts <em>transform</em></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="integration_contenu_scripts.html#concatenation-des-changements-fragmentes">Concaténation des changements fragmentés</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="integration_contenu_scripts.html#scripts-load">Scripts <em>load</em></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="integration_contenu_scripts.html#appariement">Appariement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_contenu_scripts.html#etape-de-link">Etape de <em>link</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_contenu_scripts.html#etape-de-de-duplication">Etape de dé-duplication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_contenu_scripts.html#structure-des-scripts-pour-les-tables-entreprises-etablissements-salaries-contrats">Structure des scripts pour les tables <code class="docutils literal notranslate"><span class="pre">entreprises</span></code>, <code class="docutils literal notranslate"><span class="pre">etablissements</span></code>, <code class="docutils literal notranslate"><span class="pre">salaries</span></code>, <code class="docutils literal notranslate"><span class="pre">contrats</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_contenu_scripts.html#autres-scripts">Autres scripts</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="integration_contenu_scripts.html#scripts-modify">Scripts <em>modify</em></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="integration_contenu_scripts.html#prise-en-compte-des-changements-de-donnees-identifiantes">Prise en compte des changements de données identifiantes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="integration_contenu_scripts.html#fonctionnement-theorique-commun-aux-deux-scripts">Fonctionnement théorique commun aux deux scripts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="integration_contenu_scripts.html#modify-changements-salaries"><code class="docutils literal notranslate"><span class="pre">modify_changements_salaries</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="integration_contenu_scripts.html#modify-changements-contrats"><code class="docutils literal notranslate"><span class="pre">modify_changements_contrats</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="integration_contenu_scripts.html#determination-des-dates-de-debut-et-de-fin-effectives-des-contrats">Détermination des dates de début et de fin effectives des contrats</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="integration_contenu_scripts.html#inference-de-la-date-de-debut-effective">Inférence de la date de début effective</a></li>
+<li class="toctree-l4"><a class="reference internal" href="integration_contenu_scripts.html#inference-de-la-date-de-fin-effective">Inférence de la date de fin effective</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="integration_contenu_scripts.html#allocation-des-interimaires-et-des-contrats-d-interim">Allocation des intérimaires et des contrats d’intérim</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="integration_contenu_scripts.html#allocate-stt"><code class="docutils literal notranslate"><span class="pre">allocate_stt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="integration_contenu_scripts.html#allocate-ctt"><code class="docutils literal notranslate"><span class="pre">allocate_ctt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="integration_contenu_scripts.html#remove-stt"><code class="docutils literal notranslate"><span class="pre">remove_stt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="integration_contenu_scripts.html#remove-ctt"><code class="docutils literal notranslate"><span class="pre">remove_ctt</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="integration_contenu_scripts.html#inference-du-statut-ouvert-ferme-des-etablissements">Inférence du statut ouvert/fermé des établissements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="integration_contenu_scripts.html#mise-a-jour-de-la-base-de-donnees">Mise à jour de la base de données</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="integration_contenu_scripts.html#reindex-tables"><code class="docutils literal notranslate"><span class="pre">reindex_tables</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="integration_contenu_scripts.html#remove-old-data"><code class="docutils literal notranslate"><span class="pre">remove_old_data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="integration_contenu_scripts.html#set-dernier-mois-de-declaration-integre"><code class="docutils literal notranslate"><span class="pre">set_dernier_mois_de_declaration_integre</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="integration_contenu_scripts.html#monthly-sanity-checks"><code class="docutils literal notranslate"><span class="pre">monthly_sanity_checks</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="integration_contenu_scripts.html#clean-database"><code class="docutils literal notranslate"><span class="pre">clean_database</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Intégration des données" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nature_donnees_source.html" class="btn btn-neutral float-right" title="Les données source : les déclarations sociales nominatives" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Margot COSSON.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

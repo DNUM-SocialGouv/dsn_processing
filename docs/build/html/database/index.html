@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Base(s) de données &mdash; DSN processing  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/avoid_rolling_tab.css?v=9d8e3617" />
+      <link rel="stylesheet" type="text/css" href="../_static/increase_width.css?v=a0fc712e" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Guide technique des bases de données" href="guide_technique_bases_de_donnees.html" />
+    <link rel="prev" title="Introduction" href="../overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            DSN processing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Sommaire :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Base(s) de données</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guide_technique_bases_de_donnees.html">Guide technique des bases de données</a></li>
+<li class="toctree-l2"><a class="reference internal" href="catalogue_donnees_base_champollion.html">Catalogue des données de la base Champollion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diagrammes_schemas.html">Diagrammes des différents schémas au sein des bases de données</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../integration/index.html">Intégration des données</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DSN processing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Base(s) de données</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/database/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="base-s-de-donnees">
+<h1>Base(s) de données<a class="headerlink" href="#base-s-de-donnees" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guide_technique_bases_de_donnees.html">Guide technique des bases de données</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guide_technique_bases_de_donnees.html#initialisation">Initialisation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="guide_technique_bases_de_donnees.html#creation-des-bases">Création des bases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide_technique_bases_de_donnees.html#definition-des-schemas">Définition des schémas</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="guide_technique_bases_de_donnees.html#structure-commune">Structure commune</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="guide_technique_bases_de_donnees.html#conventions">Conventions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide_technique_bases_de_donnees.html#types-des-tables-dynamiques-et-statiques">Types des tables : dynamiques et statiques</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide_technique_bases_de_donnees.html#tables-dynamiques">Tables dynamiques</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide_technique_bases_de_donnees.html#tables-statiques">Tables statiques</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="guide_technique_bases_de_donnees.html#liste-des-tables-permanentes">Liste des tables permanentes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide_technique_bases_de_donnees.html#liens-entre-les-tables-clefs-etrangeres">Liens entre les tables : clefs étrangères</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide_technique_bases_de_donnees.html#index">Index</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="guide_technique_bases_de_donnees.html#nature-des-donnees">Nature des données</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide_technique_bases_de_donnees.html#trois-bases-pour-quatre-cas-d-usage">Trois bases pour quatre cas d’usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="guide_technique_bases_de_donnees.html#un-schema-de-donnees-semi-anonymisees-au-sein-de-la-base-champollion">Un schéma de données semi-anonymisées au sein de la base <code class="docutils literal notranslate"><span class="pre">champollion</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide_technique_bases_de_donnees.html#methode-de-semi-anonymisation">Méthode de semi-anonymisation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide_technique_bases_de_donnees.html#schema-anonymous">Schéma <code class="docutils literal notranslate"><span class="pre">anonymous</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide_technique_bases_de_donnees.html#comment-etendre-le-perimetre-de-donnees">Comment étendre le périmètre de données ?</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="guide_technique_bases_de_donnees.html#une-base-de-test-avec-des-donnees-reelles">Une base de <code class="docutils literal notranslate"><span class="pre">test</span></code> avec des données réelles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide_technique_bases_de_donnees.html#une-base-de-fausses-donnees-pour-le-site-vitrine">Une base de fausses données pour le site vitrine</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="catalogue_donnees_base_champollion.html">Catalogue des données de la base Champollion</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="catalogue_donnees_base_champollion.html#donnees-repertoriees-par-table">Données répertoriées par table</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="catalogue_donnees_base_champollion.html#table-chargement-donnees">Table <code class="docutils literal notranslate"><span class="pre">chargement_donnees</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="catalogue_donnees_base_champollion.html#table-entreprises">Table <code class="docutils literal notranslate"><span class="pre">entreprises</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="catalogue_donnees_base_champollion.html#table-etablissements">Table <code class="docutils literal notranslate"><span class="pre">etablissements</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="catalogue_donnees_base_champollion.html#table-salaries">Table <code class="docutils literal notranslate"><span class="pre">salaries</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="catalogue_donnees_base_champollion.html#table-contrats">Table <code class="docutils literal notranslate"><span class="pre">contrats</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="catalogue_donnees_base_champollion.html#table-postes">Table <code class="docutils literal notranslate"><span class="pre">postes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="catalogue_donnees_base_champollion.html#table-activites">Table <code class="docutils literal notranslate"><span class="pre">activites</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="catalogue_donnees_base_champollion.html#table-categories-juridiques-insee">Table <code class="docutils literal notranslate"><span class="pre">categories_juridiques_insee</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="catalogue_donnees_base_champollion.html#table-motifs-recours">Table <code class="docutils literal notranslate"><span class="pre">motifs_recours</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="catalogue_donnees_base_champollion.html#table-naf">Table <code class="docutils literal notranslate"><span class="pre">naf</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="catalogue_donnees_base_champollion.html#table-conventions-collectives">Table <code class="docutils literal notranslate"><span class="pre">conventions_collectives</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="catalogue_donnees_base_champollion.html#table-natures-contrats">Table <code class="docutils literal notranslate"><span class="pre">natures_contrats</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="catalogue_donnees_base_champollion.html#table-zonage">Table <code class="docutils literal notranslate"><span class="pre">zonage</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="catalogue_donnees_base_champollion.html#table-daily-calendar">Table <code class="docutils literal notranslate"><span class="pre">daily_calendar</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="catalogue_donnees_base_champollion.html#schema-de-la-base-de-donnees">Schéma de la base de données</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="diagrammes_schemas.html">Diagrammes des différents schémas au sein des bases de données</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="diagrammes_schemas.html#schema-public">Schéma <code class="docutils literal notranslate"><span class="pre">public</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="diagrammes_schemas.html#schemas-sys-et-log">Schémas <code class="docutils literal notranslate"><span class="pre">sys</span></code> et <code class="docutils literal notranslate"><span class="pre">log</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="diagrammes_schemas.html#schema-source">Schéma <code class="docutils literal notranslate"><span class="pre">source</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="diagrammes_schemas.html#schema-raw">Schéma <code class="docutils literal notranslate"><span class="pre">raw</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="diagrammes_schemas.html#schema-test">Schéma <code class="docutils literal notranslate"><span class="pre">test</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="diagrammes_schemas.html#schema-anonymous">Schéma <code class="docutils literal notranslate"><span class="pre">anonymous</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../overview.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="guide_technique_bases_de_donnees.html" class="btn btn-neutral float-right" title="Guide technique des bases de données" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Margot COSSON.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
