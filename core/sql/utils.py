@@ -95,51 +95,62 @@ class MapTable:
 
     def get_remove_cyclic_mappings_query(self):
         query = f"""
-        -- remove cyclic mappings (a -> b -> c -> a)
-        WITH RECURSIVE search_graph({self.merged_id_column},
-                                    {self.absorbing_id_column},
-                                    {self.modification_date_column}) AS (
-            SELECT
-                {self.merged_id_column},
-                {self.absorbing_id_column},
-                {self.modification_date_column}
-            FROM {self.table_name}
-            UNION ALL
-            SELECT
-                graph.{self.merged_id_column},
-                graph.{self.absorbing_id_column},
-                graph.{self.modification_date_column}
-            FROM {self.table_name} AS graph, search_graph
-            WHERE graph.{self.merged_id_column} = search_graph.{self.absorbing_id_column}
-        )
+        DO $$ 
+        DECLARE
+            rows_deleted INTEGER;
+        BEGIN
+            LOOP
+                -- remove cyclic mappings (a -> b -> c -> a)
+                WITH RECURSIVE search_graph({self.merged_id_column},
+                                            {self.absorbing_id_column},
+                                            {self.modification_date_column}) AS (
+                    SELECT
+                        {self.merged_id_column},
+                        {self.absorbing_id_column},
+                        {self.modification_date_column}
+                    FROM {self.table_name}
+                    UNION ALL
+                    SELECT
+                        graph.{self.merged_id_column},
+                        graph.{self.absorbing_id_column},
+                        graph.{self.modification_date_column}
+                    FROM {self.table_name} AS graph, search_graph
+                    WHERE graph.{self.merged_id_column} = search_graph.{self.absorbing_id_column}
+                )
 
-        CYCLE {self.absorbing_id_column} SET is_cycle USING path,
+                CYCLE {self.absorbing_id_column} SET is_cycle USING path,
 
-        qualified_paths AS (
-            SELECT
-                *,
-                (SELECT MIN(path_as_array) FROM UNNEST(STRING_TO_ARRAY(TRANSLATE(CAST(path AS VARCHAR), '(){{}}', ''), ',')) AS path_as_array) AS min_vertex_path
-            FROM search_graph
-            WHERE is_cycle IS TRUE
-        ),
+                qualified_paths AS (
+                    SELECT
+                        *,
+                        (SELECT MIN(path_as_array) FROM UNNEST(STRING_TO_ARRAY(TRANSLATE(CAST(path AS VARCHAR), '(){{}}', ''), ',')) AS path_as_array) AS min_vertex_path
+                    FROM search_graph
+                    WHERE is_cycle IS TRUE
+                ),
 
-        mapping_to_delete AS (
-            SELECT
-                {self.merged_id_column},
-                {self.absorbing_id_column}
-            FROM (
-                SELECT
-                    *,
-                    ROW_NUMBER() OVER(PARTITION BY min_vertex_path ORDER BY {self.modification_date_column} ASC) AS row_num
-                FROM qualified_paths
-            ) AS ord
-            WHERE row_num = 1
-        )
+                mapping_to_delete AS (
+                    SELECT
+                        {self.merged_id_column},
+                        {self.absorbing_id_column}
+                    FROM (
+                        SELECT
+                            *,
+                            ROW_NUMBER() OVER(PARTITION BY min_vertex_path ORDER BY {self.modification_date_column} ASC) AS row_num
+                        FROM qualified_paths
+                    ) AS ord
+                    WHERE row_num = 1
+                )
 
-        DELETE FROM {self.table_name} AS graph
-        USING mapping_to_delete AS del
-        WHERE graph.{self.merged_id_column} = del.{self.merged_id_column}
-            AND graph.{self.absorbing_id_column} = del.{self.absorbing_id_column};
+                DELETE FROM {self.table_name} AS graph
+                USING mapping_to_delete AS del
+                WHERE graph.{self.merged_id_column} = del.{self.merged_id_column}
+                    AND graph.{self.absorbing_id_column} = del.{self.absorbing_id_column};
+
+                GET DIAGNOSTICS rows_deleted = ROW_COUNT;
+
+                EXIT WHEN rows_deleted = 0;
+            END LOOP;
+        END $$;
         """
         return query
 

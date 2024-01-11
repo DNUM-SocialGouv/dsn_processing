@@ -35,51 +35,62 @@
         
 
 
-        -- remove cyclic mappings (a -> b -> c -> a)
-        WITH RECURSIVE search_graph(old_contrat_id,
-                                    new_contrat_id,
-                                    date_modification) AS (
-            SELECT
-                old_contrat_id,
-                new_contrat_id,
-                date_modification
-            FROM source.map_changes_contrats
-            UNION ALL
-            SELECT
-                graph.old_contrat_id,
-                graph.new_contrat_id,
-                graph.date_modification
-            FROM source.map_changes_contrats AS graph, search_graph
-            WHERE graph.old_contrat_id = search_graph.new_contrat_id
-        )
+        DO $$ 
+        DECLARE
+            rows_deleted INTEGER;
+        BEGIN
+            LOOP
+                -- remove cyclic mappings (a -> b -> c -> a)
+                WITH RECURSIVE search_graph(old_contrat_id,
+                                            new_contrat_id,
+                                            date_modification) AS (
+                    SELECT
+                        old_contrat_id,
+                        new_contrat_id,
+                        date_modification
+                    FROM source.map_changes_contrats
+                    UNION ALL
+                    SELECT
+                        graph.old_contrat_id,
+                        graph.new_contrat_id,
+                        graph.date_modification
+                    FROM source.map_changes_contrats AS graph, search_graph
+                    WHERE graph.old_contrat_id = search_graph.new_contrat_id
+                )
 
-        CYCLE new_contrat_id SET is_cycle USING path,
+                CYCLE new_contrat_id SET is_cycle USING path,
 
-        qualified_paths AS (
-            SELECT
-                *,
-                (SELECT MIN(path_as_array) FROM UNNEST(STRING_TO_ARRAY(TRANSLATE(CAST(path AS VARCHAR), '(){}', ''), ',')) AS path_as_array) AS min_vertex_path
-            FROM search_graph
-            WHERE is_cycle IS TRUE
-        ),
+                qualified_paths AS (
+                    SELECT
+                        *,
+                        (SELECT MIN(path_as_array) FROM UNNEST(STRING_TO_ARRAY(TRANSLATE(CAST(path AS VARCHAR), '(){}', ''), ',')) AS path_as_array) AS min_vertex_path
+                    FROM search_graph
+                    WHERE is_cycle IS TRUE
+                ),
 
-        mapping_to_delete AS (
-            SELECT
-                old_contrat_id,
-                new_contrat_id
-            FROM (
-                SELECT
-                    *,
-                    ROW_NUMBER() OVER(PARTITION BY min_vertex_path ORDER BY date_modification ASC) AS row_num
-                FROM qualified_paths
-            ) AS ord
-            WHERE row_num = 1
-        )
+                mapping_to_delete AS (
+                    SELECT
+                        old_contrat_id,
+                        new_contrat_id
+                    FROM (
+                        SELECT
+                            *,
+                            ROW_NUMBER() OVER(PARTITION BY min_vertex_path ORDER BY date_modification ASC) AS row_num
+                        FROM qualified_paths
+                    ) AS ord
+                    WHERE row_num = 1
+                )
 
-        DELETE FROM source.map_changes_contrats AS graph
-        USING mapping_to_delete AS del
-        WHERE graph.old_contrat_id = del.old_contrat_id
-            AND graph.new_contrat_id = del.new_contrat_id;
+                DELETE FROM source.map_changes_contrats AS graph
+                USING mapping_to_delete AS del
+                WHERE graph.old_contrat_id = del.old_contrat_id
+                    AND graph.new_contrat_id = del.new_contrat_id;
+
+                GET DIAGNOSTICS rows_deleted = ROW_COUNT;
+
+                EXIT WHEN rows_deleted = 0;
+            END LOOP;
+        END $$;
         
 
 
