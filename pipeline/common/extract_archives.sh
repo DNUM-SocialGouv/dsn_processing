@@ -34,7 +34,7 @@ else
     else
         # Check if the archive exists
         if [ "$folder_type" == "raw" ] && [ -e "$zip_folder" ]; then
-            7za x "$zip_folder" -o"${WORKFLOW_RAW_DATA_PATH}" -p${WORKFLOW_ARCHIVES_PASSWORD}
+            7za x "$zip_folder" -o"$src_folder" -p${WORKFLOW_ARCHIVES_PASSWORD}
             mv "$src_folder" "$dst_folder"
             echo "Extracted and moved folder $src_folder to $dst_folder."
         else
