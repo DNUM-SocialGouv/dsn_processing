@@ -445,8 +445,8 @@ On liste la démarche à suivre ci-dessous. A noter que ces procédures n'ont pa
     1. Via l'interface Airflow, trouver le premier DAG `monthly_integration` (c.a.d mois) qui a fini en erreur (les suivants finissent en erreur dès la première tâche `get_start_task`, voir [la documentation](#interactions-pipelineairflowdagshistorical_integrationsh---airflow)).
     2. Corriger le bug dans les scripts et re-déployer l'Airflow avec la nouvelle version du code.
     3. Remettre la base dans son état précédant ce DAG ayant fini en erreur. Pour ce faire, utiliser le backup réalisé à l'aide de la tâche `database_backup` lors du dernier DAG fructueux. Pour connaître les commandes à exécuter, voir la [documentation](https://gitlab.intranet.social.gouv.fr/champollion/champolib/blob/dev/documentation/data/1_infrastructure_data.md#restoration-dun-dump) de l'infrastructure data.
-    4. Repasser le statut de la base à `ONGOING` grâce à la commande : `UPDATE sys.current_status SET status = 'SUCCESS'`.
-    5. Reprendre à l'étape 3 avec, comme premier mois à intégrer, le mois du DAG ayant échoué.
+    4. Repasser le statut de la base à `SUCCESS` grâce à la commande : `UPDATE sys.current_status SET status = 'SUCCESS'`.
+    5. Reprendre à l'étape 4 avec, comme premier mois à intégrer, le mois du DAG ayant échoué.
     
 10. Si l'étape 1 a été effectuée, exécuter les [tâches auxiliaires](#désactivation-des-tâches-auxiliaires) précédemment désactivées.
 

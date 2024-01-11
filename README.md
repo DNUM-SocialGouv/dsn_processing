@@ -103,18 +103,20 @@ chore(all) : CHAM-506 move data processing code to an independent repo
 
 #### Pousser sur github
 
-1. Configurez votre accès à github en générant un [personal access token](https://github.com/settings/tokens) et en exécutant la commande suivante : 
+1. Définissez vos variables d'environnement `HTPP_PROXY` et `HTTPS_PROXY` pour avoir accès à internet. Des valeurs pré-définies sont disponibles [ici](https://msociauxfr.sharepoint.com/:t:/r/teams/EIG71/Documents%20partages/General/Commun/D%C3%A9veloppement/.env.prefilled/.env.dsn_processing.prefilled.txt?csf=1&web=1&e=GchPW6).
+
+2. Configurez votre accès à github en générant un [personal access token](https://github.com/settings/tokens) et en exécutant la commande suivante : 
     ```bash
     git config --global credential.github.com.token PERSONAL_ACCESS_TOKEN
     ```
     Dans la suite, si une fenêtre github s'ouvre, n'ouvrez pas la redirection vers github.com, restez sur l'interface VsCode, entrez votre nom d'utilisateur puis saisissez le token d'accès comme mot de passe.
 
-2. Dans le dossier `dsn_processing`, ajoutez la remote github :
+3. Dans le dossier `dsn_processing`, ajoutez la remote github :
     ```bash
     git remote add github-upstream https://github.com/DNUM-SocialGouv/dsn_processing.git
     ```
 
-3. Poussez la dernière version du code :
+4. Poussez la dernière version du code :
     ```bash
     git fetch upstream dev
     git checkout -B dev -t upstream/dev
